@@ -1,0 +1,11 @@
+# radni fajlovi — ne idu na produkciju
+README.md
+FOTO-SPECIFIKACIJA.md
+PROCITAJ-PRVO.txt
+POKRENI-SAJT.bat
+POKRENI-SAJT.command
+preuzmi-slike.ps1
+izbor-slika.html
+*.jfif
+.DS_Store
+assets/img/PROCITAJ-ME.txt

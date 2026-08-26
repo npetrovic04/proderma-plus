@@ -1,0 +1,145 @@
+===============================================================
+  PRODERMA PLUS - novi sajt
+  Uputstvo za pokretanje (2 minuta)
+===============================================================
+
+SADRZAJ
+  index.html            naslovna strana
+  cenovnik.html         cenovnik
+  assets/css/style.css  ceo dizajn
+  assets/js/app.js      sva logika i animacije
+  POKRENI-SAJT.bat      pokretac lokalnog servera (Windows)
+  preuzmi-slike.ps1     skida slike sa starog sajta
+  vercel.json           podesavanja za Vercel deploy
+  README.md             tehnicka dokumentacija (detaljno)
+
+
+---------------------------------------------------------------
+ 1. RASPAKUJ ZIP
+---------------------------------------------------------------
+
+VAZNO: raspakuj ceo folder na disk (npr. na Desktop).
+Ne pokretaj fajlove direktno iz zip arhive - Windows ih otvara
+iz privremenog foldera i putanje pucaju.
+
+
+---------------------------------------------------------------
+ 2. POKRENI SAJT
+---------------------------------------------------------------
+
+NAJLAKSE:
+  Dupli klik na  POKRENI-SAJT.bat
+
+  Ako Windows prikaze "Windows protected your PC":
+  klikni "More info" -> "Run anyway".
+  (To se javlja za svaki .bat skinut sa interneta, nije virus -
+   fajl je obican tekst, mozes ga otvoriti Notepad-om i procitati.)
+
+  Skripta trazi Python ili Node.js, dize server na portu 8080
+  i sama otvara browser na http://localhost:8080
+
+
+RUCNO (ako .bat ne radi):
+  Otvori Command Prompt u folderu sajta (Shift + desni klik u
+  folderu -> "Open PowerShell window here") pa ukucaj JEDNU
+  od ove tri komande:
+
+     py -m http.server 8080
+     python -m http.server 8080
+     npx --yes serve -l 8080 .
+
+  Zatim otvori u browseru:  http://localhost:8080
+
+
+BEZ SERVERA:
+  Moze i dupli klik na index.html, ali TADA NE RADE:
+    - UV vidzet (trenutno UV zracenje)
+    - temperatura i vlaznost u sekciji "Kalendar nege"
+  Razlog: browser blokira mrezne pozive sa file:// adrese.
+  Sve ostalo (animacije, kviz, ABCDE, cenovnik) radi normalno.
+
+
+---------------------------------------------------------------
+ 3. AKO NEMA NI PYTHON NI NODE.JS
+---------------------------------------------------------------
+
+  Python : https://www.python.org/downloads/
+           (pri instalaciji CEKIRAJ "Add Python to PATH")
+  Node.js: https://nodejs.org/   -> LTS verzija
+
+  Dovoljno je bilo koje od ta dva.
+
+
+---------------------------------------------------------------
+ 4. SLIKE
+---------------------------------------------------------------
+
+  Sajt trenutno vuce slike direktno sa starog proderma.rs sajta.
+  Radi dok ima interneta.
+
+  Da ih skines lokalno:
+    desni klik na  preuzmi-slike.ps1  ->  "Run with PowerShell"
+
+  Ako PowerShell odbije zbog politike izvrsavanja, u PowerShell-u:
+    powershell -ExecutionPolicy Bypass -File preuzmi-slike.ps1
+
+
+---------------------------------------------------------------
+ 5. PALETE BOJA
+---------------------------------------------------------------
+
+  Dole desno na sajtu su tri kruzica - prebacuju celu paletu
+  uzivo. Namenjeno za sastanak sa klijentom, da bira.
+
+  Aqua Clinic  - teal + breskva (default, najblize starom brendu)
+  Sage Calm    - zalfija + puder roze
+  Lilac Soft   - perivinkl + roze
+
+  Kad klijent izabere: obrisati <div class="pal-switch"> iz oba
+  HTML fajla i fiksirati izbor u data-palette na <html> tagu.
+
+
+---------------------------------------------------------------
+ 6. DEPLOY NA VERCEL
+---------------------------------------------------------------
+
+  Prevuci ceo folder na  https://vercel.com/new
+  Framework Preset: Other
+  Build Command: (ostaviti prazno)
+  Output Directory: (ostaviti prazno)
+
+  Nema build koraka - ovo je cist staticki sajt.
+
+  Ili preko CLI-ja:
+    npm i -g vercel
+    vercel          (preview link)
+    vercel --prod   (produkcija)
+
+
+---------------------------------------------------------------
+ STA JOS TREBA URADITI PRE OBJAVE
+---------------------------------------------------------------
+
+  [ ] Cene u cenovnik.html - sve pise "na upit"
+  [ ] Fotografije tima - sad su samo inicijali u gradijentu
+  [ ] Slike prebaciti lokalno + konvertovati u WebP
+  [ ] Potvrditi brojke u heroju (7 clanova, 20+ tretmana, 3 profesora)
+  [ ] Kontakt forma - sad je demo, treba backend
+  [ ] Google Fonts hostovati lokalno (GDPR)
+  [ ] Politika privatnosti / cookie notice
+  [ ] Odluciti da li ostaju Galerija i Vesti sa starog sajta
+
+  Detaljno objasnjenje svake stavke: README.md
+
+
+---------------------------------------------------------------
+ NAPOMENA - MEDICINSKI SADRZAJ
+---------------------------------------------------------------
+
+  UV vidzet i ostali alati u sekciji "Skin Lab" imaju ispod sebe
+  disclaimer da su procene informativne i da ne zamenjuju pregled
+  dermatologa.
+
+  NE UKLANJATI TE BLOKOVE. Ovo je sajt zdravstvene ustanove.
+
+===============================================================

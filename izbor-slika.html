@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Izbor fotografija za hero — PRODERMA PLUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#B36B81; --brand-deep:#74374B; --brand-soft:#E4C0CC; --brand-tint:#F7EBEF;
+  --accent:#C29A6B; --accent-soft:#F0E2CC; --glow-a:#EEC3D0; --glow-b:#F7E6CE;
+  --paper:#FBF6EE; --ivory:#FDFBF7; --ink:#1F1A1C; --ink-2:#635659; --ink-3:#756769;
+  --line:rgba(31,26,28,.10);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:Inter,sans-serif;background:var(--paper);color:var(--ink-2);line-height:1.6}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:clamp(18px,4vw,44px)}
+h1,h2{font-family:Fraunces,serif;color:var(--ink);font-weight:480;line-height:1.1;margin:0}
+h1{font-size:clamp(1.9rem,3.4vw,2.7rem)}
+h2{font-size:1.25rem;margin-bottom:6px}
+.top{padding:clamp(28px,4vw,52px) 0 22px}
+.top p{max-width:70ch;margin:12px 0 0;font-size:.94rem}
+.note{margin-top:16px;padding:14px 18px;border-left:3px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:.88rem;color:#5c4426}
+
+/* ---- pregled heroja ---- */
+.preview{position:relative;height:min(58vh,460px);border-radius:22px;overflow:hidden;
+  background:var(--paper);border:1px solid var(--line);margin-bottom:14px}
+.pv-bleed{position:absolute;top:0;bottom:0;width:31%;overflow:hidden}
+.pv-bleed img{width:100%;height:100%;object-fit:cover}
+.pv-l{left:0;-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.5) 68%,transparent 100%);
+  mask-image:linear-gradient(90deg,#000 0%,#000 34%,rgba(0,0,0,.5) 68%,transparent 100%)}
+.pv-r{right:0;-webkit-mask-image:linear-gradient(270deg,#000 0%,#000 34%,rgba(0,0,0,.5) 68%,transparent 100%);
+  mask-image:linear-gradient(270deg,#000 0%,#000 34%,rgba(0,0,0,.5) 68%,transparent 100%)}
+.pv-wash{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(46% 46% at 50% 42%, color-mix(in srgb,var(--paper) 92%,transparent) 0%,
+   color-mix(in srgb,var(--paper) 55%,transparent) 55%, transparent 78%),
+  radial-gradient(34% 34% at 30% 84%, color-mix(in srgb,var(--glow-a) 40%,transparent) 0%, transparent 72%),
+  radial-gradient(32% 32% at 72% 88%, color-mix(in srgb,var(--glow-b) 38%,transparent) 0%, transparent 72%)}
+.pv-txt{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:20px}
+.pv-txt .eb{font-family:Fraunces,serif;font-style:italic;font-size:.82rem;color:var(--ink-2);margin-bottom:12px}
+.pv-txt .h{font-family:Fraunces,serif;font-size:clamp(1.8rem,4vw,3rem);color:var(--ink);line-height:1.05}
+.pv-txt .h em{font-style:italic;color:var(--brand-deep)}
+
+/* ---- traka aktivnog izbora ---- */
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:34px}
+.slot{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;
+  background:var(--ivory);border:1px solid var(--line);cursor:pointer;transition:.25s}
+.slot.on{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-tint)}
+.slot img{width:52px;height:52px;object-fit:cover;border-radius:9px;flex-shrink:0;background:var(--brand-tint)}
+.slot b{display:block;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.slot span{font-size:.82rem;color:var(--ink);word-break:break-all}
+
+/* ---- galerija ---- */
+.sec{padding-bottom:14px;margin-top:34px}
+.sec p{font-size:.88rem;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:18px}
+.card{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:var(--ivory);cursor:pointer;transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(31,26,28,.4)}
+.card .ph{aspect-ratio:4/3;background:linear-gradient(150deg,var(--brand-tint),var(--accent-soft));position:relative}
+.card .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .ph .err{position:absolute;inset:0;display:grid;place-items:center;font-size:.74rem;color:var(--ink-3);text-align:center;padding:10px}
+.card figcaption{padding:9px 11px;font-size:.72rem;color:var(--ink-3);word-break:break-all}
+.card .pick{position:absolute;inset:auto 0 0 0;display:flex;gap:0;opacity:0;transition:opacity .25s}
+.card:hover .pick,.card:focus-within .pick{opacity:1}
+.card .pick button{flex:1;border:none;padding:9px 4px;font:inherit;font-size:.7rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:#fff;background:var(--brand-deep)}
+.card .pick button+button{border-left:1px solid rgba(255,255,255,.25)}
+.card .pick button:hover{background:var(--brand)}
+
+/* ---- izlaz ---- */
+.out{margin:38px 0 60px;padding:22px;border-radius:16px;background:var(--ink);color:#e8dfe2}
+.out h2{color:#fff}
+.out p{font-size:.86rem;color:rgba(255,255,255,.62);margin:6px 0 14px}
+pre{margin:0;padding:16px;border-radius:10px;background:rgba(255,255,255,.07);overflow-x:auto;
+  font-size:.76rem;line-height:1.7;color:#f3e9ec;white-space:pre-wrap;word-break:break-all}
+.copy{margin-top:12px;padding:10px 20px;border:none;border-radius:999px;background:var(--brand);
+  color:#fff;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.copy:hover{background:var(--brand-soft);color:var(--brand-deep)}
+@media(max-width:700px){.slots{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="wrap top">
+  <h1>Izbor fotografija za hero</h1>
+  <p>Sve fotografije sa starog <strong>proderma.rs</strong>. Pređi mišem preko slike pa klikni
+     <strong>LEVO</strong> ili <strong>DESNO</strong> — pregled iznad se menja odmah. Kad si zadovoljan,
+     kopiraj dva reda na dnu i zameni ih u <code>index.html</code>.</p>
+  <div class="note">
+    Ova stranica se ne objavljuje sa sajtom — služi samo za izbor. Obriši je pre deploy-a na Vercel.
+    Ako se slike ne učitaju, znači da nema interneta ili je proderma.rs nedostupan.
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="preview">
+    <div class="pv-bleed pv-l"><img id="pvL" alt=""></div>
+    <div class="pv-bleed pv-r"><img id="pvR" alt=""></div>
+    <div class="pv-wash"></div>
+    <div class="pv-txt">
+      <div class="eb">— Specijalistička dermatovenerološka klinika — Niš, od 2012. —</div>
+      <div class="h">Nega kože<br>sa <em>potpisom</em></div>
+    </div>
+  </div>
+
+  <div class="slots">
+    <div class="slot on" id="slotL"><img id="thL" alt=""><div><b>Leva strana</b><span id="nmL">—</span></div></div>
+    <div class="slot" id="slotR"><img id="thR" alt=""><div><b>Desna strana</b><span id="nmR">—</span></div></div>
+  </div>
+</div>
+
+<div class="wrap sec">
+  <h2>Ordinacija i oprema</h2>
+  <p>Bez prepoznatljivih osoba — najpodesnije za generičku pozadinu.</p>
+  <div class="grid" id="gOprema"></div>
+</div>
+
+<div class="wrap sec">
+  <h2>Galerija</h2>
+  <p>Svih 16 fotografija iz galerije starog sajta, plus dve koje nikad nisu objavljene.</p>
+  <div class="grid" id="gGalerija"></div>
+</div>
+
+<div class="wrap sec">
+  <h2>Sa osobama</h2>
+  <p>Sadrže prepoznatljive osobe — za hero se ne preporučuju, ali su tu ako zatrebaju.</p>
+  <div class="grid" id="gOsobe"></div>
+</div>
+
+<div class="wrap">
+  <div class="out">
+    <h2>Zameni ovo u index.html</h2>
+    <p>Pronađi blok <code>&lt;!-- fotografije koje cure preko ivica ekrana --&gt;</code> i zameni dva
+       <code>data-remote</code> atributa vrednostima ispod.</p>
+    <pre id="code">—</pre>
+    <button class="copy" id="btnCopy">Kopiraj</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var BASE = 'https://proderma.rs/wp-content/uploads/2022/07/';
+
+  var SETS = [
+    ['gOprema', [
+      ['proderma-ord01-res.jpg', 'Ordinacija — slajd 1'],
+      ['proderma-ord02.jpg',     'Ordinacija — slajd 2'],
+      ['proderma-ord03.jpg',     'Oprema — slajd 3'],
+      ['proderma-img1-res.jpg',  'Ordinacija (O nama)'],
+      ['proderma-img17-res.jpg', 'Široka traka (Usluge)'],
+      ['proderma-VAK_6219-res.jpg', 'Ordinacija (O nama, glavna)'],
+      ['klinika-proderma-nis-01-res.jpg', 'Klinika (Kontakt)'],
+      ['proderma-galerija-hero-01.jpg', 'Hero galerije'],
+      ['welcome.jpg', 'Panorama „Dobrodošli“']
+    ]],
+    ['gGalerija', [
+      ['VAK_6175.jpg',''],['VAK_6180.jpg',''],['VAK_6181.jpg',''],['VAK_6183.jpg',''],
+      ['VAK_6186.jpg',''],['VAK_6209.jpg',''],['VAK_6219.jpg',''],
+      ['img1.jpg',''],['img2.jpg',''],['img3.jpg',''],['img4.jpg',''],['img5.jpg',''],
+      ['img6.jpg',''],['img7.jpg',''],['img10.jpg',''],['img11.jpg',''],
+      ['img8.jpg','nije bila objavljena'],['img9.jpg','nije bila objavljena']
+    ]],
+    ['gOsobe', [
+      ['ivana-binic-6186.jpg', 'prof. dr Ivana Binić uz FotoFinder'],
+      ['Ivana-Binic-01.jpg',   'prof. dr Ivana Binić — portret'],
+      ['PRODERMA-BANNER.jpg',  'Baner klinike']
+    ]]
+  ];
+
+  var state = { L: 'proderma-ord01-res.jpg', R: 'VAK_6209.jpg', target: 'L' };
+
+  function $(id) { return document.getElementById(id); }
+
+  // slika koja ne stigne ne sme da ostavi slomljenu ikonu
+  ['pvL','pvR','thL','thR'].forEach(function (id) {
+    $(id).addEventListener('error', function () { this.style.visibility = 'hidden'; });
+    $(id).addEventListener('load',  function () { this.style.visibility = 'visible'; });
+  });
+
+  function render() {
+    $('pvL').src = BASE + state.L;  $('thL').src = BASE + state.L;  $('nmL').textContent = state.L;
+    $('pvR').src = BASE + state.R;  $('thR').src = BASE + state.R;  $('nmR').textContent = state.R;
+    $('slotL').classList.toggle('on', state.target === 'L');
+    $('slotR').classList.toggle('on', state.target === 'R');
+    $('code').textContent =
+      '<!-- LEVO -->\n' +
+      '<img data-fallback src="assets/img/hero-levo.jpg"\n' +
+      '     data-remote="' + BASE + state.L + '" alt="">\n\n' +
+      '<!-- DESNO -->\n' +
+      '<img data-fallback src="assets/img/hero-desno.jpg"\n' +
+      '     data-remote="' + BASE + state.R + '" alt="">';
+  }
+
+  SETS.forEach(function (set) {
+    var host = $(set[0]);
+    if (!host) return;
+    set[1].forEach(function (item) {
+      var file = item[0], desc = item[1];
+      var fig = document.createElement('figure');
+      fig.className = 'card';
+      fig.style.margin = '0';
+      fig.innerHTML =
+        '<div class="ph"><span class="err">slika nije dostupna</span>' +
+        '<img loading="lazy" alt="" src="' + BASE + file + '"></div>' +
+        '<figcaption>' + file + (desc ? ' — ' + desc : '') + '</figcaption>' +
+        '<div class="pick"><button type="button" data-s="L">Levo</button>' +
+        '<button type="button" data-s="R">Desno</button></div>';
+      fig.querySelector('img').addEventListener('error', function () { this.remove(); });
+      fig.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        var slot = b ? b.getAttribute('data-s') : state.target;
+        state[slot] = file;
+        render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      host.appendChild(fig);
+    });
+  });
+
+  $('slotL').addEventListener('click', function () { state.target = 'L'; render(); });
+  $('slotR').addEventListener('click', function () { state.target = 'R'; render(); });
+
+  $('btnCopy').addEventListener('click', function () {
+    var t = $('code').textContent, btn = this;
+    function done() { btn.textContent = 'Kopirano ✓'; setTimeout(function () { btn.textContent = 'Kopiraj'; }, 1800); }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(t).then(done, fallback);
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (err) { btn.textContent = 'Kopiraj ručno iz polja'; }
+      ta.remove();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

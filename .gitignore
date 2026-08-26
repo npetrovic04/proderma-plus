@@ -1,0 +1,7 @@
+.DS_Store
+.vercel
+node_modules/
+*.log
+
+# lokalni radni fajlovi (ne treba da idu na produkciju)
+Gemini_Generated_Image_*.jfif

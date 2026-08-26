@@ -1,0 +1,17 @@
+Ovde idu slike sajta.
+
+Brzo resenje: pokreni  preuzmi-slike.ps1  iz glavnog foldera
+(desni klik -> Run with PowerShell). Skinuce slike sa starog
+proderma.rs sajta pod ovim imenima:
+
+  ordinacija-01.jpg
+  ordinacija-02.jpg
+  ordinacija-03.jpg
+  ivana-binic.jpg
+
+Dok fajlovi ne postoje, sajt automatski povlaci slike sa
+proderma.rs (hotlink). Ako ni to ne uspe, prikazuje se
+pastelni gradijent - nikad slomljena ikona.
+
+Za produkciju: konvertuj u WebP (kvalitet 80-85) i zameni
+putanje u index.html.

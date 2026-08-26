@@ -1,0 +1,1302 @@
+/* ==========================================================================
+   PRODERMA PLUS — app.js
+   Vanilla JS, bez zavisnosti. Sve je modularno (IIFE po celini) da bi se
+   moglo 1:1 preneti u WordPress temu (wp_enqueue_script).
+   ========================================================================== */
+(function () {
+'use strict';
+
+var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $  = function (s, c) { return (c || document).querySelector(s); };
+var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+
+/* ======================================================================
+   1. PRELOADER
+   ====================================================================== */
+window.addEventListener('load', function () {
+  var pl = $('#preloader');
+  setTimeout(function () {
+    if (pl) pl.classList.add('done');
+    var hero = $('#hero');
+    if (hero) hero.classList.add('ready');
+  }, 420);
+});
+// bezbednosni fallback ako "load" nikad ne okine (spor CDN)
+setTimeout(function () {
+  var pl = $('#preloader');
+  if (pl && !pl.classList.contains('done')) { pl.classList.add('done'); }
+  var hero = $('#hero'); if (hero) hero.classList.add('ready');
+}, 3500);
+
+/* ======================================================================
+   2. ANIMIRANA MESH POZADINA (canvas)
+   ====================================================================== */
+(function mesh() {
+  return;   /* ISKLJUČENO: aurora je preuzela pozadinu; dva canvasa su trošila GPU bez razlike */
+  var cv = $('#mesh');
+  if (!cv || reduceMotion) return;
+  var ctx = cv.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 1.6);
+  var W = 0, H = 0, blobs = [], colors = [];
+  var t = 0, raf = null, visible = true;
+
+  function readColors() {
+    var cs = getComputedStyle(document.documentElement);
+    colors = ['--glow-a', '--glow-b', '--glow-c', '--brand-soft'].map(function (v) {
+      return (cs.getPropertyValue(v) || '#9ccfc9').trim();
+    });
+    blobs.forEach(function (b, i) { b.c = colors[i % colors.length]; });
+  }
+
+  function resize() {
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function build() {
+    var n = window.innerWidth < 760 ? 4 : 6;
+    blobs = [];
+    for (var i = 0; i < n; i++) {
+      blobs.push({
+        x: Math.random(), y: Math.random(),
+        r: 0.24 + Math.random() * 0.26,
+        sx: (Math.random() - 0.5) * 0.00016,
+        sy: (Math.random() - 0.5) * 0.00016,
+        ph: Math.random() * Math.PI * 2,
+        c: '#9ccfc9'
+      });
+    }
+    readColors();
+  }
+
+  function hexToRgba(hex, a) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+    var n = parseInt(hex, 16);
+    if (isNaN(n)) return 'rgba(150,200,195,' + a + ')';
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  function draw() {
+    t += 1;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'source-over';
+    for (var i = 0; i < blobs.length; i++) {
+      var b = blobs[i];
+      b.x += b.sx; b.y += b.sy;
+      if (b.x < -0.25 || b.x > 1.25) b.sx *= -1;
+      if (b.y < -0.25 || b.y > 1.25) b.sy *= -1;
+      var wob = Math.sin(t * 0.0035 + b.ph) * 0.045;
+      var cx = (b.x + wob) * W, cy = (b.y - wob * 0.6) * H;
+      var rr = (b.r + wob * 0.4) * Math.max(W, H);
+      var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr);
+      g.addColorStop(0, hexToRgba(b.c, 0.58));
+      g.addColorStop(0.5, hexToRgba(b.c, 0.20));
+      g.addColorStop(1, hexToRgba(b.c, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.fill();
+    }
+    if (visible) raf = requestAnimationFrame(draw);
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    visible = !document.hidden;
+    if (visible && !raf) raf = requestAnimationFrame(draw);
+    if (!visible && raf) { cancelAnimationFrame(raf); raf = null; }
+  });
+
+  window.addEventListener('resize', function () { resize(); }, { passive: true });
+  document.addEventListener('palettechange', readColors);
+
+  resize(); build(); raf = requestAnimationFrame(draw);
+})();
+
+/* ======================================================================
+   2b. ČESTICE PREKO CELOG SAJTA — sitne pastelne tačke koje sporo plutaju
+   naviše. Kontejner je position:fixed pa efekat "prati" ceo skrol, ne
+   samo hero. JS samo generiše elemente jednom; animacija je čist CSS.
+   ====================================================================== */
+(function dust() {
+  return;   /* ISKLJUČENO: tačkice nisu doprinosile, a rAF je radio non-stop */
+  var host = $('#dust');
+  if (!host || reduceMotion) return;
+  var n = window.innerWidth < 760 ? 22 : 46;
+  var cs = getComputedStyle(document.documentElement);
+  var tones = ['--brand-soft', '--accent-soft', '--glow-a', '--glow-c']
+    .map(function (v) { return (cs.getPropertyValue(v) || '#E9C7D1').trim(); });
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < n; i++) {
+    var s = document.createElement('i');
+    var dur = (16 + Math.random() * 20).toFixed(1);
+    s.style.left = (Math.random() * 100).toFixed(1) + '%';
+    s.style.setProperty('--s', (3 + Math.random() * 6).toFixed(1) + 'px');
+    s.style.setProperty('--d', dur + 's');
+    s.style.setProperty('--dl', '-' + (Math.random() * dur).toFixed(1) + 's');
+    s.style.setProperty('--dx', (Math.random() * 120 - 60).toFixed(0) + 'px');
+    s.style.setProperty('--dc', tones[i % tones.length]);
+    frag.appendChild(s);
+  }
+  host.appendChild(frag);
+})();
+
+/* ======================================================================
+   2c. NASLOV — reveal po slovima + reč koja se smenjuje
+   Tekst se seče na karaktere tek u JS-u, pa u HTML-u ostaje čitav i
+   dostupan screen readerima i pretraživačima ako JS ne prođe.
+   ====================================================================== */
+(function heroHeadline() {
+  // 2c-1. seci [data-split] na pojedinačna slova
+  $$('[data-split]').forEach(function (el) {
+    var txt = el.textContent;
+    el.setAttribute('aria-label', txt);
+    el.textContent = '';
+    for (var i = 0; i < txt.length; i++) {
+      var c = document.createElement('span');
+      c.className = 'ch' + (txt[i] === ' ' ? ' ch--sp' : '');
+      c.textContent = txt[i] === ' ' ? ' ' : txt[i];
+      c.style.setProperty('--i', i);
+      c.setAttribute('aria-hidden', 'true');
+      el.appendChild(c);
+    }
+  });
+
+  // 2c-2. rotacija reči u naslovu
+  var rot = $('#heroRot');
+  if (!rot || reduceMotion) return;
+  var words = $$('.rot-w', rot);
+  if (words.length < 2) return;
+
+  // Širina se zaključava na najdužu reč da se podvlaka ne trza pri svakoj
+  // izmeni. Meri se stvarna širina teksta (grid deca su justify-self:start,
+  // pa im je širina jednaka sadržaju, ne kontejneru).
+  function lockWidth() {
+    rot.style.minWidth = '';
+    var max = 0;
+    words.forEach(function (w) {
+      max = Math.max(max, w.getBoundingClientRect().width);
+    });
+    if (max > 0) rot.style.minWidth = Math.ceil(max) + 'px';
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockWidth);
+  else window.addEventListener('load', lockWidth);
+  // font-size je clamp() po vw — širina se mora premeriti pri promeni prozora
+  var rz = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz); rz = setTimeout(lockWidth, 180);
+  }, { passive: true });
+
+  var idx = 0, timer = null;
+  function step() {
+    var cur = words[idx];
+    idx = (idx + 1) % words.length;
+    var nxt = words[idx];
+    cur.classList.remove('on'); cur.classList.add('out');
+    nxt.classList.remove('out'); nxt.classList.add('on');
+    setTimeout(function () { cur.classList.remove('out'); }, 700);
+  }
+  function start() { if (!timer) timer = setInterval(step, 2600); }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+  // ne troši ciklus dok je tab u pozadini
+  document.addEventListener('visibilitychange', function () {
+    document.hidden ? stop() : start();
+  });
+  setTimeout(start, 2200);
+})();
+
+/* ======================================================================
+   2d. TRAKA NAPRETKA SKROLA
+   ====================================================================== */
+(function scrollBar() {
+  var bar = $('#scrollBar');
+  if (!bar || reduceMotion) return;
+  var tick = false;
+  function upd() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty('--p', h > 0 ? (window.scrollY / h).toFixed(4) : 0);
+    tick = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!tick) { tick = true; requestAnimationFrame(upd); }
+  }, { passive: true });
+  upd();
+})();
+
+/* ======================================================================
+   2e. CITAT KOJI SE "ISPISUJE"
+   Maske po redovima kreću tek kad citat uđe u kadar, i to samo jednom —
+   da se ne ponavlja pri svakom prolasku skrolom.
+   ====================================================================== */
+(function handwriting() {
+  var fig = $('#hwQuote');
+  if (!fig) return;
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    fig.classList.add('writing');
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      fig.classList.add('writing');
+      io.disconnect();
+    });
+  }, { threshold: 0.45 });
+  io.observe(fig);
+})();
+
+/* ======================================================================
+   2f. SPISAK USLUGA — otvaranje opisa na dodir i tastaturu
+   Mišem se otvara preko :hover u CSS-u. Ovde je pokriveno ono što hover
+   ne pokriva: telefoni i navigacija tastaturom.
+   ====================================================================== */
+(function svcRows() {
+  var rows = $$('.svc-row');
+  if (!rows.length) return;
+
+  // Klik na karticu vodi direktno na odgovarajuću grupu u cenovniku —
+  // opis "sr-more" i dalje iskače na hover/fokus kao pregled pre klika.
+  function goToPrice(row) {
+    var g = row.getAttribute('data-price-group');
+    window.location.href = 'cenovnik.html' + (g ? ('?g=' + encodeURIComponent(g)) : '');
+  }
+
+  rows.forEach(function (row) {
+    row.addEventListener('click', function () { goToPrice(row); });
+    row.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        goToPrice(row);
+      }
+    });
+  });
+})();
+
+/* ======================================================================
+   2g. RADNO VREME — današnji dan i trenutni status
+   Računa se po vremenu u Nišu, a ne po satu na uređaju posetioca —
+   inače bi pacijent iz drugog vremenskog pojasa video netačan status.
+   ====================================================================== */
+(function hours() {
+  var box = $('.hrs');
+  if (!box) return;
+
+  // Pon–Pet 14–20, Sub 10–14, Ned zatvoreno. Indeks 0 = nedelja.
+  var PLAN = [null, [14,20], [14,20], [14,20], [14,20], [14,20], [10,14]];
+  var KLJUC = ['ned','pon-pet','pon-pet','pon-pet','pon-pet','pon-pet','sub'];
+  var IMENA = ['u nedelju','u ponedeljak','u utorak','u sredu','u četvrtak','u petak','u subotu'];
+
+  function uNisu() {
+    try {
+      var f = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Belgrade', weekday: 'short', hour: '2-digit',
+        minute: '2-digit', hour12: false
+      }).formatToParts(new Date());
+      var o = {};
+      f.forEach(function (p) { o[p.type] = p.value; });
+      var dani = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+      return { d: dani[o.weekday], h: parseInt(o.hour,10) + parseInt(o.minute,10)/60 };
+    } catch (e) {
+      var n = new Date();                     // rezerva: lokalno vreme
+      return { d: n.getDay(), h: n.getHours() + n.getMinutes()/60 };
+    }
+  }
+
+  function osveži() {
+    var t = uNisu();
+    if (t.d == null || isNaN(t.h)) return;
+
+    $$('.hrs-r').forEach(function (r) {
+      r.classList.toggle('is-today', r.getAttribute('data-day') === KLJUC[t.d]);
+    });
+
+    var el = $('#hrsNow');
+    if (!el) return;
+    var danas = PLAN[t.d], otvoreno = !!danas && t.h >= danas[0] && t.h < danas[1];
+    var txt;
+
+    if (otvoreno) {
+      txt = 'Otvoreno &middot; do ' + String(danas[1]).padStart(2,'0') + ':00';
+    } else {
+      // pronađi prvi naredni dan sa radnim vremenom
+      var i = (danas && t.h < danas[0]) ? 0 : 1;
+      for (; i <= 7; i++) {
+        var d = (t.d + i) % 7;
+        if (PLAN[d]) {
+          var kada = (i === 0) ? 'danas' : (i === 1 ? 'sutra' : IMENA[d]);
+          txt = 'Zatvoreno &middot; otvara se ' + kada + ' u ' +
+                String(PLAN[d][0]).padStart(2,'0') + ':00';
+          break;
+        }
+      }
+    }
+    el.querySelector('span').innerHTML = txt;
+    el.classList.toggle('is-open', otvoreno);
+    el.hidden = false;
+  }
+
+  osveži();
+  setInterval(osveži, 60000);
+})();
+
+/* ======================================================================
+   3. SVETLO KOJE PRATI KURSOR
+   ====================================================================== */
+(function cursor() {
+  return;   /* ISKLJUČENO: kursor-tačka izbačena na zahtev klijenta */
+  var glow = $('#cursorGlow'), dot = $('#cursorDot');
+  if (!glow || !dot || reduceMotion) return;
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  var gx = window.innerWidth / 2, gy = window.innerHeight / 2;
+  var tx = gx, ty = gy, dx = gx, dy = gy;
+  var on = false;
+
+  window.addEventListener('mousemove', function (e) {
+    tx = e.clientX; ty = e.clientY;
+    if (!on) { on = true; glow.classList.add('on'); dot.classList.add('on'); gx = tx; gy = ty; }
+  }, { passive: true });
+
+  window.addEventListener('mouseout', function (e) {
+    if (!e.relatedTarget) { glow.classList.remove('on'); dot.classList.remove('on'); on = false; }
+  });
+
+  // uvećanje nad interaktivnim elementima
+  document.addEventListener('mouseover', function (e) {
+    var el = e.target.closest ? e.target.closest('a,button,[data-spot],.ab,.tm,.price-row') : null;
+    dot.classList.toggle('grow', !!el);
+  });
+
+  (function loop() {
+    gx += (tx - gx) * 0.075;  // sporo, "svetlo"
+    gy += (ty - gy) * 0.075;
+    dx += (tx - dx) * 0.30;   // brzo, "tačka"
+    dy += (ty - dy) * 0.30;
+    glow.style.transform = 'translate3d(' + gx + 'px,' + gy + 'px,0)';
+    dot.style.transform  = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* ======================================================================
+   4. HEADER + MOBILNI MENI
+   ====================================================================== */
+(function header() {
+  var h = $('#header'), b = $('#burger'), m = $('#mobileMenu');
+  var onScroll = function () { if (h) h.classList.toggle('stuck', window.scrollY > 24); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  if (b && m) {
+    b.addEventListener('click', function () {
+      var open = m.classList.toggle('open');
+      b.classList.toggle('open', open);
+      b.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    $$('a', m).forEach(function (a) {
+      a.addEventListener('click', function () {
+        m.classList.remove('open'); b.classList.remove('open');
+        b.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
+      });
+    });
+  }
+})();
+
+/* ======================================================================
+   5. SCROLL REVEAL
+   ====================================================================== */
+(function reveal() {
+  var els = $$('[data-reveal],[data-reveal-group]');
+  if (!('IntersectionObserver' in window) || reduceMotion) {
+    els.forEach(function (e) { e.classList.add('in'); }); return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+/* ======================================================================
+   6. BROJAČI
+   ====================================================================== */
+(function counters() {
+  var els = $$('[data-count]');
+  if (!els.length) return;
+  var run = function (el) {
+    if (el.hasAttribute('data-plain')) { el.textContent = el.getAttribute('data-count'); return; }
+    var to = parseFloat(el.getAttribute('data-count')) || 0;
+    var suf = el.getAttribute('data-suffix') || '';
+    var dur = 1400, st = null;
+    function step(ts) {
+      if (!st) st = ts;
+      var p = Math.min((ts - st) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e) + (p === 1 ? suf : '');
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  };
+  if (!('IntersectionObserver' in window) || reduceMotion) { els.forEach(run); return; }
+  var io = new IntersectionObserver(function (en) {
+    en.forEach(function (x) { if (x.isIntersecting) { run(x.target); io.unobserve(x.target); } });
+  }, { threshold: 0.5 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+/* ======================================================================
+   7. HERO SLAJDER
+   ====================================================================== */
+(function heroSlider() {
+  var frame = $('#heroFrame'); if (!frame) return;
+  var slides = $$('.hs', frame), dots = $$('#heroDots i'), i = 0;
+  var caps = [
+    ['Savremena oprema', 'Dijagnostika koja prati svetske trendove'],
+    ['Prijatan prostor', 'Izolovan od gradske gužve, nadomak centra Niša'],
+    ['Stručan tim', 'Tri profesora dermatovenerologije pod jednim krovom']
+  ];
+  var cT = $('#heroCapT'), cS = $('#heroCapS');
+  function go(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
+    if (cT) cT.textContent = caps[i][0];
+    if (cS) cS.textContent = caps[i][1];
+  }
+  dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
+  if (!reduceMotion) setInterval(function () { go(i + 1); }, 6000);
+})();
+
+/* ======================================================================
+   8. TILT + MAGNETIC + SPOTLIGHT
+   ====================================================================== */
+(function interactions() {
+  if (reduceMotion || window.matchMedia('(pointer: coarse)').matches) return;
+
+  // tilt
+  $$('[data-tilt]').forEach(function (el) {
+    el.style.transformStyle = 'preserve-3d';
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = 'perspective(1100px) rotateY(' + (px * 6) + 'deg) rotateX(' + (-py * 6) + 'deg)';
+      el.style.transition = 'transform .12s linear';
+    });
+    el.addEventListener('mouseleave', function () {
+      el.style.transition = 'transform .9s cubic-bezier(.16,1,.3,1)';
+      el.style.transform = '';
+    });
+  });
+
+  // magnetic dugmad
+  $$('[data-magnetic]').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      var x = e.clientX - r.left, y = e.clientY - r.top;
+      el.style.setProperty('--mx', x + 'px');
+      el.style.setProperty('--my', y + 'px');
+      el.style.transform = 'translate(' + ((x - r.width / 2) * 0.12) + 'px,' + ((y - r.height / 2) * 0.18 - 2) + 'px)';
+    });
+    el.addEventListener('mouseleave', function () { el.style.transform = ''; });
+  });
+
+  // spotlight na karticama
+  $$('[data-spot]').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+})();
+
+/* ======================================================================
+   9. TABOVI (O nama + Skin Lab)
+   ====================================================================== */
+(function tabs() {
+  $$('[data-atab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var n = b.getAttribute('data-atab');
+      $$('[data-atab]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $$('[data-apanel]').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-apanel') === n); });
+    });
+  });
+  $$('[data-lab]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var n = b.getAttribute('data-lab');
+      $$('[data-lab]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      $$('[data-labp]').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-labp') === n); });
+    });
+  });
+})();
+
+/* ======================================================================
+   10. UV VIDŽET  (Open-Meteo — bez API ključa)
+   ====================================================================== */
+var UV = (function () {
+  var NIS = { lat: 43.3209, lon: 21.8958, name: 'Niš, Srbija' };
+  var state = { uv: null, peak: null, peakH: null, type: 2, hourly: [], loc: NIS.name };
+
+  // Minimalna eritemska doza (J/m²) po Fitzpatrick fototipu — standardne vrednosti
+  var MED = { 1: 200, 2: 250, 3: 350, 4: 450, 5: 600, 6: 1000 };
+
+  var LEVELS = [
+    { max: 2.5,  n: 'Nizak',        c: '#DCEFE0', fg: '#3E6B4A', arc: '#7FB98D' },
+    { max: 5.5,  n: 'Umeren',       c: '#FBF0D3', fg: '#8A6A1E', arc: '#DFBB55' },
+    { max: 7.5,  n: 'Visok',        c: '#FCE3D0', fg: '#9A5824', arc: '#E39258' },
+    { max: 10.5, n: 'Vrlo visok',   c: '#FBD9D5', fg: '#9E403A', arc: '#DD7A72' },
+    { max: 99,   n: 'Ekstreman',    c: '#EEDFF3', fg: '#6C3E80', arc: '#A576BB' }
+  ];
+
+  function level(uv) {
+    for (var i = 0; i < LEVELS.length; i++) if (uv <= LEVELS[i].max) return LEVELS[i];
+    return LEVELS[LEVELS.length - 1];
+  }
+
+  function burnMinutes(uv, type) {
+    if (!uv || uv <= 0.2) return null;
+    return MED[type] / (uv * 1.5);
+  }
+
+  function fmtMin(m) {
+    if (m === null) return '—';
+    if (m > 300) return '> 5 h';
+    if (m >= 60) { var h = Math.floor(m / 60), r = Math.round(m % 60); return h + ' h' + (r ? ' ' + r + ' min' : ''); }
+    return Math.round(m) + ' min';
+  }
+
+  function spf(uv, type) {
+    if (uv <= 2) return type <= 2 ? '30' : '15–30';
+    if (uv <= 5) return type <= 2 ? '50' : '30';
+    if (uv <= 7) return type <= 3 ? '50+' : '30–50';
+    return '50+';
+  }
+
+  function advice(uv, type) {
+    if (uv <= 2) return 'UV je nizak — zaštita nije neophodna za kratak boravak napolju. Dnevna krema sa SPF-om je i dalje najjeftinija anti-age investicija.';
+    if (uv <= 5) return 'Umeren UV. U sredini dana potražite hlad, nosite naočare i nanesite zaštitu na lice, vrat i šake.';
+    if (uv <= 7) return 'Visok UV. Zaštita je obavezna: SPF, šešir, naočare. Izbegavajte direktno sunce između 11 i 16 č.';
+    if (uv <= 10) return 'Vrlo visok UV. Koža bez zaštite reaguje brzo. Ostanite u hladu u sredini dana i ponavljajte SPF na svaka 2 sata.';
+    return 'Ekstreman UV. Izbegavajte direktno sunce. Ako morate napolje — pokrijte kožu, SPF 50+ i ponavljanje na svakih 90 minuta.';
+  }
+
+  function render() {
+    var uv = state.uv;
+    var lv = level(uv || 0);
+    var C = 2 * Math.PI * 82;      // 515.2
+    var TRACK = 386;               // 75% kruga
+    var frac = Math.min((uv || 0) / 11, 1);
+
+    var arc = $('#uvArc');
+    if (arc) { arc.setAttribute('stroke-dasharray', (TRACK * frac).toFixed(1) + ' ' + C.toFixed(1)); arc.style.stroke = lv.arc; }
+
+    var v = $('#uvVal'); if (v) v.textContent = uv === null ? '–' : (Math.round(uv * 10) / 10);
+    var l = $('#uvLevel');
+    if (l) { l.textContent = uv === null ? 'Podatak nedostupan' : lv.n; l.style.setProperty('--uv-c', lv.c); l.style.setProperty('--uv-fg', lv.fg); }
+
+    var loc = $('#uvLoc');
+    if (loc) loc.innerHTML = state.loc + ' · <button id="uvGeo" type="button">koristi moju lokaciju</button>';
+    bindGeo();
+
+    $('#uvMsg').textContent = uv === null
+      ? 'Trenutno ne možemo da učitamo UV podatke. Osnovno pravilo ostaje: SPF svakog dana, i u hlad između 11 i 16 časova.'
+      : advice(uv, state.type);
+
+    $('#uvHead').textContent = uv === null ? 'Koliko sunca vaša koža podnese danas?'
+      : 'Fototip ' + ['I','II','III','IV','V','VI'][state.type - 1] + ' · UV ' + (Math.round(uv * 10) / 10);
+
+    $('#uvBurn').textContent = fmtMin(burnMinutes(uv, state.type));
+    $('#uvSpf').textContent  = uv === null ? '–' : 'SPF ' + spf(uv, state.type);
+    $('#uvSpfNote').textContent = (uv && uv > 7) ? 'ponoviti na 90 min' : 'ponoviti na 2 h';
+    $('#uvPeak').textContent = state.peakH === null ? '–' : (String(state.peakH).padStart(2, '0') + ':00');
+
+    // bočni rail
+    var rv = $('#railUvVal'), rl = $('#railUvLvl'), rm = $('#railUvMsg'), rr = $('#railUvRing');
+    if (rv) rv.textContent = uv === null ? '–' : (Math.round(uv * 10) / 10);
+    if (rl) rl.textContent = uv === null ? 'Podatak nedostupan' : lv.n + ' UV';
+    if (rr) { rr.style.setProperty('--rc-p', (frac * 100).toFixed(0) + '%'); rr.style.setProperty('--rc-c', lv.arc); }
+    if (rm) {
+      var bm = burnMinutes(uv, state.type);
+      rm.textContent = uv === null
+        ? 'Osnovno pravilo: SPF svakog dana, hlad između 11 i 16 h.'
+        : 'Fototip ' + ['I','II','III','IV','V','VI'][state.type - 1] + ' — do prvog crvenila ' +
+          fmtMin(bm) + '. Preporuka: SPF ' + spf(uv, state.type) + '.';
+    }
+
+    // graf po satima
+    var bars = $('#uvBars');
+    if (bars && state.hourly.length) {
+      var max = Math.max.apply(null, state.hourly.map(function (h) { return h.v; })) || 1;
+      var nowH = new Date().getHours();
+      bars.innerHTML = state.hourly.map(function (h) {
+        var pct = Math.max(3, (h.v / Math.max(max, 1)) * 100);
+        var lab = (h.h % 3 === 0) ? '<span>' + h.h + '</span>' : '';
+        return '<div class="ub' + (h.h === nowH ? ' now' : '') + '" style="height:' + pct + '%" title="' +
+               h.h + ':00 — UV ' + (Math.round(h.v * 10) / 10) + '">' + lab + '</div>';
+      }).join('');
+    }
+  }
+
+  function bindGeo() {
+    var g = $('#uvGeo');
+    if (!g) return;
+    g.addEventListener('click', function () {
+      if (!navigator.geolocation) return;
+      g.textContent = 'tražim lokaciju…';
+      navigator.geolocation.getCurrentPosition(function (p) {
+        load(p.coords.latitude, p.coords.longitude, 'Vaša lokacija');
+      }, function () { g.textContent = 'lokacija nije dostupna'; }, { timeout: 8000 });
+    });
+  }
+
+  function load(lat, lon, name) {
+    var url = 'https://api.open-meteo.com/v1/forecast'
+            + '?latitude=' + lat + '&longitude=' + lon
+            + '&current=uv_index,temperature_2m,relative_humidity_2m'
+            + '&hourly=uv_index'
+            + '&timezone=auto&forecast_days=1';
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+      state.loc = name || NIS.name;
+
+      // sati 6–20
+      var H = [];
+      if (d.hourly && d.hourly.time) {
+        for (var i = 0; i < d.hourly.time.length; i++) {
+          var hh = parseInt(d.hourly.time[i].slice(11, 13), 10);
+          if (hh >= 6 && hh <= 20) H.push({ h: hh, v: d.hourly.uv_index[i] || 0 });
+        }
+      }
+      state.hourly = H;
+
+      var cur = (d.current && typeof d.current.uv_index === 'number') ? d.current.uv_index : null;
+      if (cur === null && H.length) {
+        var nh = new Date().getHours();
+        var m = H.filter(function (x) { return x.h === nh; })[0];
+        cur = m ? m.v : 0;
+      }
+      state.uv = cur;
+
+      if (H.length) {
+        var pk = H.reduce(function (a, b) { return b.v > a.v ? b : a; });
+        state.peak = pk.v; state.peakH = pk.h;
+      }
+
+      // podaci za kalendar-vidžet
+      if (d.current) {
+        var t = $('#calTemp'), hu = $('#calHum'), hm = $('#calHumMsg');
+        if (t && typeof d.current.temperature_2m === 'number') t.textContent = Math.round(d.current.temperature_2m) + '°C';
+        if (hu && typeof d.current.relative_humidity_2m === 'number') {
+          var rh = d.current.relative_humidity_2m;
+          hu.textContent = Math.round(rh) + '%';
+          if (hm) hm.textContent = rh < 35
+            ? 'Vazduh je suv — kožna barijera brže gubi vodu. Pojačajte hidratantnu negu i unos tečnosti.'
+            : rh > 70
+              ? 'Vazduh je vlažan — lakše teksture su dovoljne; masne kreme mogu da zapuše pore.'
+              : 'Vlažnost je u prijatnom opsegu za kožu.';
+        }
+      }
+      render();
+    }).catch(function () { state.uv = null; render(); });
+  }
+
+  function init() {
+    if (!$('#uvVal')) return;
+    $$('#pheno button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        $$('#pheno button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        state.type = parseInt(b.getAttribute('data-t'), 10);
+        render();
+      });
+    });
+    bindGeo();
+    render();
+    load(NIS.lat, NIS.lon, NIS.name);
+  }
+
+  return { init: init };
+})();
+UV.init();
+
+/* ======================================================================
+   10b. VAZDUH I POLEN  (Open-Meteo Air Quality — CAMS Europe, bez ključa)
+   ====================================================================== */
+(function air() {
+  if (!$('#airAqi') && !$('#railAirVal')) return;
+  var NIS = { lat: 43.3209, lon: 21.8958 };
+
+  // Evropski AQI — zvanične granice
+  var AQI = [
+    { max: 20,  n: 'Dobar',          c: '#DCEFE0', fg: '#3E6B4A', arc: '#7FB98D' },
+    { max: 40,  n: 'Prihvatljiv',    c: '#E7F0D8', fg: '#5A6B33', arc: '#A8BF72' },
+    { max: 60,  n: 'Umeren',         c: '#FBF0D3', fg: '#8A6A1E', arc: '#DFBB55' },
+    { max: 80,  n: 'Loš',            c: '#FCE3D0', fg: '#9A5824', arc: '#E39258' },
+    { max: 100, n: 'Vrlo loš',       c: '#FBD9D5', fg: '#9E403A', arc: '#DD7A72' },
+    { max: 1e5, n: 'Ekstremno loš',  c: '#EEDFF3', fg: '#6C3E80', arc: '#A576BB' }
+  ];
+
+  // Polen: [naziv, latinski, prag_umeren, prag_visok, prag_vrlo_visok] u zrncima/m³
+  var POLLEN = [
+    ['alder_pollen',    'Jova',      'Alnus',      10,  50, 500],
+    ['birch_pollen',    'Breza',     'Betula',     10,  50, 500],
+    ['grass_pollen',    'Trave',     'Poaceae',     5,  20, 200],
+    ['mugwort_pollen',  'Pelin',     'Artemisia',   5,  20,  50],
+    ['olive_pollen',    'Maslina',   'Olea',       10,  50, 200],
+    ['ragweed_pollen',  'Ambrozija', 'Ambrosia',    5,  20,  50]
+  ];
+
+  var LVL = [
+    { n: 'Nizak',      c: '#7FB98D', fg: '#3E6B4A' },
+    { n: 'Umeren',     c: '#DFBB55', fg: '#8A6A1E' },
+    { n: 'Visok',      c: '#E39258', fg: '#9A5824' },
+    { n: 'Vrlo visok', c: '#DD7A72', fg: '#9E403A' }
+  ];
+
+  function aqiLevel(v) {
+    for (var i = 0; i < AQI.length; i++) if (v <= AQI[i].max) return AQI[i];
+    return AQI[AQI.length - 1];
+  }
+
+  function pollenLevel(v, t1, t2, t3) {
+    if (v < t1) return 0;
+    if (v < t2) return 1;
+    if (v < t3) return 2;
+    return 3;
+  }
+
+  function aqiMsg(v) {
+    if (v <= 20) return 'Vazduh je čist. Nema dodatnog opterećenja za kožnu barijeru.';
+    if (v <= 40) return 'Vazduh je prihvatljiv. Uobičajena večernja rutina čišćenja je dovoljna.';
+    if (v <= 60) return 'Umereno zagađenje. PM čestice se talože na koži tokom dana — večernje čišćenje lica nije opcija, već obaveza.';
+    if (v <= 80) return 'Zagađen vazduh. Čestice pojačavaju oksidativni stres i pogoršavaju akne, rozaceu i ekcem. Antioksidans ujutru, temeljno čišćenje uveče.';
+    if (v <= 100) return 'Vrlo loš vazduh. Skratite boravak napolju. Kod postojećih dermatoza očekujte pogoršanje u naredna 24–48 h.';
+    return 'Ekstremno zagađen vazduh. Izbegavajte duži boravak napolju; kod hroničnih kožnih oboljenja javite se ako se stanje pogorša.';
+  }
+
+  function skinMsg(aqiV, worst, worstName) {
+    var out = [];
+    if (worst >= 2) {
+      out.push('<strong style="color:#fff">' + worstName + '</strong> je u ' +
+        (worst === 3 ? 'vrlo visokoj' : 'visokoj') + ' koncentraciji. Kod atopijskog dermatitisa, ekcema ' +
+        'i kontaktne urtikarije koža često reaguje pre nosa — svrab, crvenilo i osip oko očiju i na vratu. ' +
+        'Isperite lice i ruke po povratku kući i ne sušite veš napolju.');
+    } else if (worst === 1) {
+      out.push('Polen je u umerenoj koncentraciji. Osetljive osobe mogu primetiti blago crvenilo i svrab — ' +
+        'blaga, nemirisna nega i hladni oblozi obično su dovoljni.');
+    } else {
+      out.push('Koncentracije polena su niske. Danas alergeni iz vazduha nisu značajno opterećenje za kožu.');
+    }
+    if (aqiV !== null && aqiV > 60) {
+      out.push('Uz to, kvalitet vazduha je ispod proseka — kombinacija čestica i polena je ono što najčešće ' +
+        'izazove „iznenadno“ pogoršanje ekcema.');
+    }
+    out.push('Ako se reakcije ponavljaju, koncentracija u vazduhu vam neće reći <em>na šta</em> reagujete — ' +
+      'to utvrđuje epikutano testiranje.');
+    return out.join(' ');
+  }
+
+  function render(d) {
+    var cur = d && d.current ? d.current : null;
+
+    // --- AQI ---
+    var aqiV = cur && typeof cur.european_aqi === 'number' ? Math.round(cur.european_aqi) : null;
+    var al = aqiLevel(aqiV === null ? 0 : aqiV);
+
+    var eA = $('#airAqi'); if (eA) eA.textContent = aqiV === null ? '–' : aqiV;
+    var eL = $('#airAqiLvl');
+    if (eL) {
+      eL.textContent = aqiV === null ? 'Podatak nedostupan' : al.n;
+      eL.style.setProperty('--air-c', al.c);
+      eL.style.setProperty('--air-fg', al.fg);
+    }
+    var p25 = $('#airPm25'), p10 = $('#airPm10');
+    if (p25) p25.textContent = cur && typeof cur.pm2_5 === 'number' ? Math.round(cur.pm2_5) : '–';
+    if (p10) p10.textContent = cur && typeof cur.pm10 === 'number' ? Math.round(cur.pm10) : '–';
+    var eM = $('#airMsg');
+    if (eM) eM.textContent = aqiV === null
+      ? 'Podaci o kvalitetu vazduha trenutno nisu dostupni. Osnovno pravilo ostaje: temeljno čišćenje lica uveče.'
+      : aqiMsg(aqiV);
+
+    // --- POLEN ---
+    var rows = [], worst = 0, worstName = 'Polen', any = false;
+    POLLEN.forEach(function (p) {
+      var v = cur && typeof cur[p[0]] === 'number' ? cur[p[0]] : null;
+      if (v === null) return;
+      any = true;
+      var li = pollenLevel(v, p[3], p[4], p[5]);
+      if (li > worst) { worst = li; worstName = p[1]; }
+      var pct = Math.min(100, (v / p[5]) * 100);
+      rows.push(
+        '<div class="pollen-row">' +
+          '<div class="pr-name">' + p[1] + '<span class="pr-lat">' + p[2] + '</span></div>' +
+          '<div class="pr-bar"><i style="width:' + Math.max(3, pct).toFixed(0) + '%;background:' + LVL[li].c + '"></i></div>' +
+          '<div class="pr-num">' + (v < 1 ? '<1' : Math.round(v)) + '</div>' +
+          '<div class="pr-lvl" style="color:' + LVL[li].fg + '">' + LVL[li].n + '</div>' +
+        '</div>'
+      );
+    });
+
+    var pl = $('#pollenList');
+    if (pl) {
+      pl.innerHTML = any ? rows.join('')
+        : '<div class="pl-empty">Podaci o polenu trenutno nisu dostupni za ovu lokaciju.</div>';
+    }
+
+    var sk = $('#airSkinMsg');
+    if (sk) sk.innerHTML = any ? skinMsg(aqiV, worst, worstName)
+      : 'Podaci o alergenima trenutno nisu dostupni. Ako primetite svrab, crvenilo ili osip bez jasnog uzroka, ' +
+        'epikutano testiranje daje konkretan odgovor.';
+
+    // --- BOČNI RAIL ---
+    var rv = $('#railAirVal'), rl = $('#railAirLvl'), rm = $('#railAirMsg'), rr = $('#railAirRing');
+    if (rv) rv.textContent = aqiV === null ? '–' : aqiV;
+    if (rl) rl.textContent = aqiV === null ? 'Podatak nedostupan' : 'Vazduh: ' + al.n;
+    if (rr) {
+      rr.style.setProperty('--rc-p', Math.min(100, ((aqiV === null ? 0 : aqiV) / 100) * 100).toFixed(0) + '%');
+      rr.style.setProperty('--rc-c', al.arc);
+    }
+    if (rm) {
+      rm.textContent = !any
+        ? 'Podaci o polenu nisu dostupni za ovu lokaciju.'
+        : (worst >= 2
+            ? worstName + ' — ' + LVL[worst].n.toLowerCase() + ' nivo. Moguće pogoršanje ekcema i svrab kože.'
+            : 'Polen: ' + LVL[worst].n.toLowerCase() + ' nivo. Nema značajnog opterećenja za kožu.');
+    }
+  }
+
+  var fields = ['european_aqi', 'pm2_5', 'pm10'].concat(POLLEN.map(function (p) { return p[0]; }));
+  var url = 'https://air-quality-api.open-meteo.com/v1/air-quality'
+          + '?latitude=' + NIS.lat + '&longitude=' + NIS.lon
+          + '&current=' + fields.join(',')
+          + '&timezone=auto&forecast_days=1';
+
+  fetch(url)
+    .then(function (r) { return r.json(); })
+    .then(render)
+    .catch(function () { render(null); });
+})();
+
+/* ======================================================================
+   10c. RAIL — sklanja se dok je Skin Lab u vidokrugu (tamo su puni podaci)
+   ====================================================================== */
+(function railVisibility() {
+  var rail = $('#rail'), hero = $('#hero'),
+      lab = $('#skin-lab'), foot = document.querySelector('.site-footer');
+  if (!rail || !('IntersectionObserver' in window)) return;
+
+  // Sklonjen je i dok se gleda hero — tamo bi se sudarao sa fotografijom.
+  var hidden = { hero: true, lab: false, foot: false };
+  function apply() {
+    rail.classList.toggle('tucked', hidden.hero || hidden.lab || hidden.foot);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.target === hero) hidden.hero = en.isIntersecting;
+      if (en.target === lab)  hidden.lab  = en.isIntersecting;
+      if (en.target === foot) hidden.foot = en.isIntersecting;
+    });
+    apply();
+  }, { threshold: 0.18 });
+
+  if (hero) io.observe(hero); else hidden.hero = false;
+  if (lab) io.observe(lab);
+  if (foot) io.observe(foot);
+  apply();
+})();
+
+/* ======================================================================
+   11. KVIZ — TIP KOŽE
+   ====================================================================== */
+(function quiz() {
+  var body = $('#quizBody'); if (!body) return;
+  var bar = $('#qpBar'), num = $('#qpN');
+
+  var Q = [
+    { q: 'Kako vaša koža izgleda 2–3 sata nakon umivanja, bez ikakve nege?',
+      a: [
+        { t: 'Zategnuto i suvo, ponegde se ljušti', i: '🌵', s: { dry: 3 } },
+        { t: 'Sjaji cela — čelo, nos, obrazi', i: '💧', s: { oil: 3 } },
+        { t: 'Sjaji samo T-zona, obrazi su normalni', i: '🔀', s: { comb: 3 } },
+        { t: 'Crveni se i pecka', i: '🔥', s: { sens: 3 } }
+      ] },
+    { q: 'Koliko su vidljive pore na vašim obrazima?',
+      a: [
+        { t: 'Jedva se primećuju', i: '·', s: { dry: 2 } },
+        { t: 'Vidljive su, posebno na nosu', i: '◦', s: { comb: 2, oil: 1 } },
+        { t: 'Izražene po celom licu', i: '○', s: { oil: 3 } },
+        { t: 'Ne obraćam pažnju na pore — smeta mi crvenilo', i: '◉', s: { sens: 2 } }
+      ] },
+    { q: 'Kako koža reaguje na novi proizvod ili kozmetiku?',
+      a: [
+        { t: 'Skoro nikad nema reakcije', i: '✓', s: { oil: 1, comb: 1 } },
+        { t: 'Povremeno se zacrveni pa se smiri', i: '~', s: { sens: 2 } },
+        { t: 'Često pecka, svrbi ili se javi osip', i: '⚠', s: { sens: 4 } },
+        { t: 'Javljaju se bubuljice', i: '●', s: { oil: 2 } }
+      ] },
+    { q: 'Šta vas trenutno najviše smeta na koži?',
+      a: [
+        { t: 'Bore i gubitak čvrstine', i: '⌛', s: { age: 4 } },
+        { t: 'Fleke, neujednačen ton', i: '🎨', s: { pigm: 4 } },
+        { t: 'Akne i zapušene pore', i: '⚫', s: { oil: 3 } },
+        { t: 'Suvoća i osećaj zatezanja', i: '💦', s: { dry: 3 } }
+      ] },
+    { q: 'Koliko vremena nedeljno provedete na direktnom suncu bez zaštite?',
+      a: [
+        { t: 'Praktično nimalo — uvek koristim SPF', i: '☂', s: { age: 0 } },
+        { t: 'Do sat vremena', i: '🌤', s: { pigm: 1 } },
+        { t: 'Nekoliko sati', i: '☀', s: { pigm: 2, age: 2 } },
+        { t: 'Puno — radim ili treniram napolju', i: '🔆', s: { pigm: 3, age: 3 } }
+      ] },
+    { q: 'Kada ste poslednji put bili kod dermatologa?',
+      a: [
+        { t: 'U poslednjih godinu dana', i: '📅', s: {} },
+        { t: 'Pre 2–5 godina', i: '🗓', s: {} },
+        { t: 'Više od 5 godina', i: '⏳', s: { check: 2 } },
+        { t: 'Nikada', i: '—', s: { check: 3 } }
+      ] }
+  ];
+
+  var TYPES = {
+    dry: {
+      name: 'Suva i dehidrirana koža',
+      d: 'Vaša koža slabije zadržava vodu i lipide, pa se javljaju zatezanje, ljuštenje i sitne linije dehidratacije. Prioritet je obnova kožne barijere, ne agresivna eksfolijacija.',
+      r: [
+        ['Tretman', 'Tretman hidratacije', 'Dubinsko vraćanje vlage i obnova barijere kože.'],
+        ['Dijagnostika', 'Dermatološki pregled', 'Isključivanje ekcema, atopije i drugih uzroka suvoće.'],
+        ['Nega', 'Blagi hemijski piling', 'Uklanjanje mrtvih ćelija bez oštećenja barijere.']
+      ]
+    },
+    oil: {
+      name: 'Masna koža sklona aknama',
+      d: 'Pojačana produkcija sebuma i zapušene pore. Cilj je regulacija, a ne isušivanje — presuva masna koža reaguje još jačim lučenjem sebuma.',
+      r: [
+        ['Tretman', 'Hemijski piling', 'Regulacija sebuma, otpušavanje pora i ujednačavanje teksture.'],
+        ['Dijagnostika', 'Pregled specijaliste', 'Procena stepena akni i plan terapije.'],
+        ['Intervencija', 'Uklanjanje izraslina radiotalasima', 'Za milije, fibrome i benigne promene.']
+      ]
+    },
+    comb: {
+      name: 'Mešovita koža',
+      d: 'Masna T-zona i normalni do suvi obrazi. Zahteva zoniranu negu — jedan proizvod za celo lice retko rešava obe strane problema.',
+      r: [
+        ['Tretman', 'Tretman hidratacije', 'Balansiranje suvih zona bez opterećenja T-zone.'],
+        ['Tretman', 'Hemijski piling', 'Ciljano na T-zonu i proširene pore.'],
+        ['Dijagnostika', 'Dermatološki pregled', 'Postavljanje plana nege po zonama lica.']
+      ]
+    },
+    sens: {
+      name: 'Osetljiva i reaktivna koža',
+      d: 'Koža brzo reaguje crvenilom, peckanjem ili osipom. Pre bilo kakvog estetskog tretmana potrebno je utvrditi okidač — često je u pitanju kontaktna alergija.',
+      r: [
+        ['Dijagnostika', 'Alergološko epikutano testiranje', 'Otkrivanje tačnog alergena koji izaziva reakciju.'],
+        ['Pregled', 'Pregled profesora', 'Za hronične i teže odredive reakcije kože.'],
+        ['Tretman', 'Tretman hidratacije', 'Umirivanje i obnova oštećene barijere.']
+      ]
+    },
+    age: {
+      name: 'Zrela koža — prioritet čvrstina',
+      d: 'Gubitak kolagena i elastina, opuštanje kontura i tanje linije. Rezultat daje kombinacija tretmana, a ne jedan zahvat.',
+      r: [
+        ['Tretman', 'Lifting', 'Podizanje i zatezanje opuštenih kontura lica.'],
+        ['Tretman', 'Tretman hidratacije', 'Vraćanje punoće i sjaja koži.'],
+        ['Dijagnostika', 'Digitalna dermoskopija', 'Kontrola svih promena nastalih tokom godina.']
+      ]
+    },
+    pigm: {
+      name: 'Hiperpigmentacije i neujednačen ton',
+      d: 'Fleke od sunca, melazma ili tragovi posle akni. Tretman bez svakodnevne UV zaštite se vraća na početak — SPF nije opcija, već deo protokola.',
+      r: [
+        ['Tretman', 'Tretman hiperpigmentacije', 'Ciljano posvetljivanje i ujednačavanje tona.'],
+        ['Tretman', 'Hemijski piling', 'Postepeno uklanjanje pigmentovanih slojeva.'],
+        ['Dijagnostika', 'FotoFinder mapiranje', 'Razlikovanje bezopasnih fleka od sumnjivih promena.']
+      ]
+    }
+  };
+
+  var idx = 0, score = { dry: 0, oil: 0, comb: 0, sens: 0, age: 0, pigm: 0, check: 0 };
+
+  function progress() {
+    if (bar) bar.style.width = ((idx / Q.length) * 100) + '%';
+    if (num) num.textContent = 'Pitanje ' + Math.min(idx + 1, Q.length) + ' / ' + Q.length;
+  }
+
+  function renderQ() {
+    progress();
+    var q = Q[idx];
+    body.innerHTML =
+      '<div class="quiz-q">' + q.q + '</div><div class="quiz-opts">' +
+      q.a.map(function (a, k) {
+        return '<button type="button" data-o="' + k + '"><span class="qo-i">' + a.i + '</span>' + a.t + '</button>';
+      }).join('') + '</div>';
+
+    $$('button[data-o]', body).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var s = q.a[parseInt(b.getAttribute('data-o'), 10)].s || {};
+        Object.keys(s).forEach(function (k) { score[k] = (score[k] || 0) + s[k]; });
+        idx++;
+        if (idx >= Q.length) renderResult(); else renderQ();
+      });
+    });
+  }
+
+  function renderResult() {
+    if (bar) bar.style.width = '100%';
+    if (num) num.textContent = 'Rezultat';
+
+    var best = 'comb', bv = -1;
+    ['dry', 'oil', 'comb', 'sens', 'age', 'pigm'].forEach(function (k) {
+      if (score[k] > bv) { bv = score[k]; best = k; }
+    });
+    var T = TYPES[best];
+    var checkNote = score.check >= 2
+      ? '<p style="font-size:.88rem;color:var(--ink-2);max-width:52ch;margin:0 auto 24px">Prošlo je dosta vremena od poslednjeg pregleda — preporučujemo <strong>dermoskopiju svih mladeža</strong> uz prvi dolazak, nezavisno od tipa kože.</p>'
+      : '';
+
+    body.innerHTML =
+      '<div class="quiz-result">' +
+        '<div class="qr-type">' + T.name + '</div>' +
+        '<p class="qr-desc">' + T.d + '</p>' +
+        checkNote +
+        '<div class="quiz-recs">' +
+          T.r.map(function (r) {
+            return '<div class="qrc"><span>' + r[0] + '</span><b>' + r[1] + '</b><p>' + r[2] + '</p></div>';
+          }).join('') +
+        '</div>' +
+        '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">' +
+          '<a class="btn" href="#kontakt">Zakaži konsultaciju</a>' +
+          '<button class="btn btn--ghost" type="button" id="quizAgain">Uradi ponovo</button>' +
+        '</div>' +
+      '</div>';
+
+    var again = $('#quizAgain');
+    if (again) again.addEventListener('click', function () {
+      idx = 0; Object.keys(score).forEach(function (k) { score[k] = 0; }); renderQ();
+    });
+  }
+
+  renderQ();
+})();
+
+/* ======================================================================
+   12. SEZONSKI KALENDAR NEGE
+   ====================================================================== */
+(function calendar() {
+  var wrapM = $('#calMonths'); if (!wrapM) return;
+
+  var M = ['Januar','Februar','Mart','April','Maj','Jun','Jul','Avgust','Septembar','Oktobar','Novembar','Decembar'];
+  var D = [
+    { s: 'Zima · najniži UV', t: 'Obnova barijere posle praznika',
+      i: 'Grejanje isušuje vazduh, a temperaturne oscilacije oslabljuju kožnu barijeru. Ovo je najbolji mesec u godini za tretmane koji zahtevaju oporavak bez sunca.',
+      f: ['Hidratacija', 'Hemijski piling', 'Hiperpigmentacije'],
+      l: ['Najniži UV u godini — idealan period za pilinge i laserske tretmane.',
+          'Bogatija hidratantna krema uveče, lakša tokom dana.',
+          'SPF 30 i zimi — sneg reflektuje do 80% UV zračenja.',
+          'Ako se javljaju crvenilo i ljuštenje, proverite da li je u pitanju seboroični dermatitis.'] },
+    { s: 'Zima · nizak UV', t: 'Pilinzi i korekcija pigmentacija',
+      i: 'Koža je i dalje van sezone sunca, pa serije hemijskih pilinga daju najbolji odnos rezultata i rizika od postinflamatorne pigmentacije.',
+      f: ['Hemijski piling', 'Lifting', 'Dermoskopija'],
+      l: ['Idealno vreme za seriju pilinga — potrebno je 3–6 tretmana u razmaku od 2–3 nedelje.',
+          'Godišnja dermoskopija: mart je već blizu, ne odlažite.',
+          'Usne i kapci prvi pokazuju dehidrataciju — ne zaboravite ih.',
+          'Nastavite SPF 30 dnevno, čak i po oblačnom danu.'] },
+    { s: 'Rano proleće · UV raste', t: 'Priprema kože za jače sunce',
+      i: 'UV indeks počinje osetno da raste, ali koža je posle zime najmanje otporna. Ovo je poslednji miran period za agresivnije tretmane.',
+      f: ['Hiperpigmentacije', 'SPF navika', 'Dermoskopija'],
+      l: ['Poslednji mesec za intenzivnije pilinge pre sezone sunca.',
+          'Prebacite se na SPF 50 za lice — UV skače brže nego što se očekuje.',
+          'Zakažite godišnji pregled mladeža pre letnjeg izlaganja.',
+          'Uvedite antioksidans (vitamin C) ujutru, ispod zaštite.'] },
+    { s: 'Proleće · UV umeren–visok', t: 'Prevencija pigmentacija',
+      i: 'Prvi sunčani dani su podmukli — koža je nenaviknuta, a UV već dovoljno jak da izazove fleke koje se posle godinu dana leče.',
+      f: ['SPF 50', 'Hidratacija', 'Epilacija'],
+      l: ['SPF 50 svakog dana, ponavljanje ako ste duže napolju.',
+          'Alergološko testiranje ako se javljaju sezonske reakcije kože.',
+          'Početak sezone laserske epilacije — najbolje pre intenzivnog tamnjenja.',
+          'Šeširi i naočare nisu kozmetika, već zaštita.'] },
+    { s: 'Proleće · UV visok', t: 'Zaštita i lakše teksture',
+      i: 'UV je već na nivou letnjih vrednosti u sredini dana. Koža se prilagođava toplijem vremenu — teške kreme postaju nepotreban teret.',
+      f: ['SPF 50', 'Lakše teksture', 'Kontrola mladeža'],
+      l: ['Prelazak na lakše, gel-teksture hidratacije.',
+          'Izbegavajte direktno sunce između 11 i 16 časova.',
+          'Pratite mladeže po ABCDE pravilu — jednom mesečno.',
+          'Odložite jače pilinge do jeseni.'] },
+    { s: 'Leto · UV visok', t: 'Sezona maksimalne zaštite',
+      i: 'UV indeks dostiže najviše vrednosti u godini. Sve što uradite sada vidi se za pet godina — pozitivno ili negativno.',
+      f: ['SPF 50+', 'Hidratacija', 'Bez pilinga'],
+      l: ['SPF 50+ obavezno, ponavljanje na svaka 2 sata i posle kupanja.',
+          'Nema hemijskih pilinga i lasera na izloženim zonama.',
+          'Pojačan unos tečnosti — dehidratacija se vidi na koži.',
+          'Kod svake nove ili promenjene promene na koži — pregled odmah.'] },
+    { s: 'Leto · UV vrlo visok', t: 'Vrhunac UV — oprez',
+      i: 'Najzahtevniji mesec za kožu. Opekotina u julu nije „prolazna neprijatnost“ — to je oštećenje DNK koje se sabira kroz život.',
+      f: ['SPF 50+', 'Hlad', 'Posle-sunca nega'],
+      l: ['Sredina dana — u hladu, bez izuzetka.',
+          'Posle sunca: umirujuće, nemasne formulacije, bez alkohola.',
+          'Znojenje i sunce pogoršavaju akne — ne prekidajte terapiju sami.',
+          'Pratite UV indeks pre izlaska (vidžet iznad).'] },
+    { s: 'Leto · UV vrlo visok', t: 'Održavanje, bez agresije',
+      i: 'Kraj sezone — koža je najviše izložena i najviše dehidrirana. Pigmentacije nastale sada postaju vidljive tek u septembru.',
+      f: ['SPF 50+', 'Hidratacija', 'Praćenje fleka'],
+      l: ['Nastavite punu zaštitu do kraja meseca.',
+          'Zabeležite (fotografišite) fleke koje su se pojavile — koristiće na pregledu.',
+          'Intenzivna hidratacija uveče, bez kiselina.',
+          'Ako je bilo opekotine — zakažite pregled, ne čekajte.'] },
+    { s: 'Rana jesen · UV pada', t: 'Popravni ispit posle leta',
+      i: 'UV opada i koža konačno može da primi korektivne tretmane. Ovo je mesec u kome se rešava sve što je leto ostavilo.',
+      f: ['Hiperpigmentacije', 'Hemijski piling', 'Dermoskopija'],
+      l: ['Start sezone pilinga i tretmana hiperpigmentacije.',
+          'Obavezna kontrola mladeža posle letnjeg izlaganja.',
+          'Uvođenje retinoida — uz savet dermatologa.',
+          'SPF ostaje u rutini, samo niži faktor.'] },
+    { s: 'Jesen · UV nizak', t: 'Sezona korektivnih tretmana',
+      i: 'Najbolji odnos rezultata i rizika u celoj godini. Koža se oporavlja brzo, a sunce više ne poništava efekat tretmana.',
+      f: ['Hemijski piling', 'Lifting', 'Laserska epilacija'],
+      l: ['Idealno vreme za serije pilinga i laserske tretmane.',
+          'Laserska epilacija najefikasnija kada koža nije potamnela.',
+          'Vratite bogatije teksture kako temperatura pada.',
+          'Planirajte tretmane koji traže više seansi — ima vremena do proleća.'] },
+    { s: 'Jesen · UV nizak', t: 'Obnova posle sezone sunca',
+      i: 'Grejanje počinje da radi, vlažnost vazduha pada. Koža gubi vodu brže nego što je nadoknađuje.',
+      f: ['Hidratacija', 'Barijera', 'Pilinzi'],
+      l: ['Hidratacija postaje prioritet — spolja i iznutra.',
+          'Nastavak serije korektivnih tretmana.',
+          'Ekcemi i atopija se pogoršavaju — reagujte na prve znake.',
+          'Nemojte prekidati SPF, samo smanjite faktor.'] },
+    { s: 'Zima · najniži UV', t: 'Zaštita barijere i planiranje',
+      i: 'Hladnoća, vetar i suv vazduh iz grejanja. Koža lica i šaka najviše trpi, a decembarski stres pogoršava sve inflamatorne dermatoze.',
+      f: ['Hidratacija', 'Barijera', 'Kontrola'],
+      l: ['Bogatije, okluzivnije kreme uveče — posebno za šake.',
+          'Izbegavajte vruće tuširanje: isušuje kožu više nego hladnoća.',
+          'Zakažite godišnju kontrolu ako je niste imali.',
+          'Planirajte veće tretmane za januar–mart, dok je UV najniži.'] }
+  ];
+
+  var now = new Date().getMonth();
+  var sel = now;
+
+  wrapM.innerHTML = M.map(function (m, k) {
+    return '<button type="button" data-m="' + k + '" class="' + (k === now ? 'now ' : '') + (k === sel ? 'on' : '') + '">' + m.slice(0, 3) + '</button>';
+  }).join('');
+
+  function paint(k) {
+    var d = D[k];
+    $('#calSeason').textContent = d.s;
+    $('#calTitle').textContent = M[k] + ' — ' + d.t;
+    $('#calIntro').textContent = d.i;
+    $('#calFocus').innerHTML = d.f.map(function (f) { return '<span>' + f + '</span>'; }).join('');
+    $('#calList').innerHTML = d.l.map(function (x) {
+      return '<li><svg viewBox="0 0 24 24"><use href="#iCheck"/></svg><span>' + x + '</span></li>';
+    }).join('');
+  }
+
+  $$('button[data-m]', wrapM).forEach(function (b) {
+    b.addEventListener('click', function () {
+      sel = parseInt(b.getAttribute('data-m'), 10);
+      $$('button[data-m]', wrapM).forEach(function (x) { x.classList.toggle('on', x === b); });
+      paint(sel);
+    });
+  });
+
+  paint(sel);
+})();
+
+/* ======================================================================
+   14. FORMA (demo — bez backend-a)
+   ====================================================================== */
+(function form() {
+  var f = $('#bookForm'); if (!f) return;
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var note = $('#formNote');
+    // NAPOMENA: f.name bi vratio atribut forme, ne polje -> obavezno preko f.elements
+    var name = f.elements.name.value.trim(), phone = f.elements.phone.value.trim();
+    if (!name || !phone) {
+      note.textContent = 'Molimo unesite ime i broj telefona.';
+      note.style.color = '#B4534A';
+      return;
+    }
+    // DEMO: bez servera. U produkciji -> WP Contact Form 7 / Vercel serverless funkcija.
+    note.innerHTML = '<strong style="color:var(--brand-deep)">Hvala, ' + name.split(' ')[0] +
+      '.</strong> Ovo je demo forma — u produkciji se zahtev šalje na e-mail klinike.';
+    note.style.color = '';
+    f.querySelector('button[type=submit]').textContent = 'Zahtev poslat ✓';
+  });
+})();
+
+/* ======================================================================
+   15. PALETTE SWITCHER — 3 alternativne palete boja, birač u dnu ekrana.
+   Pamti izbor u localStorage (traje i posle zatvaranja pretraživača, važi
+   na svim stranicama). Primenjeno je već i u <head> (inline skripta) da
+   se izbegne bljesak podrazumevane palete pre učitavanja stilova.
+   ====================================================================== */
+(function palette() {
+  var sw = $('#palSwitch'); if (!sw) return;
+  var KEY = 'pp-palette';
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) markOn(saved);
+
+  function markOn(p) {
+    $$('button', sw).forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-p') === p); });
+  }
+  function apply(p) {
+    document.documentElement.setAttribute('data-palette', p);
+    markOn(p);
+    try { localStorage.setItem(KEY, p); } catch (e) {}
+    document.dispatchEvent(new Event('palettechange'));
+  }
+  $$('button', sw).forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.getAttribute('data-p')); });
+  });
+})();
+
+
+/* ======================================================================
+   16. SLIKE — troslojni fallback
+   1) lokalna slika iz assets/img/  (preporuceno za produkciju)
+   2) ako je nema -> data-remote (privremeno, sa starog proderma.rs)
+   3) ako ni to -> sakrij <img>, ostaje gradijent iz CSS-a (nikad slomljena ikona)
+   ====================================================================== */
+(function images() {
+  $$('img[data-fallback]').forEach(function (img) {
+    var tried = 0;
+    img.addEventListener('error', function () {
+      tried++;
+      if (tried === 1 && img.getAttribute('data-remote')) {
+        img.src = img.getAttribute('data-remote');
+      } else {
+        img.style.display = 'none';
+        var p = img.closest('.hero-frame, .about-media, .tm-ph, .hero-bleed, .hero-photo, .sr-media');
+        if (p) p.setAttribute('data-noimg', '');
+      }
+    });
+    // ako je slika vec pukla pre nego sto se JS ucitao
+    if (img.complete && img.naturalWidth === 0) {
+      img.dispatchEvent(new Event('error'));
+    }
+  });
+})();
+
+/* ======================================================================
+   17. GODINA U FOOTERU + SMOOTH ANCHOR OFFSET
+   ====================================================================== */
+(function misc() {
+  var y = $('#yr'); if (y) y.textContent = new Date().getFullYear();
+
+  $$('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (id === '#' || id.length < 2) return;
+      var el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      var top = el.getBoundingClientRect().top + window.scrollY - 84;
+      window.scrollTo({ top: top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+})();
+
+})();

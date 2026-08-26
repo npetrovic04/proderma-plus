@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<script>(function(){/* roze iz loga je sada zvanicna paleta */
+try{var p=localStorage.getItem('pp-palette');}catch(e){}
+document.documentElement.setAttribute('data-palette', p||'rose');})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galerija — PRODERMA PLUS, dermatovenerološka klinika Niš</title>
+<meta name="description" content="Galerija klinike PRODERMA PLUS u Nišu — prostor ordinacije, oprema za digitalnu dermoskopiju i FotoFinder mapiranje, ambijent u kojem primamo pacijente.">
+<meta name="theme-color" content="#7E4A5C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/wow.css">
+</head>
+<body>
+
+<div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<!-- ============ BIRAČ PALETE BOJA ============ -->
+<div class="pal-switch" id="palSwitch">
+  <span class="ps-l">Paleta</span>
+  <button type="button" data-p="aqua" aria-label="Tirkiz paleta"></button>
+  <button type="button" data-p="rose" aria-label="Roze paleta"></button>
+  <button type="button" data-p="lilac" aria-label="Lila paleta"></button>
+</div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <!-- ===== PRODERMA PLUS — logo =====
+       Rekonstrukcija originalnog znaka: dvostruki prsten (spoljni tanki
+       sivi + puna roze elipsa sa belim unutrašnjim prstenom), "PRO" belo
+       unutar znaka, "DERMA" u crnoj nastavlja wordmark, tanki potez
+       ispod. Dodat PLUS badge. -->
+  <g id="logoFull">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="#9B9498" stroke-width="1.6"
+             opacity=".5" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="#fff" stroke-width="1.5" opacity=".85"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="var(--ink)">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand)" stroke-width="1.5"
+          stroke-linecap="round" opacity=".8"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="var(--brand-soft)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="var(--brand-deep)">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== varijanta za tamnu podlogu (futer) ===== -->
+  <g id="logoLight">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="rgba(255,255,255,.3)"
+             stroke-width="1.6" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="#fff">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand-soft)" stroke-width="1.5"
+          stroke-linecap="round"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="rgba(255,255,255,.18)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="#fff">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== ikone ===== -->
+  <g id="iPhone"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iArr"><path d="M4 12h15m-5.5-5.5L19 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iCheck"><path d="m4 12.5 5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iIG"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></g>
+  <g id="iFB"><path d="M14 8.5h2.5V5.2H14c-2.2 0-3.8 1.7-3.8 3.9v1.6H8v3.3h2.2V21h3.3v-7h2.4l.6-3.3h-3V9.1c0-.4.2-.6.5-.6z" fill="currentColor"/></g>
+  <g id="iIn"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 10.5V17M7.5 7.3v.1M11.5 17v-3.6c0-1.4 1-2.4 2.3-2.4s2.2 1 2.2 2.4V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iYT"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10.5 9 5 3-5 3z" fill="currentColor"/></g>
+</defs>
+</svg>
+
+<div class="topbar">
+  <div class="wrap">
+    <span class="tb-claim">Specijalistička dermatovenerološka klinika — Niš · od 2012.</span>
+    <div class="tb-socials">
+      <a href="tel:0631045084">063 1045 084</a>
+      <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+      <a href="https://www.facebook.com/klinikaprodermanis/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header" id="header">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html" aria-label="PRODERMA PLUS — početna">
+        <svg viewBox="0 0 300 92" role="img"><title>PRODERMA PLUS</title><use href="#logoFull"/></svg>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html#usluge">Usluge</a></li>
+        <li><a href="index.html#tehnologija">Tehnologija</a></li>
+        <li><a href="index.html#skin-lab">Skin Lab</a></li>
+        <li><a href="index.html#tim">Tim</a></li>
+        <li><a href="cenovnik.html">Cenovnik</a></li>
+        <li><a href="index.html#kontakt">Kontakt</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <span class="nav-social">
+          <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+          <a href="https://www.facebook.com/klinikaproderma" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+        </span>
+        <a class="btn" href="index.html#kontakt" data-magnetic>Zaka&#382;i pregled <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+        <button class="burger" id="burger" aria-label="Meni" aria-expanded="false"><span></span></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#o-nama">O nama</a>
+  <a href="index.html#usluge">Usluge</a>
+  <a href="index.html#skin-lab">Skin Lab</a>
+  <a href="index.html#tim">Tim</a>
+  <a href="galerija.html">Galerija</a>
+  <a href="cenovnik.html">Cenovnik</a>
+  <a href="index.html#kontakt">Kontakt</a>
+</div>
+
+<main>
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Galerija</span>
+    <h1>Naš prostor</h1>
+    <p class="lead">Klinika se nalazi u Nišu, u ulici Stanka Vlasotinčanina 3/1 — izolovana od gradske
+    gužve i buke, saobraćajno lako pristupna i nadomak centralnog gradskog jezgra.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="gal-grid" data-reveal-group>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img10.jpg" aria-label="Uvećaj: Prostor ordinacije PRODERMA PLUS">
+        <img data-fallback src="assets/img/galerija-01.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img10.jpg" alt="Prostor ordinacije PRODERMA PLUS" loading="eager">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img11.jpg" aria-label="Uvećaj: Detalj enterijera klinike">
+        <img data-fallback src="assets/img/galerija-02.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img11.jpg" alt="Detalj enterijera klinike" loading="eager">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6175.jpg" aria-label="Uvećaj: Sala za preglede">
+        <img data-fallback src="assets/img/galerija-03.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6175.jpg" alt="Sala za preglede" loading="eager">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6180.jpg" aria-label="Uvećaj: Oprema za dermatološku dijagnostiku">
+        <img data-fallback src="assets/img/galerija-04.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6180.jpg" alt="Oprema za dermatološku dijagnostiku" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6181.jpg" aria-label="Uvećaj: Radni prostor klinike">
+        <img data-fallback src="assets/img/galerija-05.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6181.jpg" alt="Radni prostor klinike" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6183.jpg" aria-label="Uvećaj: Kabinet za tretmane">
+        <img data-fallback src="assets/img/galerija-06.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6183.jpg" alt="Kabinet za tretmane" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6186.jpg" aria-label="Uvećaj: FotoFinder — mapiranje mladeža">
+        <img data-fallback src="assets/img/galerija-07.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6186.jpg" alt="FotoFinder — mapiranje mladeža" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6209.jpg" aria-label="Uvećaj: Aparat za dijagnostiku kože">
+        <img data-fallback src="assets/img/galerija-08.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6209.jpg" alt="Aparat za dijagnostiku kože" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/VAK_6219.jpg" aria-label="Uvećaj: Ordinacija PRODERMA PLUS">
+        <img data-fallback src="assets/img/galerija-09.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6219.jpg" alt="Ordinacija PRODERMA PLUS" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img1.jpg" aria-label="Uvećaj: Enterijer klinike">
+        <img data-fallback src="assets/img/galerija-10.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img1.jpg" alt="Enterijer klinike" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img2.jpg" aria-label="Uvećaj: Čekaonica">
+        <img data-fallback src="assets/img/galerija-11.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img2.jpg" alt="Čekaonica" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img3.jpg" aria-label="Uvećaj: Prostor za konsultacije">
+        <img data-fallback src="assets/img/galerija-12.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img3.jpg" alt="Prostor za konsultacije" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img4.jpg" aria-label="Uvećaj: Detalj opreme">
+        <img data-fallback src="assets/img/galerija-13.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img4.jpg" alt="Detalj opreme" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img5.jpg" aria-label="Uvećaj: Sala za intervencije">
+        <img data-fallback src="assets/img/galerija-14.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img5.jpg" alt="Sala za intervencije" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img6.jpg" aria-label="Uvećaj: Ambijent klinike">
+        <img data-fallback src="assets/img/galerija-15.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img6.jpg" alt="Ambijent klinike" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img7.jpg" aria-label="Uvećaj: Prostor ordinacije">
+        <img data-fallback src="assets/img/galerija-16.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img7.jpg" alt="Prostor ordinacije" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img8.jpg" aria-label="Uvećaj: Klinika PRODERMA PLUS">
+        <img data-fallback src="assets/img/galerija-17.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img8.jpg" alt="Klinika PRODERMA PLUS" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+      <button class="gi" type="button" data-full="https://proderma.rs/wp-content/uploads/2022/07/img9.jpg" aria-label="Uvećaj: Detalj enterijera">
+        <img data-fallback src="assets/img/galerija-18.jpg" data-remote="https://proderma.rs/wp-content/uploads/2022/07/img9.jpg" alt="Detalj enterijera" loading="lazy">
+        <span class="gi-zoom" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><use href="#iSearch"/></svg>
+        </span>
+      </button>
+    </div>
+
+    
+  </div>
+</section>
+</main>
+
+<!-- uvećani prikaz -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Uvećana fotografija" hidden>
+  <button class="lb-close" id="lbClose" type="button" aria-label="Zatvori">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="Prethodna">&#8249;</button>
+  <img id="lbImg" alt="">
+  <button class="lb-nav lb-next" id="lbNext" type="button" aria-label="Sledeća">&#8250;</button>
+  <div class="lb-cap"><span id="lbCap"></span><span id="lbNum"></span></div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <svg viewBox="0 0 300 92" role="img"><title>PRODERMA PLUS</title><use href="#logoLight"/></svg>
+        <p>Specijalistička dermatovenerološka klinika u Nišu. Od 2012. — prevencija, lečenje i estetska dermatologija.</p>
+        <div class="foot-social">
+          <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+          <a href="https://www.facebook.com/klinikaprodermanis/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+          <a href="https://www.linkedin.com/in/klinika-proderma-68b57219b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><use href="#iIn"/></svg></a>
+          <a href="https://youtu.be/w5sLHhPMbY8" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><use href="#iYT"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-nav">
+        <h4>Vodič</h4>
+        <ul class="foot-links foot-links--2">
+          <li><a href="index.html#o-nama">O nama</a></li>
+          <li><a href="index.html#usluge">Usluge</a></li>
+          <li><a href="cenovnik.html">Cenovnik</a></li>
+          <li><a href="galerija.html">Galerija</a></li>
+          <li><a href="index.html#skin-lab">Skin Lab</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontakt</h4>
+        <ul class="foot-links">
+          <li><a href="https://maps.google.com/?q=Stanka+Vlasotin%C4%8Danina+3,+Ni%C5%A1" target="_blank" rel="noopener">Stanka Vlasotinčanina 3/1<br>18000 Niš</a></li>
+          <li><a href="tel:0631045084">063 1045 084</a></li>
+          <li><a href="mailto:klinikaproderma@gmail.com">klinikaproderma@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="foot-hours">
+        <h4>Radno vreme</h4>
+        <div><span>Ponedeljak — Petak</span><b>14:00 — 20:00</b></div>
+        <div><span>Subota</span><b>10:00 — 14:00</b></div>
+        <div><span>Nedelja</span><b style="color:rgba(255,255,255,.42)">Ne radimo</b></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr">2026</span> PRODERMA PLUS. Sva prava zadržana.</span>
+      <span>Dermatovenerološka klinika · Niš, Srbija</span>
+    </div>
+  </div>
+</footer>
+
+<a class="call-fab" href="tel:0631045084">
+  <span class="cf-p"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#iPhone"/></svg></span>
+  <span>Pozovite nas</span>
+</a>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/wow.js"></script>
+
+<script>
+/* uvećani prikaz — samo na ovoj strani */
+(function () {
+  'use strict';
+  var box = document.getElementById('lightbox');
+  if (!box) return;
+  var img = document.getElementById('lbImg'),
+      cap = document.getElementById('lbCap'),
+      num = document.getElementById('lbNum'),
+      thumbsHost = document.getElementById('lbThumbs'),
+      items = Array.prototype.slice.call(document.querySelectorAll('.gi')),
+      i = 0, lastFocus = null,
+      reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // traka malih sličica ispod uvećane fotografije — grade se jednom,
+  // klik menja prikaz bez zatvaranja
+  var thumbBtns = items.map(function (btn, n) {
+    var thumb = btn.querySelector('img');
+    var t = document.createElement('button');
+    t.type = 'button';
+    t.setAttribute('aria-label', thumb.alt || ('Slika ' + (n + 1)));
+    var ti = document.createElement('img');
+    ti.src = thumb.currentSrc || thumb.src;
+    ti.alt = '';
+    ti.loading = 'lazy';
+    t.appendChild(ti);
+    t.addEventListener('click', function () { show(n); });
+    if (thumbsHost) thumbsHost.appendChild(t);
+    return t;
+  });
+
+  function show(n) {
+    i = (n + items.length) % items.length;
+    var btn = items[i], src = btn.getAttribute('data-full'), thumb = btn.querySelector('img');
+    // ako daljinska ne stigne, prikaži ono što je već učitano u mreži
+    img.onerror = function () { img.onerror = null; img.src = thumb.currentSrc || thumb.src; };
+    img.src = src;
+    img.alt = thumb.alt;
+    cap.textContent = thumb.alt;
+    num.textContent = (i + 1) + ' / ' + items.length;
+    thumbBtns.forEach(function (t, n) { t.classList.toggle('on', n === i); });
+    var active = thumbBtns[i];
+    if (active && active.scrollIntoView) {
+      active.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+  function open(n) {
+    lastFocus = document.activeElement;
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    show(n);
+    document.getElementById('lbClose').focus();
+  }
+  function close() {
+    box.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  items.forEach(function (b, n) { b.addEventListener('click', function () { open(n); }); });
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbPrev').addEventListener('click', function () { show(i - 1); });
+  document.getElementById('lbNext').addEventListener('click', function () { show(i + 1); });
+  box.addEventListener('click', function (e) { if (e.target === box) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (box.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(i - 1);
+    if (e.key === 'ArrowRight') show(i + 1);
+  });
+})();
+</script>
+</body>
+</html>

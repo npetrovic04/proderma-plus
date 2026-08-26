@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<script>(function(){/* roze iz loga je sada zvanicna paleta */
+try{var p=localStorage.getItem('pp-palette');}catch(e){}
+document.documentElement.setAttribute('data-palette', p||'rose');})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRODERMA PLUS — Specijalistička dermatovenerološka klinika, Niš</title>
+<meta name="description" content="PRODERMA PLUS Niš — od 2012. prevencija, lečenje kožnih oboljenja i estetska dermatologija. Digitalna dermoskopija, FotoFinder mapiranje, laserski i estetski tretmani. Tim na čelu sa prof. dr Ivanom Binić.">
+<meta name="theme-color" content="#7E4A5C">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sr_RS">
+<meta property="og:site_name" content="PRODERMA PLUS">
+<meta property="og:title" content="PRODERMA PLUS — Specijalistička dermatovenerološka klinika, Niš">
+<meta property="og:description" content="Nega kože sa potpisom. Dijagnostika, lečenje i estetska dermatologija u Nišu od 2012.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/wow.css">
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div style="display:grid;place-items:center">
+    <svg class="pl-mark" viewBox="0 0 300 92" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <use href="#logoFull"></use>
+    </svg>
+    <div class="pl-bar"><i></i></div>
+  </div>
+</div>
+
+<!-- ============ POZADINSKI SLOJEVI ============ -->
+<div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<!-- ============ BIRAČ PALETE BOJA ============ -->
+<div class="pal-switch" id="palSwitch">
+  <span class="ps-l">Paleta</span>
+  <button type="button" data-p="aqua" aria-label="Tirkiz paleta"></button>
+  <button type="button" data-p="rose" aria-label="Roze paleta"></button>
+  <button type="button" data-p="lilac" aria-label="Lila paleta"></button>
+</div>
+<!-- ============ SVG SPRITE: LOGO + IKONE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+
+  <!-- ===== PRODERMA PLUS — logo =====
+       Rekonstrukcija originalnog znaka: dvostruki prsten (spoljni tanki
+       sivi + puna roze elipsa sa belim unutrašnjim prstenom), "PRO" belo
+       unutar znaka, "DERMA" u crnoj nastavlja wordmark, tanki potez
+       ispod. Dodat PLUS badge. -->
+  <g id="logoFull">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="#9B9498" stroke-width="1.6"
+             opacity=".5" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="#fff" stroke-width="1.5" opacity=".85"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="var(--ink)">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand)" stroke-width="1.5"
+          stroke-linecap="round" opacity=".8"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="var(--brand-soft)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="var(--brand-deep)">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== varijanta za tamnu podlogu (futer) ===== -->
+  <g id="logoLight">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="rgba(255,255,255,.3)"
+             stroke-width="1.6" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="#fff">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand-soft)" stroke-width="1.5"
+          stroke-linecap="round"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="rgba(255,255,255,.18)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="#fff">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== ikone ===== -->
+  <g id="iPhone"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iMail"><rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m2 7 10 6 10-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iPin"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></g>
+  <g id="iClock"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iCheck"><path d="m4 12.5 5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iShield"><path d="M12 2.5 4 6v6c0 5 3.4 8.6 8 9.5 4.6-.9 8-4.5 8-9.5V6z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m8.8 12 2.2 2.2 4.2-4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g id="iScan"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="7.5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+  <g id="iSun"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iDrop"><path d="M12 2.7S5.5 9.8 5.5 14.3a6.5 6.5 0 0 0 13 0C18.5 9.8 12 2.7 12 2.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+  <g id="iSpark"><path d="M12 2.5 14 9l6.5 2-6.5 2-2 6.5-2-6.5L3.5 11 10 9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></g>
+  <g id="iLaser"><path d="M12 2v7M12 15v7M4.9 6.4l4.3 3.1M14.8 14.5l4.3 3.1M19.1 6.4l-4.3 3.1M9.2 14.5l-4.3 3.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></g>
+  <g id="iCal"><rect x="3" y="5" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g id="iSearch"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iQuote"><path d="M0 30V17.5C0 7.8 5.4 1.6 15.6 0l1.9 4.6c-5.3 1.5-8 4.4-8 8.6h6.1V30H0zm22.5 0V17.5C22.5 7.8 27.9 1.6 38.1 0L40 4.6c-5.3 1.5-8 4.4-8 8.6h6.1V30H22.5z" fill="currentColor"/></g>
+  <g id="iArr"><path d="M4 12h15m-5.5-5.5L19 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iWind"><path d="M3 8.5h10.5a3 3 0 1 0-3-3M3 12.5h15a3 3 0 1 1-3 3M3 16.5h8a2.5 2.5 0 1 1-2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iPollen"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v3.6M12 17.4V21M3 12h3.6M17.4 12H21M5.6 5.6l2.6 2.6M15.8 15.8l2.6 2.6M18.4 5.6l-2.6 2.6M8.2 15.8l-2.6 2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="3" r="1.2" fill="currentColor"/><circle cx="21" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="21" r="1.2" fill="currentColor"/><circle cx="3" cy="12" r="1.2" fill="currentColor"/></g>
+  <g id="iIG"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></g>
+  <g id="iFB"><path d="M14 8.5h2.5V5.2H14c-2.2 0-3.8 1.7-3.8 3.9v1.6H8v3.3h2.2V21h3.3v-7h2.4l.6-3.3h-3V9.1c0-.4.2-.6.5-.6z" fill="currentColor"/></g>
+  <g id="iIn"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 10.5V17M7.5 7.3v.1M11.5 17v-3.6c0-1.4 1-2.4 2.3-2.4s2.2 1 2.2 2.4V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iYT"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10.5 9 5 3-5 3z" fill="currentColor"/></g>
+</defs>
+</svg>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="wrap">
+    <span class="tb-claim">Specijalistička dermatovenerološka klinika — Niš · od 2012.</span>
+    <div class="tb-socials">
+      <a href="tel:0631045084">063 1045 084</a>
+      <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+      <a href="https://www.facebook.com/klinikaprodermanis/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+      <a href="https://www.linkedin.com/in/klinika-proderma-68b57219b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24"><use href="#iIn"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="header">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="/" aria-label="PRODERMA PLUS — početna">
+        <svg viewBox="0 0 300 92" role="img"><title>PRODERMA PLUS</title><use href="#logoFull"/></svg>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#usluge">Usluge</a></li>
+        <li><a href="#tehnologija">Tehnologija</a></li>
+        <li><a href="#skin-lab">Skin Lab</a></li>
+        <li><a href="#tim">Tim</a></li>
+        <li><a href="cenovnik.html">Cenovnik</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <span class="nav-social">
+          <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+          <a href="https://www.facebook.com/klinikaproderma" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+        </span>
+        <a class="btn" href="#kontakt" data-magnetic>Zaka&#382;i pregled <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+        <button class="burger" id="burger" aria-label="Meni" aria-expanded="false"><span></span></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#o-nama">O nama</a>
+  <a href="#usluge">Usluge</a>
+  <a href="#tehnologija">Tehnologija</a>
+  <a href="#skin-lab">Skin Lab</a>
+  <a href="#tim">Tim</a>
+  <a href="galerija.html">Galerija</a>
+  <a href="cenovnik.html">Cenovnik</a>
+  <a href="#kontakt">Kontakt</a>
+  <div class="mm-foot">
+    <p><strong>063 1045 084</strong><br>klinikaproderma@gmail.com<br>Stanka Vlasotinčanina 3/1, Niš</p>
+    <a class="btn" href="tel:0631045084" style="margin-top:14px">Pozovite nas</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+
+  <!-- POZADINA HEROJA -----------------------------------------------------
+       Režim A (podrazumevani): jedna široka fotografija preko celog heroja.
+         -> stavi sliku u assets/img/hero-full.jpg  (vidi FOTO-SPECIFIKACIJA.md)
+       Režim B (rezerva): dve fotografije koje cure preko leve i desne ivice.
+         -> aktivira se sam ako hero-full.jpg ne postoji
+       Ako nema nijedne, ostaje mekani preliv iz CSS-a — nikad prazan hero. -->
+  <div class="hero-photo" aria-hidden="true">
+    <img data-fallback src="assets/img/hero-full.jpg" alt="">
+  </div>
+
+  <div class="hero-bleed hero-bleed--l" aria-hidden="true">
+    <img data-fallback src="assets/img/hero-levo.jpg"
+         data-remote="https://proderma.rs/wp-content/uploads/2022/07/proderma-ord01-res.jpg" alt="">
+  </div>
+  <div class="hero-bleed hero-bleed--r" aria-hidden="true">
+    <img data-fallback src="assets/img/hero-desno.jpg"
+         data-remote="https://proderma.rs/wp-content/uploads/2022/07/VAK_6209.jpg" alt="">
+  </div>
+
+  <div class="wrap hero-inner">
+    <svg class="hero-logo" viewBox="0 0 300 92" role="img" aria-label="PRODERMA PLUS"><use href="#logoFull"/></svg>
+
+    <span class="hero-eyebrow">Specijalisti&#269;ka dermatovenerolo&#353;ka klinika</span>
+
+    <h1 class="hero-h1">
+      <span class="ln"><span data-letters>Dermatologija</span></span>
+      <span class="ln">
+        <span data-letters>koja</span>
+        <span class="rot" id="heroRot" aria-live="off">
+          <em class="rot-w on">postavlja dijagnozu</em>
+          <em class="rot-w">le&#269;i uzrok</em>
+          <em class="rot-w">prati promene</em>
+          <em class="rot-w">daje odgovor</em>
+        </span>
+      </span>
+    </h1>
+
+    <p class="hero-sub">
+      Specijalisti&#269;ka dijagnostika, le&#269;enje ko&#382;nih oboljenja i dermatohirurgija.
+      Tri profesora dermatovenerologije, oprema po svetskim standardima &mdash; od 2012. u Ni&#353;u.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn" href="#kontakt" data-magnetic>Zaka&#382;i pregled <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+      <a class="btn btn--ghost" href="#skin-lab">Proveri svoju ko&#382;u</a>
+    </div>
+  </div>
+
+  <!-- donja traka: brojke + praktični podaci -->
+  <div class="hero-strip">
+    <div class="wrap hero-strip-in">
+      <div class="hs-stats">
+        <div class="hm"><b data-count="2012" data-plain>2012</b><span>Godina osnivanja</span></div>
+        <div class="hm"><b data-count="6">0</b><span>Članova tima</span></div>
+        <div class="hm"><b data-count="3" data-suffix="×">0</b><span>Profesora dermatologije</span></div>
+      </div>
+      <div class="hs-info">
+        <div><span>Lokacija</span><b>Stanka Vlasotinčanina 3/1 &middot; Niš</b></div>
+        <div><span>Radno vreme</span><b>Pon&ndash;Pet 14&ndash;20 &middot; Sub 10&ndash;14</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O NAMA ============ -->
+<section class="section" id="o-nama">
+  <div class="wrap sec-head sec-head--bare" data-reveal>
+    <span class="eyebrow eyebrow--center">O nama</span>
+  </div>
+  <div class="wrap grid about-grid">
+    <div class="about-media" data-reveal>
+      <img data-fallback src="assets/img/ivana-binic.jpg"
+           data-remote="https://proderma.rs/wp-content/uploads/2022/07/ivana-binic-6186.jpg"
+           alt="Prof. dr Ivana Binić — klinika PRODERMA PLUS Niš" loading="lazy">
+    </div>
+
+    <div class="about-copy" data-reveal>
+      <h2>Dobrodošli u <em style="font-style:italic;color:var(--brand-deep)">Prodermu Plus</em></h2>
+      <p class="lead" style="margin-top:18px">
+        Dermatovenerološka klinika PRODERMA PLUS od 2012. godine pruža savete dermatologa i bavi se
+        prevencijom, lečenjem kožnih oboljenja i rešavanjem estetskih problema vaše kože.
+      </p>
+      <p>
+        O kvalitetu naših usluga najbolje govori veliki broj pacijenata koji su nam već ukazali svoje poverenje.
+        Raspolažemo savremenom opremom koja ispunjava najnovije svetske standarde i pružamo usluge koje prate
+        svetske trendove u dijagnostici i rešavanju kožnih problema — dermatološkim intervencijama, estetskim
+        i laserskim tretmanima.
+      </p>
+
+      <div class="about-tabs" role="tablist">
+        <button class="on" data-atab="0" role="tab">Usluge</button>
+        <button data-atab="1" role="tab">Pregledi i saveti</button>
+        <button data-atab="2" role="tab">Ordinacija</button>
+      </div>
+
+      <div class="about-panel on" data-apanel="0">
+        <p>Kompletan spisak naših usluga nalazi se u okviru cenovnika. Ovo su samo neke od usluga koje nudimo:</p>
+        <p><strong>digitalna dermoskopija, FotoFinder mapiranje, alergološko epikutano testiranje, biopsija kože,
+        uklanjanje benignih izraslina radiotalasima, hemijski piling, tretman hidratacije, tretman hiperpigmentacije,
+        elektroepilacija, lipoliza, lifting, laserska epilacija žena i muškaraca…</strong></p>
+      </div>
+      <div class="about-panel" data-apanel="1">
+        <p>Prilikom specijalističkih dermatoveneroloških pregleda možete dobiti sve informacije o promenama na koži,
+        njihovom lečenju, neophodnim intervencijama i estetskim i laserskim tretmanima.</p>
+        <p>U našoj klinici možete zahtevati i <strong>pregled profesora</strong>. Dobrodošli u vašu
+        <strong>PRODERMU PLUS</strong> — kliniku sa potpisom.</p>
+      </div>
+      <div class="about-panel" data-apanel="2">
+        <p>Klinika se nalazi u Nišu, ul. Stanka Vlasotinčanina 3/1 — na idealnom mestu u gradu, izolovana od gradske
+        gužve i buke, saobraćajno lako pristupna i nadomak centralnog gradskog jezgra.</p>
+        <div class="hrs">
+          <div class="hrs-t">Radno vreme</div>
+          <div class="hrs-r" data-day="pon-pet"><span>Ponedeljak &ndash; petak</span><b>14:00 &ndash; 20:00</b></div>
+          <div class="hrs-r" data-day="sub"><span>Subota</span><b>10:00 &ndash; 14:00</b></div>
+          <div class="hrs-r hrs-r--off" data-day="ned"><span>Nedelja</span><b>ne radimo</b></div>
+          <p class="hrs-now" id="hrsNow" hidden><i></i><span></span></p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px">
+        <a class="btn" href="#usluge" data-magnetic>Pogledaj usluge <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+        <a class="btn btn--ghost" href="cenovnik.html">Cenovnik</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CITAT ============ -->
+<section class="section quote-sec">
+  <div class="wrap">
+    <figure class="hw" id="hwQuote">
+      <blockquote class="hw-q">
+        <span class="hw-l">&bdquo;Dermatologija se mnogo promenila i stalno napreduje, a moja želja je</span>
+        <span class="hw-l">da pacijentima pružim najbolji tretman i zato je važno da nega kože,</span>
+        <span class="hw-l">briga o nečijoj koži prati svetske trendove.&ldquo;</span>
+      </blockquote>
+      <figcaption class="hw-cap">
+        <span class="hw-sig">
+          Ivana Binić
+          <svg class="hw-underline" viewBox="0 0 220 20" fill="none" aria-hidden="true">
+            <path d="M4 13 C 40 4, 78 18, 116 9 S 186 3, 216 11"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="hw-role">prof. dr &middot; osnivač klinike PRODERMA PLUS</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ USLUGE ============ -->
+<section class="section" id="usluge">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Usluge</span>
+      <h2>Od dijagnostike do estetskog rezultata</h2>
+      <p class="lead">Za lečenje naših pacijenata, uz stručno znanje, koristimo najsavremenije
+      tehnologije i lasere poslednje generacije.</p>
+    </div>
+
+    <ul class="svc-list" data-reveal-group>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="dijagnostika">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/dijagnostika.png" alt="Dijagnostika kože">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Dijagnostika kože</span>
+            <span class="sr-d">Digitalna dermoskopija, FotoFinder mapiranje mladeža i biopsija kože</span>
+            <span class="sr-tags"><span class="tag">dermoskopija</span><span class="tag">FotoFinder</span><span class="tag">biopsija</span></span>
+          </div>
+        </div>
+      </li>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="pregledi">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/dermatoloski-pregled.png" alt="Dermatološki pregledi">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Dermatološki pregledi</span>
+            <span class="sr-d">Pregled kože, sluzokože, noktiju i kose — uz mogućnost pregleda profesora</span>
+            <span class="sr-tags"><span class="tag">specijalista</span><span class="tag">profesor</span><span class="tag">konsultacije</span></span>
+          </div>
+        </div>
+      </li>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="dijagnostika">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/alergo-test.png" alt="Alergologija">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Alergologija</span>
+            <span class="sr-d">Epikutano testiranje za kontaktni dermatitis i hronične reakcije kože</span>
+            <span class="sr-tags"><span class="tag">epikutani testovi</span><span class="tag">kontaktni dermatitis</span></span>
+          </div>
+        </div>
+      </li>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="intervencije">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/radiotalasi.png" alt="Intervencije radiotalasima">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Intervencije radiotalasima</span>
+            <span class="sr-d">Uklanjanje benignih izraslina precizno i sa minimalnim oporavkom</span>
+            <span class="sr-tags"><span class="tag">fibromi</span><span class="tag">bradavice</span><span class="tag">ksantelazme</span></span>
+          </div>
+        </div>
+      </li>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="estetski">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/estetski.png" alt="Estetski tretmani">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Estetski tretmani</span>
+            <span class="sr-d">Hemijski pilinzi, hidratacija, hiperpigmentacija, lifting i lipoliza</span>
+            <span class="sr-tags"><span class="tag">piling</span><span class="tag">hidratacija</span><span class="tag">lifting</span></span>
+          </div>
+        </div>
+      </li>
+      <li class="svc-row" tabindex="0" role="button" data-price-group="epilacija">
+        <div class="sr-media">
+          <img class="sr-img" data-fallback src="uslugeSlike/laserski.png" alt="Laserska epilacija">
+        </div>
+        <div class="sr-panel">
+          <span class="sr-cta"><span>Pogledaj cenu</span><svg class="sr-arr" viewBox="0 0 24 24" aria-hidden="true"><use href="#iArr"/></svg></span>
+          <div class="sr-body">
+            <span class="sr-t">Laserska epilacija</span>
+            <span class="sr-d">Laserska epilacija za žene i muškarce i elektroepilacija osetljivih zona</span>
+            <span class="sr-tags"><span class="tag">laser</span><span class="tag">elektroepilacija</span><span class="tag">sve zone</span></span>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="svc-cta" data-reveal>
+      <a class="btn" href="cenovnik.html" data-magnetic>Pogledaj sve usluge
+        <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ TRAKA OPREME / TEHNOLOGIJE ============ -->
+<div class="eq" data-velocity aria-label="Oprema i tehnologije koje koristimo">
+  <div class="eq-track">
+    <!-- niz se duplira u JS-u; ovde su oba prolaza radi CSS-only fallback-a -->
+    <span class="eq-i"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>FotoFinder mapiranje</span>
+    <span class="eq-i"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5"/></svg>Digitalna dermoskopija</span>
+    <span class="eq-i"><svg viewBox="0 0 24 24"><path d="M4 20 20 4M14 4h6v6"/></svg>Laser poslednje generacije</span>
+    <span class="eq-i"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Radiotalasna hirurgija</span>
+    <span class="eq-i"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12h6"/></svg>Epikutano testiranje</span>
+    <span class="eq-i"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a7 7 0 0 1 14 0c0 5.4-7 10-7 10z"/></svg>Medicinski pilinzi</span>
+
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>FotoFinder mapiranje</span>
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5"/></svg>Digitalna dermoskopija</span>
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20 20 4M14 4h6v6"/></svg>Laser poslednje generacije</span>
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Radiotalasna hirurgija</span>
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12h6"/></svg>Epikutano testiranje</span>
+    <span class="eq-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-10a7 7 0 0 1 14 0c0 5.4-7 10-7 10z"/></svg>Medicinski pilinzi</span>
+  </div>
+</div>
+
+<!-- ============ PUT PACIJENTA — sticky storytelling ============ -->
+<section class="section jr" id="put">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Kako izgleda</span>
+      <h2>Vaš put kod nas</h2>
+      <p class="lead">Od poziva do kontrole — četiri koraka, bez iznenađenja.
+      Znate unapred šta vas čeka i koliko traje.</p>
+    </div>
+
+    <div class="jr-grid">
+      <!-- levo: vizual koji se pinuje i menja uz korake -->
+      <div class="jr-stage" aria-hidden="true">
+        <img data-jr="1" class="on" src="assets/img/galerija-05.jpg" alt="">
+        <img data-jr="2" src="assets/img/galerija-02.jpg" alt="">
+        <img data-jr="3" src="assets/img/galerija-11.jpg" alt="">
+        <img data-jr="4" src="assets/img/galerija-08.jpg" alt="">
+        <div class="jr-badge">
+          <b data-jr-num>Korak 01</b>
+          <span data-jr-title>Zakazivanje</span>
+        </div>
+      </div>
+
+      <!-- desno: koraci -->
+      <div class="jr-steps">
+
+        <article class="jr-step on" data-jr-step="1">
+          <span class="jr-num">01</span>
+          <h3>Zakazivanje</h3>
+          <p>Pozovete nas ili popunite formu. Javljamo se istog radnog dana i dogovaramo termin
+          koji vam odgovara. Ako niste sigurni koji pregled vam treba — recite nam šta vas muči,
+          mi predlažemo.</p>
+          <div class="jr-meta"><span>telefon ili forma</span><span>odgovor isti dan</span></div>
+          <div class="jr-mob"><img loading="lazy" src="assets/img/galerija-05.jpg" alt="Recepcija klinike PRODERMA PLUS"></div>
+        </article>
+
+        <article class="jr-step" data-jr-step="2">
+          <span class="jr-num">02</span>
+          <h3>Pregled i razgovor</h3>
+          <p>Specijalista pregleda kožu, sluzokožu, nokte i kosu. Pitamo za istoriju, terapije
+          koje ste probali i navike. Ovo je deo za koji izdvajamo najviše vremena — bez njega
+          dijagnostika je pogađanje.</p>
+          <div class="jr-meta"><span>20–30 minuta</span><span>specijalista ili profesor</span></div>
+          <div class="jr-mob"><img loading="lazy" src="assets/img/galerija-02.jpg" alt="Dermatološki pregled"></div>
+        </article>
+
+        <article class="jr-step" data-jr-step="3">
+          <span class="jr-num">03</span>
+          <h3>Dijagnostika</h3>
+          <p>Po potrebi radimo digitalnu dermoskopiju, FotoFinder mapiranje mladeža, epikutano
+          testiranje ili biopsiju. Nalaz dobijate sa objašnjenjem šta znači, a ne samo sa
+          latinskim terminom.</p>
+          <div class="jr-meta"><span>dermoskopija</span><span>FotoFinder</span><span>alergo-testovi</span></div>
+          <div class="jr-mob"><img loading="lazy" src="assets/img/galerija-11.jpg" alt="Digitalna dermoskopija"></div>
+        </article>
+
+        <article class="jr-step" data-jr-step="4">
+          <span class="jr-num">04</span>
+          <h3>Terapija i kontrola</h3>
+          <p>Dobijate plan sa realnim rokovima — koliko seansi, kada se vidi rezultat i šta
+          radite kod kuće. Kontrolni termin zakazujemo odmah, da se plan ne prekine na pola.</p>
+          <div class="jr-meta"><span>pisani plan</span><span>kontrola u terminu</span></div>
+          <div class="jr-mob"><img loading="lazy" src="assets/img/galerija-08.jpg" alt="Kontrolni pregled"></div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEHNOLOGIJA — horizontalni skrol ============ -->
+<section class="tech" id="tehnologija" data-tech>
+  <div class="tech-viewport">
+    <div class="tech-head">
+      <div class="wrap sec-head" style="text-align:center">
+        <span class="eyebrow eyebrow--center">Tehnologija</span>
+        <h2>Oprema kojom radimo</h2>
+      </div>
+    </div>
+
+    <div class="tech-track">
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-11.jpg" alt="FotoFinder sistem za mapiranje mladeža"></div>
+        <div class="tech-body">
+          <span class="tech-k">Dijagnostika</span>
+          <h3>FotoFinder mapiranje</h3>
+          <p>Digitalna mapa celog tela. Svaki mladež dobija svoju fotografiju i koordinatu,
+          pa se na sledećoj kontroli poredi promena — ne po sećanju, nego po slici.</p>
+          <div class="tech-tags"><span>rano otkrivanje</span><span>praćenje kroz godine</span></div>
+        </div>
+      </article>
+
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-03.jpg" alt="Digitalni dermoskop"></div>
+        <div class="tech-body">
+          <span class="tech-k">Dijagnostika</span>
+          <h3>Digitalna dermoskopija</h3>
+          <p>Uvećanje do 70 puta sa polarizovanim svetlom. Vidi se struktura ispod površine
+          kože — pigmentna mreža, krvni sudovi, obrasci koji golim okom ne postoje.</p>
+          <div class="tech-tags"><span>bezbolno</span><span>nalaz odmah</span></div>
+        </div>
+      </article>
+
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-07.jpg" alt="Laser poslednje generacije"></div>
+        <div class="tech-body">
+          <span class="tech-k">Tretmani</span>
+          <h3>Laser poslednje generacije</h3>
+          <p>Epilacija, vaskularne lezije, pigmentacije i resurfacing. Sistem hlađenja
+          drži kožu na sigurnoj temperaturi, pa je oporavak kraći.</p>
+          <div class="tech-tags"><span>sve fototipove</span><span>hlađenje kože</span></div>
+        </div>
+      </article>
+
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-14.jpg" alt="Radiotalasni aparat"></div>
+        <div class="tech-body">
+          <span class="tech-k">Intervencije</span>
+          <h3>Radiotalasna hirurgija</h3>
+          <p>Uklanjanje fibroma, bradavica i ksantelazmi bez šavova. Radiotalas seče i
+          zatvara u istom potezu, pa je krvarenje minimalno a ožiljak tanji nego kod skalpela.</p>
+          <div class="tech-tags"><span>lokalna anestezija</span><span>bez šavova</span></div>
+        </div>
+      </article>
+
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-16.jpg" alt="Epikutano alergološko testiranje"></div>
+        <div class="tech-body">
+          <span class="tech-k">Alergologija</span>
+          <h3>Epikutano testiranje</h3>
+          <p>Standardna evropska serija kontaktnih alergena. Nosite test 48 sati,
+          očitavamo dva puta — i konačno znate na šta vam koža reaguje.</p>
+          <div class="tech-tags"><span>evropska serija</span><span>dva očitavanja</span></div>
+        </div>
+      </article>
+
+      <article class="tech-card">
+        <div class="tech-ph"><img loading="lazy" src="assets/img/galerija-09.jpg" alt="Medicinski hemijski pilinzi"></div>
+        <div class="tech-body">
+          <span class="tech-k">Estetika</span>
+          <h3>Medicinski pilinzi</h3>
+          <p>Koncentracije koje se ne kupuju u apoteci i ne rade u salonu. Protokol se
+          pravi posle pregleda, prema fototipu i indikaciji.</p>
+          <div class="tech-tags"><span>po fototipu</span><span>u seriji</span></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="tech-progress" aria-hidden="true"><i></i></div>
+  </div>
+</section>
+
+<!-- ============ TIM ============ -->
+<section class="section" id="tim">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Tim</span>
+      <h2>Upoznajte naše specijaliste</h2>
+      <p class="lead">Stručnost osoblja na čelu sa prof. dr Ivanom Binić, prof. dr Milenkom Stanojevićem i
+      prof. dr Vesnom Karanikolić postavlja PRODERMU PLUS u red klinika sa najvećim autoritetom iz oblasti
+      dermatovenerologije u Srbiji i regionu.</p>
+    </div>
+
+    <div class="grid team-grid" data-reveal-group>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-ivana-binic.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/Ivana-Binic-01.jpg"
+               alt="Prof. dr Ivana Binić — specijalista dermatovenerolog, PRODERMA PLUS Niš">
+          <span class="tm-init">IB</span>
+        </div>
+        <figcaption>
+          <h3>Prof. dr Ivana Binić</h3>
+          <span>specijalista dermatovenerolog</span>
+          <div class="tm-bio"><div><p>Osnivač klinike i redovni profesor dermatovenerologije. Uža oblast: oboljenja kože, dermoskopija i rano otkrivanje melanoma. Autor radova u domaćim i međunarodnim časopisima.</p><div class="tm-cred"><span>osnivač klinike</span><span>dermoskopija</span><span>melanom</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-milenko-stanojevic.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/milenko-01.jpg"
+               alt="Prof. dr Milenko Stanojević — specijalista dermatovenerolog, PRODERMA PLUS Niš">
+          <span class="tm-init">MS</span>
+        </div>
+        <figcaption>
+          <h3>Prof. dr Milenko Stanojević</h3>
+          <span>specijalista dermatovenerolog</span>
+          <div class="tm-bio"><div><p>Profesor dermatovenerologije sa dugogodišnjim kliničkim iskustvom. Bavi se hroničnim dermatozama, psorijazom i alergijskim reakcijama kože.</p><div class="tm-cred"><span>hronične dermatoze</span><span>psorijaza</span><span>alergologija</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-vesna-karanikolic.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/vesna-01.jpg"
+               alt="Prof. dr Vesna Karanikolić — specijalista dermatovenerolog, PRODERMA PLUS Niš">
+          <span class="tm-init">VK</span>
+        </div>
+        <figcaption>
+          <h3>Prof. dr Vesna Karanikolić</h3>
+          <span>specijalista dermatovenerolog</span>
+          <div class="tm-bio"><div><p>Profesor dermatovenerologije. Fokus na dermatohirurgiji, uklanjanju promena na koži i estetskim procedurama sa medicinskom indikacijom.</p><div class="tm-cred"><span>dermatohirurgija</span><span>estetska dermatologija</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-masa-golubovic.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/Masa-01.jpg"
+               alt="Dr Maša Golubović — specijalista dermatovenerolog, PRODERMA PLUS Niš">
+          <span class="tm-init">MG</span>
+        </div>
+        <figcaption>
+          <h3>Dr Maša Golubović</h3>
+          <span>specijalista dermatovenerolog</span>
+          <div class="tm-bio"><div><p>Specijalista dermatovenerolog. Radi lasersku epilaciju, tretmane hiperpigmentacija i medicinske pilinge. Vodi protokole nege za osetljivu kožu.</p><div class="tm-cred"><span>laser</span><span>pigmentacije</span><span>pilinzi</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-nila-kucer.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/nila-01.jpg"
+               alt="Dr Nila Kućer — lekar na specijalizaciji, PRODERMA PLUS Niš">
+          <span class="tm-init">NK</span>
+        </div>
+        <figcaption>
+          <h3>Dr Nila Kućer</h3>
+          <span>lekar na specijalizaciji</span>
+          <div class="tm-bio"><div><p>Lekar na specijalizaciji dermatovenerologije. Učestvuje u dijagnostici i praćenju pacijenata pod nadzorom specijaliste.</p><div class="tm-cred"><span>specijalizacija</span><span>dijagnostika</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      <figure class="tm">
+        <div class="tm-ph">
+          <img data-fallback loading="lazy" src="assets/img/tim-anita-pavlovic.jpg"
+               data-remote="https://proderma.rs/wp-content/uploads/2022/07/Anita-01.jpg"
+               alt="Anita Pavlović — medicinska sestra — tehničar, PRODERMA PLUS Niš">
+          <span class="tm-init">AP</span>
+        </div>
+        <figcaption>
+          <h3>Anita Pavlović</h3>
+          <span>medicinska sestra — tehničar</span>
+          <div class="tm-bio"><div><p>Medicinska sestra — tehničar. Priprema pacijenta za intervencije, asistira u zahvatima i vodi protokol nege posle tretmana.</p><div class="tm-cred"><span>priprema i asistencija</span><span>nega posle tretmana</span></div></div></div>
+          <span class="tm-more">Pogledaj biografiju <svg viewBox="0 0 24 24"><use href="#iArr"/></svg></span>
+        </figcaption>
+      </figure>
+      
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKIN LAB — VIDŽETI ============ -->
+<section class="section lab" id="skin-lab">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Skin Lab</span>
+      <h2>Vaša koža, u realnom vremenu</h2>
+      <p class="lead">Pet alata koje smo napravili da biste između dva pregleda znali šta vaša koža traži danas —
+      od UV zračenja iznad Niša do samopregleda mladeža.</p>
+    </div>
+
+    <div class="lab-tabs" data-reveal role="tablist">
+      <button class="on" data-lab="uv" role="tab"><svg viewBox="0 0 24 24"><use href="#iSun"/></svg> UV indeks danas</button>
+      <button data-lab="air" role="tab"><svg viewBox="0 0 24 24"><use href="#iPollen"/></svg> Vazduh i polen</button>
+      <button data-lab="quiz" role="tab"><svg viewBox="0 0 24 24"><use href="#iDrop"/></svg> Kakav je vaš tip kože?</button>
+      <button data-lab="abcde" role="tab"><svg viewBox="0 0 24 24"><use href="#iScan"/></svg> ABCDE samopregled</button>
+      <button data-lab="cal" role="tab"><svg viewBox="0 0 24 24"><use href="#iCal"/></svg> Kalendar nege</button>
+    </div>
+
+    <div class="lab-card" data-reveal>
+
+      <!-- ---------- UV VIDŽET ---------- -->
+      <div class="lab-panel on" data-labp="uv">
+        <div class="uv-grid">
+          <div>
+            <div class="uv-gauge">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line)" stroke-width="12"
+                        stroke-dasharray="386 515" stroke-linecap="round" transform="rotate(135 100 100)"/>
+                <circle id="uvArc" cx="100" cy="100" r="82" fill="none" stroke="var(--brand)" stroke-width="12"
+                        stroke-dasharray="0 515" stroke-linecap="round" transform="rotate(135 100 100)"
+                        style="transition:stroke-dasharray 1.2s cubic-bezier(.16,1,.3,1), stroke .6s"/>
+              </svg>
+              <div class="uv-num"><b id="uvVal">–</b><span>UV indeks</span></div>
+            </div>
+            <div style="text-align:center">
+              <span class="uv-level" id="uvLevel">Učitavanje…</span>
+              <div class="uv-loc" id="uvLoc">Niš, Srbija · <button id="uvGeo" type="button">koristi moju lokaciju</button></div>
+            </div>
+          </div>
+
+          <div class="uv-advice">
+            <h3 id="uvHead">Koliko sunca vaša koža podnese danas?</h3>
+            <p class="uv-msg" id="uvMsg">Izaberite svoj fototip kože i dobićete procenu vremena do prvog crvenila,
+            kao i preporučeni SPF za današnje uslove.</p>
+
+            <div class="pheno-label">Fototip kože po Fitzpatricku</div>
+            <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa kože">
+              <button data-t="1" title="I — vrlo svetla koža, uvek izgori, nikad ne potamni">I</button>
+              <button data-t="2" class="on" title="II — svetla koža, obično izgori, slabo potamni">II</button>
+              <button data-t="3" title="III — svetlo-smeđa koža, ponekad izgori, ravnomerno potamni">III</button>
+              <button data-t="4" title="IV — maslinasta koža, retko izgori, lako potamni">IV</button>
+              <button data-t="5" title="V — tamno-smeđa koža, vrlo retko izgori">V</button>
+              <button data-t="6" title="VI — tamna koža, praktično nikad ne izgori">VI</button>
+            </div>
+
+            <div class="uv-out">
+              <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite, na direktnom suncu</i></div>
+              <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i id="uvSpfNote">ponoviti na 2 h</i></div>
+              <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce u tom periodu</i></div>
+            </div>
+
+            <div class="uv-chart">
+              <div class="uc-t">UV kroz dan</div>
+              <div class="uv-bars" id="uvBars"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Procena je informativna i računa se po standardnom modelu minimalne eritemske doze
+          za direktno podnevno sunce, bez zaštite. Stvarno vreme zavisi od nadmorske visine, refleksije (voda, pesak, sneg),
+          lekova koje uzimate i stanja kože. Ne zamenjuje pregled dermatologa.
+          Podaci: Open-Meteo. <a href="#kontakt" style="color:var(--brand-deep);text-decoration:underline">Zakažite dermoskopiju →</a>
+        </div>
+      </div>
+
+      <!-- ---------- VAZDUH I POLEN ---------- -->
+      <div class="lab-panel" data-labp="air">
+        <div class="air-grid">
+          <div>
+            <div class="air-hero" id="airHero">
+              <div class="air-aqi">
+                <span class="ah-l">Kvalitet vazduha</span>
+                <b id="airAqi">–</b>
+                <span class="air-level" id="airAqiLvl">Učitavanje…</span>
+              </div>
+              <div class="air-pm">
+                <div><span>PM2.5</span><b id="airPm25">–</b><i>µg/m³</i></div>
+                <div><span>PM10</span><b id="airPm10">–</b><i>µg/m³</i></div>
+              </div>
+            </div>
+            <p class="air-msg" id="airMsg">Učitavanje podataka o vazduhu za Niš…</p>
+          </div>
+
+          <div>
+            <h3>Alergeni u vazduhu</h3>
+            <p style="margin:8px 0 20px;font-size:.92rem">Koncentracije polena za Niš, u zrncima po kubnom metru.
+            Kod atopijskog dermatitisa, ekcema i kontaktne urtikarije visok polen se često vidi na koži
+            pre nego u nosu.</p>
+            <div class="pollen-list" id="pollenList">
+              <div class="pl-empty">Učitavanje…</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="air-skin" id="airSkin">
+          <div class="as-t">Šta ovo znači za kožu danas</div>
+          <p id="airSkinMsg">—</p>
+          <a class="btn btn--ghost" href="#kontakt">Zakaži alergološko testiranje</a>
+        </div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Podaci su modelovani (CAMS Europe / Open-Meteo) i predstavljaju procenu za
+          širu zonu grada, ne merenje na vašoj adresi. Reakcija kože na alergene je individualna — tačan okidač
+          utvrđuje se <strong>alergološkim epikutanim testiranjem</strong>, ne prema koncentraciji u vazduhu.
+          Ako već primate terapiju, ne menjajte je na osnovu ovih brojeva.
+        </div>
+      </div>
+
+      <!-- ---------- KVIZ ---------- -->
+      <div class="lab-panel" data-labp="quiz">
+        <div class="quiz" id="quiz">
+          <div class="quiz-progress">
+            <span class="qp-n" id="qpN">Pitanje 1 / 6</span>
+            <div class="qp-bar"><i id="qpBar"></i></div>
+          </div>
+          <div id="quizBody"></div>
+        </div>
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Kviz daje orijentacionu procenu tipa kože na osnovu vaših odgovora i ne predstavlja
+          dijagnozu. Za tačnu analizu potrebna je dermatološka procena uživo.
+        </div>
+      </div>
+
+      <!-- ---------- ABCDE ---------- -->
+      <div class="lab-panel" data-labp="abcde">
+        <div style="max-width:62ch;margin-bottom:26px">
+          <h3>ABCDE pravilo — kako da sami pregledate mladež</h3>
+          <p style="margin-top:8px">Jednom mesečno, pri dobrom svetlu, pregledajte kožu celog tela. Ako mladež ispunjava
+          <strong>bilo koji</strong> od pet kriterijuma — ne čekajte. Digitalna dermoskopija i FotoFinder mapiranje
+          daju odgovor za jedan pregled.</p>
+        </div>
+
+        <div class="abcde-grid" data-reveal-group>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <path d="M60 14c14 0 26 10 26 26 0 16-12 30-26 30S34 56 34 40c0-16 12-26 26-26z" fill="var(--brand-tint)"/>
+              <path class="sh-bad" d="M60 16c16 2 24 12 24 26 0 15-11 28-24 28V16z" fill="var(--accent-soft)"/>
+              <path d="M60 12v62" stroke="var(--brand)" stroke-width="1.4" stroke-dasharray="4 4"/>
+            </svg>
+            <div class="ab-l">A</div><div class="ab-w">Asimetrija</div>
+            <p>Jedna polovina mladeža ne odgovara drugoj kada ga zamislite prepolovljenog.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <path class="sh-bad" d="M60 12c10-2 22 6 26 16 5 12-2 18 2 26-5 10-16 16-28 16s-24-6-28-16c-3-8 2-14 0-24 4-12 18-16 28-18z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+            </svg>
+            <div class="ab-l">B</div><div class="ab-w">Border / ivice</div>
+            <p>Ivice su nazubljene, nepravilne ili razlivene, a ne glatke i jasno ograničene.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <ellipse cx="60" cy="42" rx="27" ry="26" fill="var(--brand-tint)"/>
+              <path class="sh-bad" d="M45 26c10-4 18 4 26 2s14 8 10 18-16 6-22 12-18 2-20-10 -2-18 6-22z" fill="var(--accent)" opacity=".55"/>
+              <circle cx="52" cy="52" r="6" fill="var(--brand-deep)" opacity=".5"/>
+            </svg>
+            <div class="ab-l">C</div><div class="ab-w">Color / boja</div>
+            <p>Više nijansi u istom mladežu — smeđa, crna, crvena, bela ili plavičasta polja.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <circle cx="40" cy="42" r="10" fill="var(--brand-tint)"/>
+              <circle class="sh-bad" cx="80" cy="42" r="24" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+              <path d="M56 70h48" stroke="var(--brand)" stroke-width="1.2"/>
+              <text x="80" y="80" text-anchor="middle" font-size="9" fill="var(--ink-3)" font-family="Inter,sans-serif">&gt; 6 mm</text>
+            </svg>
+            <div class="ab-l">D</div><div class="ab-w">Diameter</div>
+            <p>Prečnik veći od 6 mm (otprilike gumica na vrhu olovke) — ili bilo koji rast.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <circle cx="38" cy="42" r="13" fill="var(--brand-tint)"/>
+              <path d="M58 42h14m-4-4 4 4-4 4" stroke="var(--brand)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle class="sh-bad" cx="92" cy="42" r="21" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+            </svg>
+            <div class="ab-l">E</div><div class="ab-w">Evolucija</div>
+            <p>Menja se — raste, menja boju ili oblik, svrbi, krvari ili se ljušti.</p>
+          </div>
+        </div>
+
+        <div class="abcde-note">
+          <p><strong style="color:#fff">Ako prepoznate bilo koji znak</strong> — zakažite dermoskopiju. Rano otkriven
+          melanom ima izuzetno visoku stopu izlečenja, a pregled traje kraće od pauze za kafu.</p>
+          <a class="btn" href="#kontakt" data-magnetic>Zakaži dermoskopiju <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+        </div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> ABCDE je alat za samoprocenu i ne isključuje potrebu za stručnim pregledom.
+          Neki melanomi ne ispunjavaju nijedan od ovih kriterijuma. Kod svake nedoumice — javite se dermatologu.
+        </div>
+      </div>
+
+      <!-- ---------- KALENDAR ---------- -->
+      <div class="lab-panel" data-labp="cal">
+        <div class="cal-grid">
+          <div>
+            <div class="pheno-label">Izaberite mesec</div>
+            <div class="cal-months" id="calMonths"></div>
+            <div style="margin-top:22px;padding:18px;border-radius:var(--r-md);background:rgba(255,255,255,.7);border:1px solid var(--line-2)">
+              <div class="pheno-label" style="margin-bottom:8px">Uslovi sada · Niš</div>
+              <div style="display:flex;gap:22px;flex-wrap:wrap">
+                <div><b style="font-family:var(--ff-display);font-size:1.6rem;color:var(--ink)" id="calTemp">–</b>
+                     <i style="font-style:normal;display:block;font-size:.74rem;color:var(--ink-3)">temperatura</i></div>
+                <div><b style="font-family:var(--ff-display);font-size:1.6rem;color:var(--ink)" id="calHum">–</b>
+                     <i style="font-style:normal;display:block;font-size:.74rem;color:var(--ink-3)">vlažnost vazduha</i></div>
+              </div>
+              <p style="font-size:.82rem;margin-top:12px;margin-bottom:0" id="calHumMsg">—</p>
+            </div>
+          </div>
+
+          <div class="cal-body">
+            <div class="cal-season" id="calSeason">—</div>
+            <h3 id="calTitle">—</h3>
+            <p id="calIntro" style="margin-top:10px"></p>
+            <div class="cal-focus" id="calFocus"></div>
+            <ul class="cal-list" id="calList"></ul>
+            <a class="btn btn--ghost" href="#usluge" style="margin-top:22px">Tretmani za ovaj period</a>
+          </div>
+        </div>
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Sezonske preporuke su opšte smernice. Plan nege se pravi individualno — nakon pregleda
+          i procene stanja vaše kože.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ UTISCI ============ -->
+<section class="section section--tight" id="utisci">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Utisci</span>
+      <h2>Šta pacijenti kažu o nama</h2>
+      <div style="display:flex;justify-content:center;margin-top:20px">
+        <a class="g-badge" href="https://www.google.com/maps?q=Proderma+Plus+Ni%C5%A1" target="_blank" rel="noopener" aria-label="Ocene na Google mapama">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.6 12.2c0-.8-.1-1.4-.2-2H12v3.8h6c-.1 1-.8 2.5-2.2 3.5l3.4 2.6c2-1.8 3.4-4.6 3.4-7.9z"/>
+            <path fill="#34A853" d="M12 23c2.9 0 5.4-1 7.2-2.6l-3.4-2.6c-.9.6-2.2 1.1-3.8 1.1-2.9 0-5.4-1.9-6.3-4.6l-3.5 2.7C4 20.4 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.7 14.3c-.2-.7-.4-1.4-.4-2.3s.1-1.6.4-2.3L2.2 7C1.4 8.5 1 10.2 1 12s.4 3.5 1.2 5l3.5-2.7z"/>
+            <path fill="#EA4335" d="M12 4.8c2 0 3.4.9 4.2 1.6l3-3C17.4 1.7 14.9.7 12 .7 7.7.7 4 3.3 2.2 7l3.5 2.7C6.6 6.9 9.1 4.8 12 4.8z"/>
+          </svg>
+          <b>4.9</b>
+          <span class="gb-s">★★★★★</span>
+          <span>Google ocene pacijenata</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="rs">
+      <article class="rs-card" style="--stick:110px">
+        <div class="rs-head">
+          <span class="rs-av"><img loading="lazy" src="assets/img/utisak-jelica.jpg" alt=""></span>
+          <span class="rs-name"><b>Jelica Ivanović</b><em>pacijent · dermatološki pregled</em></span>
+          <span class="rs-stars">★★★★★</span>
+        </div>
+        <p>Divan ambijent, opuštena atmosfera, velika stručnost celokupnog tima. Vidimo se ponovo!</p>
+      </article>
+
+      <article class="rs-card" style="--stick:124px">
+        <div class="rs-head">
+          <span class="rs-av"><img loading="lazy" src="assets/img/utisak-milan.jpg" alt=""></span>
+          <span class="rs-name"><b>Milan Milić</b><em>pacijent · uklanjanje izraslina</em></span>
+          <span class="rs-stars">★★★★★</span>
+        </div>
+        <p>Jako sam zadovoljan uslugom. Osoblje je ljubazno, profesionalnost je na najvišem nivou. Sve pohvale.</p>
+      </article>
+
+      <article class="rs-card" style="--stick:138px">
+        <div class="rs-head">
+          <span class="rs-av">AS</span>
+          <span class="rs-name"><b>Ana Stanković</b><em>pacijent · dermoskopija</em></span>
+          <span class="rs-stars">★★★★★</span>
+        </div>
+        <p>Otišla sam zbog jednog mladeža, a dobila kompletnu mapu kože i objašnjenje šta da pratim.
+        Prvi put da mi neko odvoji toliko vremena i sve strpljivo objasni.</p>
+      </article>
+
+      <article class="rs-card" style="--stick:152px">
+        <div class="rs-head">
+          <span class="rs-av">NP</span>
+          <span class="rs-name"><b>Nevena Petrović</b><em>pacijent · estetski tretmani</em></span>
+          <span class="rs-stars">★★★★★</span>
+        </div>
+        <p>Godinama sam se mučila sa pigmentacijama posle trudnoće. Dobila sam realan plan,
+        bez obećavanja čuda — i rezultat koji se vidi posle treće seanse.</p>
+      </article>
+
+      <article class="rs-card" style="--stick:166px">
+        <div class="rs-head">
+          <span class="rs-av">DJ</span>
+          <span class="rs-name"><b>Dušan Jovanović</b><em>pacijent · alergološko testiranje</em></span>
+          <span class="rs-stars">★★★★★</span>
+        </div>
+        <p>Dve godine nisam znao na šta reagujem. Epikutani test je dao odgovor iz prve.
+        Klinika je čista, tačna sa terminima i sve deluje ozbiljno.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KONTAKT ============ -->
+<section class="section" id="kontakt">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Kontakt</span>
+      <h2>Gde se nalazimo</h2>
+    </div>
+
+    <div class="grid contact-grid">
+      <div class="contact-left" data-reveal>
+        <div class="cinfo">
+          <a class="ci" href="https://maps.google.com/?q=Stanka+Vlasotin%C4%8Danina+3,+Ni%C5%A1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><use href="#iPin"/></svg>
+            <div><span>Adresa</span><b>Stanka Vlasotinčanina 3, stan 1 — Niš</b></div>
+          </a>
+          <a class="ci" href="tel:0631045084">
+            <svg viewBox="0 0 24 24"><use href="#iPhone"/></svg>
+            <div><span>Telefon</span><b>063 1045 084</b></div>
+          </a>
+          <a class="ci" href="mailto:klinikaproderma@gmail.com">
+            <svg viewBox="0 0 24 24"><use href="#iMail"/></svg>
+            <div><span>E-mail</span><b>klinikaproderma@gmail.com</b></div>
+          </a>
+          <div class="ci">
+            <svg viewBox="0 0 24 24"><use href="#iClock"/></svg>
+            <div><span>Radno vreme</span><b>Pon–Pet 14:00–20:00 · Subota 10:00–14:00</b></div>
+          </div>
+        </div>
+
+        <div class="map-frame">
+          <iframe title="Lokacija klinike PRODERMA PLUS na mapi" loading="lazy" allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Stanka%20Vlasotin%C4%8Danina%203,%20Ni%C5%A1&output=embed"></iframe>
+        </div>
+      </div>
+
+      <div class="form-card" data-reveal>
+        <h3 style="margin-bottom:4px">Zakažite termin</h3>
+        <p style="font-size:.86rem;margin-bottom:14px">Popunite formu i javljamo vam se radi potvrde termina.</p>
+
+        <form id="bookForm" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="field"><label for="f-name">Ime i prezime</label><input id="f-name" name="name" type="text" required autocomplete="name"></div>
+            <div class="field"><label for="f-phone">Telefon</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel"></div>
+          </div>
+          <div class="field"><label for="f-mail">E-mail</label><input id="f-mail" name="email" type="email" autocomplete="email"></div>
+          <div class="field">
+            <label for="f-svc">Usluga</label>
+            <select id="f-svc" name="service">
+              <option>Specijalistički dermatološki pregled</option>
+              <option>Pregled profesora</option>
+              <option>Digitalna dermoskopija / FotoFinder</option>
+              <option>Alergološko epikutano testiranje</option>
+              <option>Uklanjanje izraslina radiotalasima</option>
+              <option>Hemijski piling / estetski tretman</option>
+              <option>Laserska epilacija</option>
+              <option>Nisam siguran/na — treba mi savet</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-msg">Poruka</label><textarea id="f-msg" name="message" placeholder="Ukratko opišite razlog dolaska…"></textarea></div>
+          <button class="btn" type="submit" style="width:100%" data-magnetic>Pošalji zahtev <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></button>
+          <p class="form-note" id="formNote">Slanjem forme pristajete da vas kontaktiramo radi zakazivanja termina.
+          Vaši podaci se ne koriste u druge svrhe.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <svg viewBox="0 0 300 92" role="img"><title>PRODERMA PLUS</title><use href="#logoLight"/></svg>
+        <p>Specijalistička dermatovenerološka klinika u Nišu. Od 2012. — prevencija, lečenje i estetska dermatologija.</p>
+        <div class="foot-social">
+          <a href="https://www.instagram.com/klinikaproderma/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><use href="#iIG"/></svg></a>
+          <a href="https://www.facebook.com/klinikaprodermanis/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><use href="#iFB"/></svg></a>
+          <a href="https://www.linkedin.com/in/klinika-proderma-68b57219b/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><use href="#iIn"/></svg></a>
+          <a href="https://youtu.be/w5sLHhPMbY8" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><use href="#iYT"/></svg></a>
+        </div>
+      </div>
+
+      <div class="foot-nav">
+        <h4>Vodič</h4>
+        <ul class="foot-links foot-links--2">
+          <li><a href="#o-nama">O nama</a></li>
+          <li><a href="#usluge">Usluge</a></li>
+          <li><a href="cenovnik.html">Cenovnik</a></li>
+          <li><a href="galerija.html">Galerija</a></li>
+          <li><a href="#skin-lab">Skin Lab</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <div class = "foot-contact">
+        <h4>Kontakt</h4>
+        <ul class="foot-links">
+          <li><a href="https://maps.google.com/?q=Stanka+Vlasotin%C4%8Danina+3,+Ni%C5%A1" target="_blank" rel="noopener">Stanka Vlasotinčanina 3/1<br>18000 Niš</a></li>
+          <li><a href="tel:0631045084">063 1045 084</a></li>
+          <li><a href="mailto:klinikaproderma@gmail.com">klinikaproderma@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-hours">
+        <h4>Radno vreme</h4>
+        <div><span>Ponedeljak &mdash; Petak</span><b>14:00 &mdash; 20:00</b></div>
+        <div><span>Subota</span><b>10:00 &mdash; 14:00</b></div>
+        <div><span>Nedelja</span><b style="color:rgba(255,255,255,.42)">Ne radimo</b></div>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© <span id="yr">2026</span> PRODERMA PLUS. Sva prava zadržana.</span>
+      <span>Dermatovenerološka klinika · Niš, Srbija</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PLUTAJUĆI ELEMENTI ============ -->
+<!-- ============ BOČNI RAIL — prati skrol ============ -->
+<aside class="rail" id="rail" aria-label="Uslovi za kožu u realnom vremenu">
+  <a class="rail-card" href="#skin-lab" data-rc="uv">
+    <span class="rc-ring" id="railUvRing"><b id="railUvVal">–</b></span>
+    <span class="rc-txt">
+      <span class="rc-t">UV indeks · Niš</span>
+      <span class="rc-v" id="railUvLvl">učitavanje…</span>
+      <span class="rc-d" id="railUvMsg">Otvori Skin Lab za procenu po tipu kože</span>
+    </span>
+  </a>
+
+  <a class="rail-card" href="#skin-lab" data-rc="air">
+    <span class="rc-ring" id="railAirRing"><b id="railAirVal">–</b></span>
+    <span class="rc-txt">
+      <span class="rc-t">Vazduh i polen · Niš</span>
+      <span class="rc-v" id="railAirLvl">učitavanje…</span>
+      <span class="rc-d" id="railAirMsg">Kvalitet vazduha i koncentracija alergena</span>
+    </span>
+  </a>
+</aside>
+
+<a class="call-fab" href="tel:0631045084">
+  <span class="cf-p"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#iPhone"/></svg></span>
+  <span>Pozovite nas</span>
+</a>
+
+
+<!-- ============ STICKY CTA (mobilni) ============ -->
+<div class="mcta" aria-label="Brzi kontakt">
+  <a class="m-call" href="tel:0631045084">
+    <svg viewBox="0 0 24 24"><use href="#iPhone"/></svg>Pozovi
+  </a>
+  <a class="m-book" href="#kontakt">
+    <svg viewBox="0 0 24 24"><use href="#iArr"/></svg>Zakaži pregled
+  </a>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/wow.js"></script>
+</body>
+</html>
