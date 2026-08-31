@@ -158,11 +158,19 @@ Ovo je razlog zašto sajt nije rađen u Next.js-u. Koraci:
 
 ---
 
-## WOW sloj — dodato u drugoj rundi
+## WOW sloj — dodato u drugoj rundi, spojeno u trećoj
 
-Novi fajlovi: `assets/css/wow.css` (~280 linija) i `assets/js/wow.js` (~560 linija).
-Uključeni su u sve tri stranice **posle** osnovnih fajlova, pa se osnovni build ne dira.
-Da se ceo sloj isključi: obrisati po jedan `<link>` i jedan `<script>` red — sajt se vraća u prethodno stanje.
+Efekti su originalno stigli u posebnim fajlovima: `assets/css/wow.css` (~280 linija) i
+`assets/js/wow.js` (~560 linija), učitani u sve tri stranice **posle** osnovnih fajlova.
+Ta dva fajla su od tada **spojena** u `assets/css/style.css` i `assets/js/app.js` (razdelnik
+"WOW SLOJ — spojeno iz wow.css/wow.js" obeležava gde počinje taj deo u svakom fajlu) — sada
+postoji samo jedan CSS i jedan JS fajl na sajtu. Da se ceo sloj isključi, više nije dovoljno
+obrisati jedan red; treba ručno ukloniti odgovarajući blok označen tim razdelnikom.
+
+Usput je uklonjen i **FlowingMenu** (slika koja prati kursor u sekciji Usluge, opisan ispod) —
+sukobljavao se sa novijim dizajnom kartica (dupli, međusobno suprotstavljeni CSS za `.svc-row`)
+i pravio vizuelni bag: kursor-prateća kopija slike koja iskače van kartice. Kartice Usluga sada
+imaju samo jedan, aktivni hover-dizajn (širenje opisa + dugme "Pogledaj cenu").
 
 ### Efekti (logika portovana sa reactbits.dev u vanilla JS)
 
@@ -171,7 +179,6 @@ Da se ceo sloj isključi: obrisati po jedan `<link>` i jedan `<script>` red — 
 | **Aurora** | pozadina celog sajta | WebGL shader, 4-oktavni simpleks fbm. Boje čita iz `--glow-a/b/c`, prati promenu palete kroz `MutationObserver`. Ako nema WebGL-a, canvas se ukloni i ostaje postojeći mesh. |
 | **Inercijalni skrol** | globalno | `lenis` logika u 40 linija. Gasi `scroll-behavior:smooth` (tukli su se) i preuzima kotve kroz isti tween. Samo miš — touch ostaje nativan. |
 | **Page transition** | između stranica | Zavesa gore/dole, `sessionStorage` pamti da je prelaz u toku. Deluje kao SPA. |
-| **FlowingMenu** | sekcija Usluge | Slika usluge prati kursor, ostali redovi se prigušuju. Gasi se na `pointer:coarse`. |
 | **TiltedCard + Glare** | kartice tima | 3D nagib + sjaj koji prati kursor. |
 | **ClickSpark** | globalno | 9 varnica na klik mišem. |
 | **StarBorder** | primarna dugmad | Konusni gradijent u rotaciji preko `@property --sb-a`, sa `@supports` fallback-om. |
@@ -240,7 +247,7 @@ nigde — hero ne može da ostane prazan ako padne net na prezentaciji.
 - Aurora je `position:fixed` sa `z-index:-3` — ispod svega, iznad body pozadine.
   Ako se u WordPress temi doda element sa negativnim z-index-om, proveriti redosled.
 - WebGL na starijim Intel integrisanim GPU-ovima ume da troši bateriju. Ako se to pokaže
-  kao problem, `#aurora` se gasi jednim redom u `wow.js`.
+  kao problem, `#aurora` se gasi jednim redom u `app.js` (WOW deo, sekcija Aurora).
 
 ### Pokretanje na Macu
 
