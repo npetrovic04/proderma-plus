@@ -3156,6 +3156,8 @@ body::before {
 .hero h1 .rot-w{width:100%; text-align:center}
 
 /* najduža varijanta ("postavlja dijagnozu") je kroz min-content diktirala
-   širinu .rot bez obzira na zadatu width -> ćelija mora da sme da se skupi */
+   širinu .rot bez obzira na zadatu width -> ćelija mora da sme da se skupi.
+   padding-bottom na .rot-w ostavlja mesta za repove slova (g, j, p, q, y) —
+   bez njega ih .rot-w svojim overflow:hidden odseca odozdo. */
 .hero h1 .ln > span.rot{overflow:hidden; padding-bottom:.14em}
-.hero h1 .rot-w{min-width:0 !important; overflow:hidden}
+.hero h1 .rot-w{min-width:0 !important; overflow:hidden; padding-bottom:.22em}
