@@ -2629,9 +2629,11 @@ body::before {
 .rs-av img{width:100%;height:100%;object-fit:cover}
 .rs-name b{display:block; font-size:.95rem; color:var(--ink,#3B2A30)}
 .rs-name em{font-style:normal; font-size:.76rem; color:var(--ink-3,#9C8A90)}
-.rs-stars{margin-left:auto; color:var(--accent); letter-spacing:.12em; font-size:.95rem}
-.rs-card p{font-size:1.02rem; line-height:1.68; color:var(--ink-2,#6C5A60)}
-.rs-card p::before{content:'“'; font-family:var(--f-display,serif); font-size:2.4rem;
+.rs-stars{margin-left:auto; color:var(--accent); letter-spacing:.12em; font-size:.99rem}
+.rs-card p{font-size:1.02rem; font-style: italic; line-height:1.68; color:var(--ink-2,#6C5A60);}
+.rs-card p::before{content:'"'; font-family:var(--f-display,serif); font-size:2.4rem;
+  color:var(--brand-soft); line-height:0; margin-right:6px; vertical-align:-.18em}
+.rs-card p::after{content:'"'; font-family:var(--f-display,serif); font-size:2.4rem;
   color:var(--brand-soft); line-height:0; margin-right:6px; vertical-align:-.18em}
 
 /* Google badge */
