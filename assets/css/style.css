@@ -136,6 +136,8 @@ html {
   /* header je fixed — bez ovoga sidra iz menija završe ispod njega */
   scroll-padding-top: calc(var(--nav-h) + 24px);
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden; /* bez ovoga se overflow-x sa body-ja "prebacuje" na html (CSS overflow propagation) i mobilni safari/chrome i dalje dozvoljavaju horizontalni swipe iako body ima overflow-x:hidden */
+  width: 100%;
 }
 
 body {
@@ -146,6 +148,7 @@ body {
   color: var(--ink-2);
   background: transparent; /* preliv živi u body::before, ispod svega */
   overflow-x: hidden;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -533,24 +536,98 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: 950;
-  background: var(--paper);
-  padding: calc(var(--nav-h) + 40px) var(--pad) 40px;
+  background:
+    radial-gradient(120% 55% at 12% -8%, color-mix(in srgb, var(--glow-a) 32%, transparent) 0%, transparent 58%),
+    radial-gradient(95% 46% at 108% 10%, color-mix(in srgb, var(--glow-b) 28%, transparent) 0%, transparent 60%),
+    var(--paper);
+  padding: 0 0 26px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
   transform: translateY(-100%);
   transition: transform .6s var(--ease-out);
   overflow-y: auto;
 }
 .mobile-menu.open { transform: translateY(0); }
-.mobile-menu a {
-  font-family: var(--ff-display);
-  font-size: var(--fs-1);
-  color: var(--ink);
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line-2);
+
+/* Traka na vrhu menija: brend + dugme za zatvaranje, prikačena (sticky) da
+   ostane vidljiva i kad se lista linkova skroluje. Bez ovoga je gornji
+   deo menija bio prazan — i, gore od toga, dok je meni otvoren on svojim
+   z-indexom (950) potpuno prekriva pravi .burger (900), pa se meni tada
+   NIJE mogao zatvoriti tim dugmetom, samo klikom na neki link. */
+.mm-top {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) var(--pad) 14px;
+  background: var(--paper);
 }
-.mobile-menu .mm-foot { margin-top: auto; padding-top: 32px; font-size: var(--fs-3); }
+.mm-links { padding: clamp(10px, 3vh, 22px) var(--pad) 0; display: flex; flex-direction: column; }
+.mm-top .brand svg { height: 34px; width: auto; }
+.mm-close {
+  width: 44px; height: 44px; flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.7);
+  position: relative;
+}
+.mm-close::before, .mm-close::after {
+  content: ""; position: absolute; left: 13px; top: 21px;
+  width: 18px; height: 1.5px; background: var(--ink);
+}
+.mm-close::before { transform: rotate(45deg); }
+.mm-close::after { transform: rotate(-45deg); }
+.mm-close:active { background: var(--brand-tint); }
+
+/* stavke menija */
+.mm-links > a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--ff-display);
+  font-size: clamp(1.22rem, 5.2vw, 1.7rem);
+  color: var(--ink);
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--line-2);
+  transition: color .3s, padding-left .35s var(--ease-out);
+}
+.mm-links > a::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px; height: 8px;
+  margin-left: auto;
+  border-right: 1.5px solid var(--ink-3);
+  border-bottom: 1.5px solid var(--ink-3);
+  transform: rotate(-45deg);
+  opacity: .5;
+  transition: transform .35s var(--ease-out), opacity .3s;
+}
+.mm-links > a:active { color: var(--brand-deep); padding-left: 8px; }
+.mm-links > a:active::after { transform: rotate(-45deg) translate(2px, -2px); opacity: 1; }
+
+.mobile-menu .mm-foot { margin-top: auto; padding: 22px var(--pad) 0; }
+.mobile-menu .mm-foot .mm-contact {
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  font-size: var(--fs-3);
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.mobile-menu .mm-foot .mm-contact strong { font-size: 1rem; color: var(--ink); }
+/* .mm-foot .btn mora da nadjača opšte .mobile-menu a stilove iznad
+   (font, padding, border-bottom) — bez ove specifičnije klase dugme
+   nasleđuje veliki serif font i padding:12px 0, pa tekst seče ivice. */
+.mobile-menu .mm-foot a.btn {
+  display: flex;
+  width: 100%;
+  margin-top: 14px;
+  padding: 17px 24px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-2);
+  font-weight: 500;
+  letter-spacing: .03em;
+  color: #fff;
+  border-bottom: 0;
+}
 
 /* ---------- 9. HERO — centriran editorial, foto preko ivica, latice ----- */
 
@@ -864,6 +941,15 @@ body::before {
   .hero-strip-in { flex-direction: column; align-items: flex-start; }
   .hs-info { display: none; }
   .hs-stats { padding-bottom: 42px; }
+  /* Na uskim telefonima 3 kolone (2012 / Članova tima / Profesora
+     dermatologije) sa nowrap oznakama ne staju u red — treća se nemo
+     seče na desnoj ivici jer je html/body overflow-x:hidden sakriva bez
+     mogućnosti skrola do nje. Etikete smeju da pređu u 2 reda, razmak
+     i brojka se stežu. */
+  .hs-stats { gap: clamp(10px, 4vw, 20px); }
+  .hs-stats .hm { flex: 1 1 0; min-width: 0; }
+  .hs-stats .hm b { font-size: 19px; }
+  .hs-stats .hm span { white-space: normal; line-height: 1.25; }
 }
 
 /* hero vizual — slojevita kartica sa slajderom */
@@ -1008,6 +1094,34 @@ body::before {
 .lab-tabs button svg { width: 16px; height: 16px; }
 .lab-tabs button:hover { border-color: var(--brand-soft); color: var(--ink); }
 .lab-tabs button.on { background: var(--brand-deep); color: #fff; border-color: var(--brand-deep); box-shadow: var(--shadow-md); }
+
+/* Na mobilnom svaka etiketa ("Kakav je vaš tip kože?"...) je preširoka da
+   stane dve u red, pa flex-wrap slaže 5 punih pilula jednu ispod druge —
+   deluje sirovo, kao gola lista dugmadi. Umesto toga: kompaktna
+   horizontalna traka sa skrolom, isti obrazac kao .tech-track/.eq-track
+   na ostatku sajta, sa manjim pilulama i sažetijim tekstom. */
+@media (max-width: 640px) {
+  .lab-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 9px;
+    margin-inline: calc(var(--pad) * -1);
+    padding-inline: var(--pad);
+    padding-bottom: 4px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none; scrollbar-width: none;
+  }
+  .lab-tabs::-webkit-scrollbar { display: none; }
+  .lab-tabs button {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 10px 16px;
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+}
 
 .lab-card {
   background: rgba(255,255,255,.72);
@@ -1255,8 +1369,9 @@ body::before {
   filter: blur(4px);
 }
 
-/* ---- Tekstualni panel — preko cele fotografije, blago zamućenje stalno
-   prisutno (kao ranije), tekst prilepljen za dno preko flex rasporeda ---- */
+/* ---- Tekstualni panel — preko cele fotografije. Van hovera bez ikakvog
+   zamućenja/pozadine (slika potpuno čista), tekst prilepljen za dno preko
+   flex rasporeda; na hover se pojavljuje staklena pozadina. ---- */
 .sr-panel {
   position: absolute;
   inset: 0;
@@ -1264,9 +1379,9 @@ body::before {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: color-mix(in srgb, var(--ivory) 3%, transparent);
-  backdrop-filter: blur(1.5px) saturate(1.2);
-  -webkit-backdrop-filter: blur(1.5px) saturate(1.2);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   transition: background .5s var(--ease), backdrop-filter .5s var(--ease);
 }
 .svc-row:hover .sr-panel, .svc-row:focus-within .sr-panel {
@@ -2683,7 +2798,15 @@ body::before {
 .mcta .m-call{background:var(--surface,#fff); color:var(--brand-deep); border:1px solid var(--line,#E7DCD6)}
 .mcta .m-book{background:var(--brand-deep); color:#fff}
 .mcta svg{width:18px;height:18px;fill:currentColor}
-@media (max-width:760px){ .mcta{display:flex} }
+@media (max-width:760px){
+  .mcta{display:flex}
+  /* .call-fab i .pal-switch su fiksni u istim uglovima (bottom-left/bottom-right)
+     u kojima sada živi .mcta traka — bez ovoga se poziv-dugme i switcher paleta
+     trajno preklapaju sa "Pozovi"/"Zakaži pregled" dugmadima na mobilnom.
+     .mcta već pokriva poziv, pa .call-fab postaje suvišan čim se pojavi. */
+  body:has(.mcta) .call-fab{display:none !important}
+  body:has(.mcta) .pal-switch{display:none !important}
+}
 
 /* ---------- 10. KURSOR SA KONTEKSTOM ------------------------------------ */
 .cursor-dot.has-label{
@@ -3163,3 +3286,519 @@ body::before {
    bez njega ih .rot-w svojim overflow:hidden odseca odozdo. */
 .hero h1 .ln > span.rot{overflow:hidden; padding-bottom:.14em}
 .hero h1 .rot-w{min-width:0 !important; overflow:hidden; padding-bottom:.22em}
+
+/* ---------- 5. H1 na uskim telefonima: red 2 ume da "iscuri" van ekrana ----
+   Red 2 ("koja " + rotirajuća reč) je white-space:nowrap — potrebno mu je
+   da najduža varijanta ("postavlja dijagnozu") stane u jedan red. Na
+   telefonima donja granica fonta (2.3rem) je preširoka za tu reč, pa se
+   .ln (koji ima overflow:hidden, centriran) odseca podjednako sa obe
+   strane — vidljiv je samo srednji deo teksta, prva i poslednja slova
+   nestaju van ekrana. Ispravka: dodatni, uži font-size opseg na mobilnom. */
+@media (max-width:760px){
+  .hero h1{ font-size: clamp(1.32rem, 6.6vw, 2.3rem); }
+}
+
+/* ---------- 26. USLUGE NA MOBILNOM — kartice ne kopiraju desktop -------
+   Desktop: kvadratna slika sa tekstom preko nje, otkriva se na hover.
+   Na dodir nema hovera, pa je ceo tekst STALNO vidljiv preko fiksne
+   visine kartice (aspect-ratio + min-height) — na prvoj kartici naslov
+   fizički ne staje i seče se o gornju ivicu (justify-content:flex-end
+   gura sadržaj nagore van okvira). Rešenje nije "stisni font dok stane",
+   nego druga kartica za mobilni: slika gore u prirodnoj visini, tekst
+   ispod na punoj, mirnoj podlozi — bez apsolutnog pozicioniranja.
+   Tagovi se izbacuju (nepotrebni na malom ekranu), a dodirom kartica
+   otkriva opis + dugme "Pogledaj cenu" (isti 0fr→1fr fazon kao kod
+   .tm-bio biografija u sekciji Tim) — tek drugi dodir na dugme vodi
+   na cenovnik, prvi samo pokazuje više. */
+@media (max-width: 640px) {
+  #usluge .svc-row {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--paper);
+    transition: transform .15s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  #usluge .svc-row:active { transform: scale(.985); }
+
+  /* neutrališe desktop hover-fazone (slika, panel, telo) — na dodiru
+     ne postoji pravi hover i ume da ostane "zaglavljen" posle tapa */
+  #usluge .svc-row:hover, #usluge .svc-row:focus-within {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  #usluge .svc-row:hover .sr-media img, #usluge .svc-row:focus-within .sr-media img {
+    transform: none !important;
+    filter: none !important;
+  }
+  #usluge .svc-row:hover .sr-panel, #usluge .svc-row:focus-within .sr-panel {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  #usluge .svc-row:hover .sr-body, #usluge .svc-row:focus-within .sr-body {
+    transform: none !important;
+  }
+
+  /* slika: prirodna visina umesto position:absolute preko cele kartice */
+  #usluge .sr-media {
+    position: relative !important;
+    inset: auto !important;
+    aspect-ratio: 16 / 10;
+    flex: none;
+  }
+
+  /* panel prestaje da bude apsolutni sloj preko slike — postaje običan
+     blok ispod nje, na neprozirnoj podlozi kartice. U markupu .sr-cta
+     dolazi PRE .sr-body (na desktopu je bilo svejedno, oba su bila
+     apsolutno pozicionirana) — na mobilnom bi to dugme gurnulo iznad
+     naslova; flex + order ga vraća na kraj, posle opisa, bez diranja HTML-a. */
+  #usluge .sr-panel {
+    position: static !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* padding živi ovde (ne na .sr-body) da bi i .sr-cta, kao sused
+       .sr-body-a ne kao njegovo dete, nasledio isto levo/desno uvlačenje
+       i dobio razmak od donje ivice kartice kad je aktivan */
+    padding: 0 var(--sr-pad-x) var(--sr-pad-y) var(--sr-pad-x) !important;
+  }
+  #usluge .sr-body { order: 1; }
+  #usluge .sr-cta { order: 2; }
+
+  #usluge .sr-body {
+    position: relative;
+    padding: 14px 30px 0 0 !important;
+    transform: none !important;
+  }
+  /* kružić sa strelicom = naznaka "dodirni za više", isti motiv kao
+     strelice u mobilnom meniju (.mm-links > a::after). Pozicionirano
+     relativno na .sr-body, koje sada počinje na levoj/desnoj ivici
+     panela (padding je prebačen na .sr-panel), pa je right:0 tačno. */
+  #usluge .sr-body::before {
+    content: "";
+    position: absolute;
+    top: 14px; right: 0;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--brand-tint);
+    transition: background .3s var(--ease-out);
+  }
+  #usluge .sr-body::after {
+    content: "";
+    position: absolute;
+    top: 23px; right: 9px;
+    width: 7px; height: 7px;
+    border-right: 1.5px solid var(--brand-deep);
+    border-bottom: 1.5px solid var(--brand-deep);
+    transform: rotate(45deg);
+    transition: transform .35s var(--ease-out);
+  }
+  #usluge .svc-row.active .sr-body::before { background: var(--brand-deep); }
+  #usluge .svc-row.active .sr-body::after {
+    border-color: #fff;
+    transform: rotate(225deg) translate(1px, 1px);
+  }
+
+  #usluge .sr-t {
+    color: var(--ink);
+    text-shadow: none;
+    font-size: var(--fs-2);
+    line-height: 1.3;
+  }
+
+  /* opis: skupljen na 0 visine dok kartica nije .active. Napomena: pravi
+     grid-template-rows:0fr->1fr fazon (kao kod .tm-bio) ovde ne radi jer
+     je .sr-d sam tekstualni čvor bez unutrašnjeg wrappera — anonimna
+     grid stavka zadržava min-content visinu i ignoriše 0fr. Umesto toga
+     max-height sa dovoljno velikim gornjim limitom za ova kratka 1-2
+     reda opisa. */
+  #usluge .sr-d {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    color: var(--ink-2);
+    text-shadow: none;
+    font-style: normal;
+    transition: max-height .4s var(--ease-out), margin-top .4s var(--ease-out);
+  }
+  #usluge .svc-row.active .sr-d {
+    max-height: 100px;
+    margin-top: 8px;
+  }
+
+  /* tagovi nisu potrebni na mobilnom — previše sitnog teksta za mali ekran */
+  #usluge .sr-tags { display: none !important; }
+
+  /* dugme se više ne "lebdi" preko slike — leži u toku teksta, skupljeno
+     dok kartica nije aktivna, sa punom veličinom dodirne mete kad se otvori */
+  #usluge .sr-cta {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    max-height: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    transition: opacity .3s var(--ease-out), max-height .4s var(--ease-out),
+      margin-top .4s var(--ease-out), padding .3s var(--ease-out) !important;
+  }
+  #usluge .svc-row.active .sr-cta {
+    opacity: 1 !important;
+    max-height: 60px !important;
+    margin-top: 14px !important;
+    padding: 12px 18px !important;
+    pointer-events: auto !important;
+  }
+}
+
+
+/* ==========================================================================
+   RUNDA 4 — mobilni: horizontalni skrol umesto vertikalnog nizanja,
+   sadržaj sakriven dok se ne klikne na strelicu (manje "isečen desktop",
+   više svoj fazon za dodir)
+   ========================================================================== */
+
+/* ---------- USLUGE: kartice u red, skrol levo-desno ---------------------- */
+@media (max-width: 640px) {
+  #usluge .svc-list {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px !important;
+    padding: 4px 4px 20px !important;
+    -ms-overflow-style: none; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+            mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+  }
+  #usluge .svc-list::-webkit-scrollbar { display: none; }
+  #usluge .svc-row {
+    flex: 0 0 80vw;
+    scroll-snap-align: center;
+  }
+}
+
+/* ---------- O NAMA: tabovi -> accordion sa strelicom --------------------- */
+@media (max-width: 760px) {
+  .about-copy { display: flex; flex-direction: column; }
+  .about-copy > h2 { order: -3; }
+  .about-copy > p { order: -3; }
+  .about-tabs { display: contents; }
+  .about-tabs button[data-atab="0"] { order: 0; }
+  .about-copy > .about-panel[data-apanel="0"] { order: 1; }
+  .about-tabs button[data-atab="1"] { order: 2; }
+  .about-copy > .about-panel[data-apanel="1"] { order: 3; }
+  .about-tabs button[data-atab="2"] { order: 4; }
+  .about-copy > .about-panel[data-apanel="2"] { order: 5; }
+  .about-copy > div:last-child { order: 6; flex-wrap: nowrap !important; gap: 10px !important; }
+  .about-copy > div:last-child > a.btn {
+    flex: 1 1 0; justify-content: center; text-align: center; padding-inline: 8px;
+    white-space: nowrap;
+  }
+
+  .about-tabs button {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; margin-right: 0; padding: 16px 2px;
+    font-size: 1rem; text-align: left;
+  }
+  .about-tabs button::after {
+    content: ""; flex: 0 0 auto; width: 8px; height: 8px; margin-left: 12px;
+    border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3);
+    transform: rotate(45deg);
+    transition: transform .35s var(--ease-out), border-color .3s;
+  }
+  .about-tabs button.on::after { border-color: var(--brand-deep); transform: rotate(225deg); }
+
+  .about-panel {
+    display: block !important;
+    max-height: 0; overflow: hidden; animation: none !important;
+    transition: max-height .5s var(--ease-out);
+  }
+  .about-panel.on { max-height: 900px; }
+}
+
+/* ---------- VAŠ PUT KOD NAS: 4 kartice u redu, skrol levo-desno --------- */
+@media (max-width: 939px) {
+  #put .jr-steps {
+    display: flex; flex-wrap: nowrap; gap: 16px;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 4px 22px;
+    -ms-overflow-style: none; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+            mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+  }
+  #put .jr-steps::-webkit-scrollbar { display: none; }
+  #put .jr-step {
+    flex: 0 0 82vw;
+    scroll-snap-align: center;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--line, #E7DCD6);
+    border-radius: var(--r-lg, 18px);
+    background: var(--surface, #fff);
+    box-shadow: 0 18px 46px -30px rgba(60,25,38,.34);
+    padding: 0 0 24px; margin: 0;
+    overflow: hidden;
+    /* neutrališe staru "reflektor" logiku (opacity .4 dok korak nije
+       "on" pri vertikalnom skrolu) — na horizontalnoj kartici svaki
+       korak mora biti čitljiv čim se pojavi, ne tek kad ga JS upali */
+    opacity: 1 !important;
+  }
+  #put .jr-step:first-child, #put .jr-step:last-child { padding-top: 0; border-bottom: 0; }
+  #put .jr-step { cursor: pointer; }
+  #put .jr-mob { order: -1; margin: 0; border-radius: 0; aspect-ratio: 4/3; }
+  #put .jr-num { margin: 18px 22px 0; }
+
+  /* naslov + strelica u istom redu — razmak od ivice dolazi iz
+     margin-inline na h3, isto kao razmak teksta */
+  #put .jr-step h3 {
+    margin-inline: 22px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  #put .jr-step h3::after {
+    content: ""; flex: 0 0 auto; width: 9px; height: 9px;
+    border-right: 1.5px solid var(--brand-deep);
+    border-bottom: 1.5px solid var(--brand-deep);
+    transform: rotate(45deg);
+    transition: transform .35s var(--ease-out);
+  }
+  #put .jr-step.active h3::after { transform: rotate(225deg); }
+
+  /* opis i meta tagovi uvučeni dok se ne klikne na karticu */
+  #put .jr-step p {
+    margin: 0 22px !important; max-width: none;
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .4s var(--ease-out), opacity .3s ease, margin-top .3s ease;
+  }
+  #put .jr-step.active p { max-height: 260px; opacity: 1; margin-top: 10px !important; }
+  #put .jr-meta {
+    margin: 0 22px !important;
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .35s var(--ease-out), opacity .3s ease, margin-top .3s ease;
+  }
+  #put .jr-step.active .jr-meta { max-height: 100px; opacity: 1; margin-top: 18px !important; }
+}
+
+/* ---------- TEHNOLOGIJA: opis iza strelice -------------------------------- */
+@media (max-width: 939px) {
+  .tech-card { cursor: pointer; }
+  .tech-body { position: relative; padding-right: 40px !important; }
+  /* poravnato sa .tech-k redom (kategorija, npr. "DIJAGNOSTIKA"), a ne
+     uz samu ivicu kartice — top se meri od vrha .tech-body do sredine
+     .tech-k reda, right ostavlja razmak od desne ivice */
+  .tech-body::before {
+    content: ""; position: absolute; top: 17px; right: 12px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--brand-tint);
+    transition: background .3s var(--ease-out);
+  }
+  .tech-body::after {
+    content: ""; position: absolute; top: 25px; right: 20px;
+    width: 7px; height: 7px;
+    border-right: 1.5px solid var(--brand-deep);
+    border-bottom: 1.5px solid var(--brand-deep);
+    transform: rotate(45deg);
+    transition: transform .35s var(--ease-out);
+  }
+  .tech-card.active .tech-body::before { background: var(--brand-deep); }
+  .tech-card.active .tech-body::after { border-color: #fff; transform: rotate(225deg) translate(1px,1px); }
+
+  .tech-body p {
+    max-height: 0; overflow: hidden; margin: 0 !important;
+    transition: max-height .4s var(--ease-out);
+  }
+  .tech-card.active .tech-body p { max-height: 220px; margin-top: 2px !important; }
+  .tech-tags {
+    max-height: 0; overflow: hidden; opacity: 0;
+    margin-top: 0 !important; padding-top: 0 !important;
+    transition: max-height .35s var(--ease-out), opacity .3s ease, padding-top .3s ease;
+  }
+  .tech-card.active .tech-tags { max-height: 100px; opacity: 1; padding-top: 14px !important; }
+}
+
+/* ---------- TIM: jedan red, bio iza strelice (bez modala na mobilnom) --- */
+@media (max-width: 640px) {
+  .team-grid {
+    display: flex !important; flex-wrap: nowrap !important;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px !important; padding: 4px 4px 20px !important;
+    -ms-overflow-style: none; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+            mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+  }
+  .team-grid::-webkit-scrollbar { display: none; }
+  .tm { flex: 0 0 72vw; scroll-snap-align: center; cursor: pointer; }
+
+  /* podrazumevano skupljeno — poništava @media(pointer:coarse) pravilo
+     koje bio drži trajno otvorenim na dodir */
+  .tm-bio { grid-template-rows: 0fr !important; margin-top: 0 !important; }
+  .tm-bio p {
+    opacity: 0 !important; transform: translateY(6px) !important;
+    -webkit-line-clamp: unset;
+  }
+  .tm-cred { opacity: 0 !important; }
+  .tm.active .tm-bio { grid-template-rows: 1fr !important; margin-top: 12px !important; }
+  .tm.active .tm-bio p { opacity: 1 !important; transform: none !important; }
+  .tm.active .tm-cred { opacity: 1 !important; }
+  .tm-more svg { transition: transform .3s var(--ease-out); }
+  .tm.active .tm-more svg { transform: rotate(90deg); }
+}
+
+/* ---------- SKIN LAB: dugmići u 2 kolone, kartica sažeta ------------------ */
+.lab-more-toggle { display: none; }
+@media (max-width: 640px) {
+  .lab-tabs {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    flex-wrap: initial !important;
+    gap: 9px !important;
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .lab-tabs button {
+    flex: initial !important;
+    white-space: normal !important;
+    text-align: left;
+    line-height: 1.25;
+    padding: 10px 12px !important;
+    font-size: .74rem !important;
+  }
+  .lab-tabs button:last-child { grid-column: 1 / -1; }
+
+  /* kartica ispod: čitljiva veličina, a deo sadržaja (fototip, statistika,
+     grafik / alergeni) ide iza dugmeta "Detaljnije" da kartica ne bude
+     preopterećena i loše čitljiva na prvi pogled */
+  .lab-card { padding: 18px !important; min-height: 0 !important; overflow: visible !important; }
+  .uv-grid { gap: 16px; }
+  .uv-gauge svg { max-width: 132px; }
+  .uv-gauge .uv-num b { font-size: 1.35rem; }
+  .uv-gauge .uv-num span { font-size: .66rem; margin-top: 2px; }
+  .uv-level { margin-top: 8px; padding: 6px 14px; font-size: .8rem; }
+  .uv-loc { margin-top: 6px; font-size: .76rem; }
+  .uv-advice h3 { font-size: 1.06rem; margin-bottom: 4px; }
+  .uv-advice .uv-msg { font-size: .85rem; margin-bottom: 6px; line-height: 1.5; }
+  .pheno-label { font-size: .72rem; margin-bottom: 7px; }
+  .pheno { gap: 7px; margin-bottom: 16px; }
+  .pheno button { width: 36px; height: 36px; border-radius: 10px; font-size: .78rem; }
+  .uv-out { gap: 8px; }
+  .uv-out .uo { padding: 10px 12px; }
+  .uv-out .uo span { font-size: .64rem; }
+  .uv-out .uo b { font-size: .98rem; }
+  .uv-out .uo i { font-size: .7rem; }
+  .uv-chart { margin-top: 12px; }
+  .uv-chart .uc-t { font-size: .7rem; margin-bottom: 6px; }
+  .uv-bars { height: 40px; }
+  .lab-disclaimer { margin-top: 12px; padding: 10px 12px; font-size: .72rem; line-height: 1.45; }
+
+  /* air-hero (AQI + PM2.5/PM10) se sudarao sam sa sobom u uskoj kartici —
+     tekst je bio odsečen jer je red bio bez prelamanja. Slaganje u kolonu
+     rešava to bez menjanja izgleda na širem ekranu (medija na 940px). */
+  .air-hero { flex-direction: column; align-items: stretch; text-align: center; gap: 16px; }
+  .air-pm { width: 100%; }
+
+  .lab-more {
+    max-height: 0; overflow: hidden;
+    transition: max-height .5s var(--ease-out);
+  }
+  .lab-more.active { max-height: 1400px; }
+  .lab-more-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 4px 0 4px; padding: 8px 16px;
+    border: 1px solid var(--brand-soft, var(--line)); border-radius: 99px;
+    background: var(--brand-tint); color: var(--brand-deep);
+    font: 600 .76rem/1 var(--f-ui, 'Inter', sans-serif); letter-spacing: .02em;
+  }
+  .lab-more-toggle::after {
+    content: ""; width: 7px; height: 7px;
+    border-right: 1.5px solid var(--brand-deep);
+    border-bottom: 1.5px solid var(--brand-deep);
+    transform: rotate(45deg);
+    transition: transform .3s var(--ease-out);
+  }
+  .lab-more-toggle.active::after { transform: rotate(225deg); }
+}
+
+/* ---------- UTISCI: red, skrol levo-desno (bez sticky-stack efekta) ----- */
+@media (max-width: 640px) {
+  .rs {
+    display: flex !important; flex-wrap: nowrap !important;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px; margin-top: 20px;
+    padding: 4px 4px 20px;
+    -ms-overflow-style: none; scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+            mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+  }
+  .rs::-webkit-scrollbar { display: none; }
+  .rs-card {
+    flex: 0 0 82vw !important;
+    scroll-snap-align: center;
+    position: static !important;
+    top: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    margin-bottom: 0 !important;
+  }
+  .rs-card + .rs-card { margin-top: 0 !important; }
+}
+
+/* ---------- KONTAKT: forma pre adrese, adresa u 2 kolone ----------------- */
+@media (max-width: 940px) {
+  /* forma za zakazivanje prva, pa tek onda naslov + adresa/mapa —
+     .contact-grid postaje "display:contents" da bi .form-card i
+     .contact-left mogli da se ubace kao flex-stavke u #kontakt .wrap
+     zajedno sa .sec-head, isti trik kao kod O nama accordiona */
+  #kontakt .wrap { display: flex; flex-direction: column; }
+  #kontakt .contact-grid { display: contents; }
+  #kontakt .form-card { order: 0; }
+  #kontakt .sec-head { order: 1; margin-top: 30px; text-align: center; }
+  #kontakt .contact-left { order: 2; }
+
+  .cinfo { grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+  .cinfo .ci { padding: 14px 0; }
+  .cinfo .ci b { font-size: .86rem; word-break: break-word; overflow-wrap: anywhere; }
+  .cinfo .ci span { font-size: .62rem; }
+}
+
+
+/* ==========================================================================
+   RUNDA 5 — tačkice (dots) ispod horizontalnog skrola
+   ========================================================================== */
+.scroll-dots { display: none; }
+.scroll-dot {
+  width: 6px; height: 6px; flex: 0 0 auto;
+  padding: 0; border: 0; border-radius: 50%;
+  background: var(--line, #E7DCD6);
+  cursor: pointer;
+  transition: background .3s ease, width .3s ease;
+}
+.scroll-dot.on { background: var(--brand-deep); width: 16px; border-radius: 99px; }
+
+@media (max-width: 640px) {
+  #usluge .svc-list + .scroll-dots,
+  .team-grid + .scroll-dots,
+  .rs + .scroll-dots {
+    display: flex; justify-content: center; align-items: center; gap: 7px;
+    margin-top: 12px;
+  }
+}
+@media (max-width: 939px) {
+  #put .jr-steps + .scroll-dots,
+  .tech-track + .scroll-dots {
+    display: flex; justify-content: center; align-items: center; gap: 7px;
+    margin-top: 12px;
+  }
+}

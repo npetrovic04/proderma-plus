@@ -158,17 +158,27 @@ document.documentElement.setAttribute('data-palette', p||'rose');})();</script>
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#o-nama">O nama</a>
-  <a href="#usluge">Usluge</a>
-  <a href="#tehnologija">Tehnologija</a>
-  <a href="#skin-lab">Skin Lab</a>
-  <a href="#tim">Tim</a>
-  <a href="galerija.html">Galerija</a>
-  <a href="cenovnik.html">Cenovnik</a>
-  <a href="#kontakt">Kontakt</a>
+  <div class="mm-top">
+    <a class="brand" href="/" aria-label="PRODERMA PLUS — početna">
+      <svg viewBox="0 0 300 92" role="img"><title>PRODERMA PLUS</title><use href="#logoFull"/></svg>
+    </a>
+    <button class="mm-close" id="mmClose" type="button" aria-label="Zatvori meni"></button>
+  </div>
+  <nav class="mm-links">
+    <a href="#o-nama">O nama</a>
+    <a href="#usluge">Usluge</a>
+    <a href="#tehnologija">Tehnologija</a>
+    <a href="#skin-lab">Skin Lab</a>
+    <a href="#tim">Tim</a>
+    <a href="galerija.html">Galerija</a>
+    <a href="cenovnik.html">Cenovnik</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
   <div class="mm-foot">
-    <p><strong>063 1045 084</strong><br>klinikaproderma@gmail.com<br>Stanka Vlasotinčanina 3/1, Niš</p>
-    <a class="btn" href="tel:0631045084" style="margin-top:14px">Pozovite nas</a>
+    <div class="mm-contact">
+      <p><strong>063 1045 084</strong><br>klinikaproderma@gmail.com<br>Stanka Vlasotinčanina 3/1, Niš</p>
+    </div>
+    <a class="btn" href="tel:0631045084">Pozovite nas</a>
   </div>
 </div>
 
@@ -744,25 +754,28 @@ document.documentElement.setAttribute('data-palette', p||'rose');})();</script>
             <p class="uv-msg" id="uvMsg">Izaberite svoj fototip kože i dobićete procenu vremena do prvog crvenila,
             kao i preporučeni SPF za današnje uslove.</p>
 
-            <div class="pheno-label">Fototip kože po Fitzpatricku</div>
-            <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa kože">
-              <button data-t="1" title="I — vrlo svetla koža, uvek izgori, nikad ne potamni">I</button>
-              <button data-t="2" class="on" title="II — svetla koža, obično izgori, slabo potamni">II</button>
-              <button data-t="3" title="III — svetlo-smeđa koža, ponekad izgori, ravnomerno potamni">III</button>
-              <button data-t="4" title="IV — maslinasta koža, retko izgori, lako potamni">IV</button>
-              <button data-t="5" title="V — tamno-smeđa koža, vrlo retko izgori">V</button>
-              <button data-t="6" title="VI — tamna koža, praktično nikad ne izgori">VI</button>
-            </div>
+            <button type="button" class="lab-more-toggle" data-labmore-toggle aria-expanded="false">Detaljnije</button>
+            <div class="lab-more" data-labmore>
+              <div class="pheno-label">Fototip kože po Fitzpatricku</div>
+              <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa kože">
+                <button data-t="1" title="I — vrlo svetla koža, uvek izgori, nikad ne potamni">I</button>
+                <button data-t="2" class="on" title="II — svetla koža, obično izgori, slabo potamni">II</button>
+                <button data-t="3" title="III — svetlo-smeđa koža, ponekad izgori, ravnomerno potamni">III</button>
+                <button data-t="4" title="IV — maslinasta koža, retko izgori, lako potamni">IV</button>
+                <button data-t="5" title="V — tamno-smeđa koža, vrlo retko izgori">V</button>
+                <button data-t="6" title="VI — tamna koža, praktično nikad ne izgori">VI</button>
+              </div>
 
-            <div class="uv-out">
-              <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite, na direktnom suncu</i></div>
-              <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i id="uvSpfNote">ponoviti na 2 h</i></div>
-              <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce u tom periodu</i></div>
-            </div>
+              <div class="uv-out">
+                <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite, na direktnom suncu</i></div>
+                <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i id="uvSpfNote">ponoviti na 2 h</i></div>
+                <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce u tom periodu</i></div>
+              </div>
 
-            <div class="uv-chart">
-              <div class="uc-t">UV kroz dan</div>
-              <div class="uv-bars" id="uvBars"></div>
+              <div class="uv-chart">
+                <div class="uc-t">UV kroz dan</div>
+                <div class="uv-bars" id="uvBars"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -795,11 +808,14 @@ document.documentElement.setAttribute('data-palette', p||'rose');})();</script>
 
           <div>
             <h3>Alergeni u vazduhu</h3>
-            <p style="margin:8px 0 20px;font-size:.92rem">Koncentracije polena za Niš, u zrncima po kubnom metru.
-            Kod atopijskog dermatitisa, ekcema i kontaktne urtikarije visok polen se često vidi na koži
-            pre nego u nosu.</p>
-            <div class="pollen-list" id="pollenList">
-              <div class="pl-empty">Učitavanje…</div>
+            <button type="button" class="lab-more-toggle" data-labmore-toggle aria-expanded="false">Detaljnije</button>
+            <div class="lab-more" data-labmore>
+              <p style="margin:8px 0 20px;font-size:.92rem">Koncentracije polena za Niš, u zrncima po kubnom metru.
+              Kod atopijskog dermatitisa, ekcema i kontaktne urtikarije visok polen se često vidi na koži
+              pre nego u nosu.</p>
+              <div class="pollen-list" id="pollenList">
+                <div class="pl-empty">Učitavanje…</div>
+              </div>
             </div>
           </div>
         </div>

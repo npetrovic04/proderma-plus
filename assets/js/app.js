@@ -254,19 +254,33 @@ setTimeout(function () {
   var rows = $$('.svc-row');
   if (!rows.length) return;
 
-  // Klik na karticu vodi direktno na odgovarajuću grupu u cenovniku —
-  // opis "sr-more" i dalje iskače na hover/fokus kao pregled pre klika.
+  // Na mišu/tastaturi klik i dalje vodi direktno na cenovnik. Na dodir
+  // (bez hovera) prvi tap samo otvara karticu (opis + dugme), drugi tap
+  // na dugme vodi dalje — inače se prva stavka svaki put "slučajno"
+  // otvarala u cenovniku pre nego što je korisnik i video o čemu se radi.
+  var coarse = window.matchMedia('(pointer: coarse)').matches;
+
   function goToPrice(row) {
     var g = row.getAttribute('data-price-group');
     window.location.href = 'cenovnik.html' + (g ? ('?g=' + encodeURIComponent(g)) : '');
   }
 
+  function toggleRow(row) {
+    var wasActive = row.classList.contains('active');
+    rows.forEach(function (r) { r.classList.remove('active'); });
+    if (!wasActive) row.classList.add('active');
+  }
+
   rows.forEach(function (row) {
-    row.addEventListener('click', function () { goToPrice(row); });
+    row.addEventListener('click', function (e) {
+      if (!coarse) { goToPrice(row); return; }
+      if (e.target.closest('.sr-cta')) { goToPrice(row); return; }
+      toggleRow(row);
+    });
     row.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
-        goToPrice(row);
+        if (coarse) { toggleRow(row); } else { goToPrice(row); }
       }
     });
   });
@@ -382,22 +396,26 @@ setTimeout(function () {
    4. HEADER + MOBILNI MENI
    ====================================================================== */
 (function header() {
-  var h = $('#header'), b = $('#burger'), m = $('#mobileMenu');
+  var h = $('#header'), b = $('#burger'), m = $('#mobileMenu'), mc = $('#mmClose');
   var onScroll = function () { if (h) h.classList.toggle('stuck', window.scrollY > 24); };
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   if (b && m) {
+    function closeMenu() {
+      m.classList.remove('open'); b.classList.remove('open');
+      b.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
+    }
     b.addEventListener('click', function () {
       var open = m.classList.toggle('open');
       b.classList.toggle('open', open);
       b.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';
     });
+    // dok je meni otvoren on svojim z-indexom (950) prekriva burger (900),
+    // pa je pravo dugme za zatvaranje unutar samog menija (.mm-close)
+    if (mc) mc.addEventListener('click', closeMenu);
     $$('a', m).forEach(function (a) {
-      a.addEventListener('click', function () {
-        m.classList.remove('open'); b.classList.remove('open');
-        b.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
-      });
+      a.addEventListener('click', closeMenu);
     });
   }
 })();
@@ -516,9 +534,25 @@ setTimeout(function () {
    9. TABOVI (O nama + Skin Lab)
    ====================================================================== */
 (function tabs() {
+  var aboutMobile = window.matchMedia('(max-width: 760px)');
+  if (aboutMobile.matches) {
+    // na mobilnom nijedna stavka nije otvorena dok korisnik ne klikne
+    $$('[data-atab]').forEach(function (x) { x.classList.remove('on'); });
+    $$('[data-apanel]').forEach(function (p) { p.classList.remove('on'); });
+  }
   $$('[data-atab]').forEach(function (b) {
     b.addEventListener('click', function () {
       var n = b.getAttribute('data-atab');
+      if (aboutMobile.matches) {
+        // pravi accordion na mobilnom: klik na već otvorenu stavku je
+        // zatvara; klik na drugu otvara nju i zatvara ostale
+        var panel = document.querySelector('[data-apanel="' + n + '"]');
+        var wasOn = b.classList.contains('on');
+        $$('[data-atab]').forEach(function (x) { x.classList.remove('on'); });
+        $$('[data-apanel]').forEach(function (p) { p.classList.remove('on'); });
+        if (!wasOn) { b.classList.add('on'); if (panel) panel.classList.add('on'); }
+        return;
+      }
       $$('[data-atab]').forEach(function (x) { x.classList.toggle('on', x === b); });
       $$('[data-apanel]').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-apanel') === n); });
     });
@@ -1817,6 +1851,111 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 })();
 
 /* ======================================================================
+   16b. TEHNOLOGIJA — klik na mobilnom ekspandira opis (strelica)
+   ====================================================================== */
+(function techExpand() {
+  var cards = $$('.tech-card');
+  if (!cards.length) return;
+  var mq = window.matchMedia('(max-width: 939px)');
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      if (!mq.matches) return;
+      card.classList.toggle('active');
+    });
+  });
+})();
+
+/* ======================================================================
+   16c. VAŠ PUT KOD NAS — klik na mobilnom ekspandira opis (strelica uz naslov)
+   ====================================================================== */
+(function putExpand() {
+  var steps = $$('#put .jr-step');
+  if (!steps.length) return;
+  var mq = window.matchMedia('(max-width: 939px)');
+  steps.forEach(function (step) {
+    step.addEventListener('click', function () {
+      if (!mq.matches) return;
+      step.classList.toggle('active');
+    });
+  });
+})();
+
+/* ======================================================================
+   16d. SKIN LAB — dugme "Detaljnije" otkriva dodatni sadržaj panela
+   ====================================================================== */
+(function labMoreToggle() {
+  var toggles = $$('[data-labmore-toggle]');
+  if (!toggles.length) return;
+  toggles.forEach(function (btn) {
+    var panel = btn.nextElementSibling;
+    if (!panel || !panel.classList.contains('lab-more')) return;
+    btn.addEventListener('click', function () {
+      var open = panel.classList.toggle('active');
+      btn.classList.toggle('active', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+})();
+
+/* ======================================================================
+   16e. Tačkice (dots) ispod horizontalnih skrol redova — Usluge, Put,
+   Tehnologija, Tim, Utisci. Prati scroll i klikom skroluje na karticu.
+   ====================================================================== */
+(function scrollDots() {
+  var groups = [
+    { list: '#usluge .svc-list', item: '.svc-row' },
+    { list: '#put .jr-steps',    item: '.jr-step' },
+    { list: '.tech-track',       item: '.tech-card' },
+    { list: '.team-grid',        item: '.tm' },
+    { list: '.rs',                item: '.rs-card' }
+  ];
+  groups.forEach(function (g) {
+    var list = $(g.list);
+    if (!list) return;
+    var items = $$(g.item, list);
+    if (items.length < 2) return;
+
+    var nav = document.createElement('div');
+    nav.className = 'scroll-dots';
+    nav.setAttribute('role', 'tablist');
+    nav.setAttribute('aria-label', 'Pozicija u listi');
+    items.forEach(function (it, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'scroll-dot';
+      dot.setAttribute('aria-label', (i + 1) + ' od ' + items.length);
+      dot.addEventListener('click', function () {
+        list.scrollTo({
+          left: it.offsetLeft - (list.clientWidth - it.clientWidth) / 2,
+          behavior: 'smooth'
+        });
+      });
+      nav.appendChild(dot);
+    });
+    list.insertAdjacentElement('afterend', nav);
+
+    var dots = $$('.scroll-dot', nav);
+    dots[0].classList.add('on');
+
+    var ticking = false;
+    function updateActive() {
+      ticking = false;
+      var center = list.scrollLeft + list.clientWidth / 2;
+      var closest = 0, min = Infinity;
+      items.forEach(function (it, i) {
+        var itCenter = it.offsetLeft + it.clientWidth / 2;
+        var d = Math.abs(itCenter - center);
+        if (d < min) { min = d; closest = i; }
+      });
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === closest); });
+    }
+    list.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(updateActive); }
+    }, { passive: true });
+  });
+})();
+
+/* ======================================================================
    17. TIM — kartica sa biografijom mora da bude dohvatljiva tastaturom
    ====================================================================== */
 (function teamFocus() {
@@ -1835,9 +1974,18 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   var cards = $$('.rs-card');
   if (!cards.length || reduce) return;
   var queued = false;
+  var narrow = window.matchMedia('(max-width: 640px)');
 
   function apply() {
     queued = false;
+    if (narrow.matches) {
+      // mobilni: .rs je horizontalni red kartica (CSS), efekat slaganja
+      // iz vertikalnog skrola bi se ovde samo sudarao sa tim rasporedom
+      cards.forEach(function (c) {
+        c.style.transform = ''; c.style.opacity = ''; c.style.zIndex = '';
+      });
+      return;
+    }
     var top = parseFloat(getComputedStyle(cards[0]).top) || 120;
     for (var i = 0; i < cards.length; i++) {
       var c = cards[i], r = c.getBoundingClientRect();
@@ -1943,10 +2091,22 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     if (lastFocus) lastFocus.focus();
   }
 
+  // Na mobilnom je tim u horizontalnom redu, a klik/tap na strelicu
+  // otvara bio inline (isti fazon kao Usluge/Tehnologija) — modal na celom
+  // ekranu je suvišan kad je kartica već tako uska. Na širem ekranu (miš)
+  // ponašanje ostaje isto kao pre: klik otvara modal.
+  var teamMobile = window.matchMedia('(max-width: 640px)');
   cards.forEach(function (card) {
-    card.addEventListener('click', function () { open(card); });
+    card.addEventListener('click', function () {
+      if (teamMobile.matches) { card.classList.toggle('active'); return; }
+      open(card);
+    });
     card.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(card); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (teamMobile.matches) { card.classList.toggle('active'); return; }
+        open(card);
+      }
     });
   });
   $('.bio-back', modal).addEventListener('click', close);
