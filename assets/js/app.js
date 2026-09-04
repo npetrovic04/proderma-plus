@@ -1859,18 +1859,17 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 })();
 
 /* ======================================================================
-   16c. VAŠ PUT KOD NAS (mobilno) — pin + rotacija kao strane kocke
-   RUNDA 9: zamena za RUNDA 8 fade-crossfade. #put .jr-grid i dalje dobija
-   veštački napumpanu visinu (isti trik kao techScroll() — sekcija je
-   viša nego njen sadržaj da pruži skrol-prostor) i #put .jr-steps je
-   position:sticky (pinovana). Svaki .jr-step je "strana kocke" — CSS
-   (style.css) mu daje rotateY offset od --jr-active promenljive puta
-   90deg, pa ovde samo treba: 1) izmeriti širinu kartice da postavimo
-   --jr-radius (translateZ, pola širine, da strane formiraju kutiju), i
-   2) menjati --jr-active kad se pređe u sledeći korak — CSS transition
-   na transform radi samu rotaciju. Dok se ne prođe i poslednji korak,
-   sekcija je veštački visoka pa sajt fizički ne može da pređe na sledeću
-   dok se sve četiri strane ne izmenjaju. */
+   16c. VAŠ PUT KOD NAS (mobilno) — pin + fade-crossfade
+   RUNDA 10: zamena za RUNDA 9 rotaciju kocke (matrix3d+perspective je na
+   telefonu sekao skrol). #put .jr-grid i dalje dobija veštački napumpanu
+   visinu (isti trik kao techScroll() — sekcija je viša nego njen sadržaj
+   da pruži skrol-prostor) i #put .jr-steps je position:sticky (pinovana).
+   Svaki .jr-step je position:absolute preko cele kutije; ovde samo
+   dodajemo/skidamo klasu .on kad se pređe u sledeći korak — CSS
+   transition na opacity radi samu glatku smenu (jeftino, bez repainta
+   3D transformacija). Dok se ne prođe i poslednji korak, sekcija je
+   veštački visoka pa sajt fizički ne može da pređe na sledeću dok se svi
+   koraci ne izmenjaju. */
 (function putMobilePin() {
   var sec = $('#put');
   if (!sec) return;
@@ -1889,12 +1888,9 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
       active = -1;
       return;
     }
-    // radius kocke = pola širine kartice, da strane kad se zarotiraju za
-    // 90deg tačno formiraju zatvorenu kutiju oko sadržaja
-    stage.style.setProperty('--jr-radius', (stage.getBoundingClientRect().width / 2) + 'px');
-    // ~0.72 ekrana skrola po koraku — dovoljno da se pročita opis pre
-    // nego što se pređe na sledeći, a da ne bude predugo/dosadno
-    perStep = window.innerHeight * 0.72;
+    // ~0.36 ekrana skrola po koraku — jedan "skrol" (wheel/swipe) treba
+    // da prebaci na sledeći korak, ne dva
+    perStep = window.innerHeight * 0.36;
     grid.style.height = (perStep * steps.length) + 'px';
     sync();
   }
@@ -1906,7 +1902,6 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(-r.top / perStep)));
     if (idx === active) return;
     active = idx;
-    stage.style.setProperty('--jr-active', idx);
     steps.forEach(function (st, i) { st.classList.toggle('on', i === idx); });
   }
 
@@ -2077,7 +2072,9 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
       active = -1;
       return;
     }
-    perCard = window.innerHeight * 0.55;
+    // ~0.28 ekrana skrola po kartici — jedan "skrol" treba da prebaci na
+    // sledeću karticu, ne dva
+    perCard = window.innerHeight * 0.28;
     pin.style.height = (stage.offsetHeight + perCard * (cards.length - 1)) + 'px';
     sync();
   }

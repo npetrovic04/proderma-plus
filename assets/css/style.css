@@ -3515,20 +3515,14 @@ body::before {
   .about-panel.on { max-height: 900px; }
 }
 
-/* ---------- VAŠ PUT KOD NAS (mobilno): pinovano, koraci se okreću kao
-   stranice kocke oko Y ose dok se skroluje — RUNDA 9 (zamenjuje RUNDA 8
-   fade-crossfade). #put .jr-grid i dalje dobija JS-generisanu visinu
-   (putMobilePin() u app.js) da obezbedi skrol-prostor pre nego što se
-   pusti skrol na ostatak sajta. .jr-steps je pinovana (sticky) kutija sa
-   perspective-om; svaki .jr-step je "strana kocke" — position:absolute
-   preko cele kutije, ali sa SOPSTVENIM rotateY offsetom u odnosu na
-   trenutno aktivan korak (--jr-active, CSS promenljiva koju JS menja).
-   Kad --jr-active poraste za 1, sve četiri strane se zarotiraju za -90deg
-   ISTOVREMENO — aktivna strana dolazi sprednja (0deg), prethodna otklizi
-   na levu stranu kocke (-90deg), sledeća čeka na desnoj (90deg) itd.
-   backface-visibility:hidden sakriva stranu kad joj je poleđina okrenuta
-   ka nama (180deg), a translateZ(radius) razmiče strane tačno za
-   pola širine kartice da zajedno formiraju "kutiju". */
+/* ---------- VAŠ PUT KOD NAS (mobilno): pinovano, koraci se smenjuju
+   glatkim fade-in/fade-out — RUNDA 10 (zamenjuje RUNDA 9 rotaciju kocke,
+   koja je na telefonu sekla/kočila zbog matrix3d+perspective repainta).
+   #put .jr-grid i dalje dobija JS-generisanu visinu (putMobilePin() u
+   app.js) da obezbedi skrol-prostor pre nego što se pusti skrol na
+   ostatak sajta. .jr-steps je pinovana (sticky) kutija; svaki .jr-step
+   je position:absolute preko cele kutije i samo menja opacity kad dobije/
+   izgubi klasu .on — jeftina, glatka animacija bez 3D transformacija. */
 @media (max-width: 939px) {
   #put .jr-grid { position: relative; }
   #put .jr-steps {
@@ -3536,9 +3530,6 @@ body::before {
     position: sticky;
     top: calc(var(--nav-h) + 14px);
     height: min(70vh, 540px);
-    perspective: 1400px;
-    --jr-active: 0;
-    --jr-radius: 160px;
   }
   #put .jr-step {
     position: absolute;
@@ -3550,18 +3541,12 @@ body::before {
     box-shadow: 0 18px 46px -30px rgba(60,25,38,.34);
     padding: 22px; margin: 0;
     overflow-y: auto;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    opacity: 0;
     pointer-events: none;
-    transition: transform .7s cubic-bezier(.2,.9,.25,1);
+    transition: opacity .45s ease;
+    will-change: opacity;
   }
-  #put .jr-step.on { pointer-events: auto; }
-  /* redosled strana kocke prati redosled koraka u markupu (data-jr-step
-     1-4) — svaka dobija fiksni offset od aktivnog koraka puta 90deg */
-  #put .jr-step[data-jr-step="1"] { transform: rotateY(calc((0 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
-  #put .jr-step[data-jr-step="2"] { transform: rotateY(calc((1 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
-  #put .jr-step[data-jr-step="3"] { transform: rotateY(calc((2 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
-  #put .jr-step[data-jr-step="4"] { transform: rotateY(calc((3 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
+  #put .jr-step.on { opacity: 1; pointer-events: auto; }
   #put .jr-mob { order: -1; margin: 0 0 16px; border-radius: 12px; aspect-ratio: 16/10; flex: none; }
   #put .jr-num { margin: 0 0 14px; }
   #put .jr-step h3 { margin-bottom: 10px; }
@@ -3734,8 +3719,8 @@ body::before {
     display: block !important;
     position: sticky;
     top: calc(var(--nav-h) + 14px);
-    height: min(62vh, 460px);
-    margin-top: 24px;
+    height: min(48vh, 380px);
+    margin-top: 8px;
     padding: 0 4px;
     overflow: visible;
     --rs-active: 0;
@@ -3748,9 +3733,8 @@ body::before {
   #utisci .rs-card {
     position: absolute !important;
     inset: 0 !important;
-    top: auto !important;
     margin: 0 !important;
-    display: flex; flex-direction: column; justify-content: center;
+    display: flex; flex-direction: column; justify-content: flex-start;
     overflow-y: auto;
     pointer-events: none;
     transform:
