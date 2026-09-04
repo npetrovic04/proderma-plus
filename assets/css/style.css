@@ -3091,6 +3091,11 @@ body::before {
      jer im je opis i dalje sakriven (max-height:0). Sa flex-start svaka
      kartica drži svoju visinu, pa se širi samo ona koja je kliknuta. */
   .tech-track{align-items:flex-start}
+
+  /* traka napretka ispod kartica: na mobilnom je dvostruko označavala isto
+     što i tačkice, pa je izgledala kao višak linije ispod njih. Poziciju
+     sada nose samo tačkice (techScroll ih pomera). */
+  .tech-progress{display:none}
 }
 
 /* ---------- 17. TIM — biografija na hover ------------------------------- */
@@ -3680,6 +3685,10 @@ body::before {
             mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
   }
   .team-grid::-webkit-scrollbar { display: none; }
+  /* isti razlog kao kod .tech-track: bez ovoga align-items:stretch razvlači
+     SVE kartice na visinu otvorene, pa ostale rastu prazne (bio im je i
+     dalje skupljen). Ovako se širi samo ona na koju je kliknuto. */
+  .team-grid { align-items: flex-start; }
   .tm { flex: 0 0 72vw; scroll-snap-align: center; cursor: pointer; }
 
   /* podrazumevano skupljeno — poništava @media(pointer:coarse) pravilo

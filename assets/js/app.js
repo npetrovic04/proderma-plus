@@ -1836,6 +1836,38 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     sync();
   }
 
+  // Tačkice ispod trake pravi scrollDots(), koji ih pomera po list.scrollLeft.
+  // Otkad traku pomera transform (a ne stvarni skrol), scrollLeft je uvek 0 pa
+  // je stalno svetlela prva tačkica. Ovde ih vezujemo za karticu koja je
+  // trenutno na sredini ekrana, i klik na tačkicu skroluje stranicu do nje.
+  var dots = null, cards = $$('.tech-card', track), activeDot = -1;
+
+  function syncDots() {
+    if (dots === null) {
+      dots = $$('.scroll-dot', sec);
+      if (dots.length === cards.length) {
+        dots.forEach(function (d, i) {
+          d.addEventListener('click', function () {
+            var total = sec.offsetHeight - window.innerHeight;
+            if (total <= 0 || cards.length < 2) return;
+            var top = sec.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: top + total * (i / (cards.length - 1)), behavior: 'smooth' });
+          });
+        });
+      }
+    }
+    if (!dots.length) return;
+    var mid = window.innerWidth / 2, best = 0, min = Infinity;
+    cards.forEach(function (c, i) {
+      var cr = c.getBoundingClientRect();
+      var d = Math.abs(cr.left + cr.width / 2 - mid);
+      if (d < min) { min = d; best = i; }
+    });
+    if (best === activeDot) return;
+    activeDot = best;
+    dots.forEach(function (d, i) { d.classList.toggle('on', i === best); });
+  }
+
   function sync() {
     if (reduce) return;
     var r = sec.getBoundingClientRect();
@@ -1844,6 +1876,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     var p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0;
     track.style.transform = 'translate3d(' + (-p * dist).toFixed(1) + 'px,0,0)';
     if (bar) bar.style.setProperty('--p', (p * 100).toFixed(1) + '%');
+    syncDots();
   }
 
   addEventListener('scroll', sync, { passive: true });
