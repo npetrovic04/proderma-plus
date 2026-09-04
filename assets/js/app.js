@@ -1879,7 +1879,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   if (!grid || !stage || steps.length < 2) return;
 
   var narrow = window.matchMedia('(max-width: 939px)');
-  var perStep = 0, active = -1;
+  var perStep = 0, stickyTop = 0, active = -1;
 
   function measure() {
     if (!narrow.matches || reduce) {
@@ -1891,7 +1891,13 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     // ~0.36 ekrana skrola po koraku — jedan "skrol" (wheel/swipe) treba
     // da prebaci na sledeći korak, ne dva
     perStep = window.innerHeight * 0.36;
-    grid.style.height = (perStep * steps.length) + 'px';
+    stickyTop = parseFloat(getComputedStyle(stage).top) || 0;
+    // KLJUČNO: sticky kutija ostaje zakačena samo (visina kontejnera −
+    // visina same kutije) piksela. Ako je kontejner visok tačno
+    // perStep × brojKoraka, izgubi se stageHeight skrola i poslednji
+    // koraci "prolete" tek pošto se kutija već odlepila i otišla gore.
+    // Zato runway mora da bude stageHeight VEĆI od zbira svih koraka.
+    grid.style.height = (stage.offsetHeight + perStep * steps.length) + 'px';
     sync();
   }
 
@@ -1899,7 +1905,10 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     if (!narrow.matches || reduce) return;
     var r = grid.getBoundingClientRect();
     if (r.bottom < -100 || r.top > window.innerHeight + 100) return;   // van kadra
-    var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(-r.top / perStep)));
+    // progres se meri OD TRENUTKA kad se kutija zakačila (r.top === stickyTop),
+    // a ne od vrha kontejnera — inače indeksi kasne za stickyTop piksela
+    var travelled = stickyTop - r.top;
+    var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(travelled / perStep)));
     if (idx === active) return;
     active = idx;
     steps.forEach(function (st, i) { st.classList.toggle('on', i === idx); });
@@ -2063,7 +2072,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   pin.appendChild(stage);
 
   var narrow = window.matchMedia('(max-width: 640px)');
-  var perCard = 0, active = -1;
+  var perCard = 0, stickyTop = 0, active = -1;
 
   function measure() {
     if (!narrow.matches || reduce) {
@@ -2075,7 +2084,11 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     // ~0.28 ekrana skrola po kartici — jedan "skrol" treba da prebaci na
     // sledeću karticu, ne dva
     perCard = window.innerHeight * 0.28;
-    pin.style.height = (stage.offsetHeight + perCard * (cards.length - 1)) + 'px';
+    stickyTop = parseFloat(getComputedStyle(stage).top) || 0;
+    // isto kao kod #put: pinovani hod je (visina runway-a − visina kutije),
+    // pa runway mora biti za stageHeight viši od zbira svih kartica —
+    // inače poslednja kartica dođe na red tek kad se špil već odlepio
+    pin.style.height = (stage.offsetHeight + perCard * cards.length) + 'px';
     sync();
   }
 
@@ -2083,7 +2096,8 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     if (!narrow.matches || reduce) return;
     var r = pin.getBoundingClientRect();
     if (r.bottom < -100 || r.top > window.innerHeight + 100) return;
-    var idx = Math.min(cards.length - 1, Math.max(0, Math.floor(-r.top / perCard)));
+    var travelled = stickyTop - r.top;
+    var idx = Math.min(cards.length - 1, Math.max(0, Math.floor(travelled / perCard)));
     if (idx === active) return;
     active = idx;
     stage.style.setProperty('--rs-active', idx);
