@@ -1859,22 +1859,25 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 })();
 
 /* ======================================================================
-   16c. VAŠ PUT KOD NAS (mobilno) — pin + fade-cycle kroz korake
-   RUNDA 8: zamena za stari tap-to-expand karusel. #put .jr-grid dobija
+   16c. VAŠ PUT KOD NAS (mobilno) — pin + rotacija kao strane kocke
+   RUNDA 9: zamena za RUNDA 8 fade-crossfade. #put .jr-grid i dalje dobija
    veštački napumpanu visinu (isti trik kao techScroll() — sekcija je
-   viša nego njen sadržaj da pruži skrol-prostor), #put .jr-steps je
-   position:sticky (pinovana), a svaki .jr-step je apsolutno naslagan
-   preko cele te kutije (CSS, vidi style.css). Ovde se samo računa koji
-   korak je "na redu" na osnovu koliko je sekcija proskrolovana i pali mu
-   .on klasu — CSS transition na opacity radi sam crossfade. Dok se ne
-   prođe i poslednji korak, sekcija je veštački visoka pa sajt fizički ne
-   može da pređe na sledeću dok se svi koraci ne izmenjaju. */
+   viša nego njen sadržaj da pruži skrol-prostor) i #put .jr-steps je
+   position:sticky (pinovana). Svaki .jr-step je "strana kocke" — CSS
+   (style.css) mu daje rotateY offset od --jr-active promenljive puta
+   90deg, pa ovde samo treba: 1) izmeriti širinu kartice da postavimo
+   --jr-radius (translateZ, pola širine, da strane formiraju kutiju), i
+   2) menjati --jr-active kad se pređe u sledeći korak — CSS transition
+   na transform radi samu rotaciju. Dok se ne prođe i poslednji korak,
+   sekcija je veštački visoka pa sajt fizički ne može da pređe na sledeću
+   dok se sve četiri strane ne izmenjaju. */
 (function putMobilePin() {
   var sec = $('#put');
   if (!sec) return;
   var grid = $('.jr-grid', sec);
+  var stage = $('.jr-steps', sec);
   var steps = $$('.jr-step', sec);
-  if (!grid || steps.length < 2) return;
+  if (!grid || !stage || steps.length < 2) return;
 
   var narrow = window.matchMedia('(max-width: 939px)');
   var perStep = 0, active = -1;
@@ -1886,6 +1889,9 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
       active = -1;
       return;
     }
+    // radius kocke = pola širine kartice, da strane kad se zarotiraju za
+    // 90deg tačno formiraju zatvorenu kutiju oko sadržaja
+    stage.style.setProperty('--jr-radius', (stage.getBoundingClientRect().width / 2) + 'px');
     // ~0.72 ekrana skrola po koraku — dovoljno da se pročita opis pre
     // nego što se pređe na sledeći, a da ne bude predugo/dosadno
     perStep = window.innerHeight * 0.72;
@@ -1900,6 +1906,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(-r.top / perStep)));
     if (idx === active) return;
     active = idx;
+    stage.style.setProperty('--jr-active', idx);
     steps.forEach(function (st, i) { st.classList.toggle('on', i === idx); });
   }
 
@@ -2039,7 +2046,57 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   addEventListener('resize', onScroll, { passive: true });
 })();
 
+/* ======================================================================
+   UTISCI MOBILNI — pin + "spil karata": kartice ispadaju jedna za drugom
+   dok se sajt skroluje (isti fazon kao putMobilePin/techScroll — JS
+   naduva runway pa upisuje --rs-active koji CSS calc() koristi po kartici)
+   ====================================================================== */
+(function utisciDeck() {
+  var sec = $('#utisci');
+  if (!sec) return;
+  var stage = $('.rs', sec);
+  var cards = $$('.rs-card', sec);
+  if (!stage || cards.length < 2) return;
 
+  cards.forEach(function (c, i) { c.setAttribute('data-rs', i); });
+
+  // rs mora imati sopstveni "runway" kontejner (bez sec-head ispred sebe u
+  // istom elementu) da bi -r.top progres bio čist, isto kao .jr-grid/.tech
+  var pin = document.createElement('div');
+  pin.className = 'rs-pin';
+  stage.parentNode.insertBefore(pin, stage);
+  pin.appendChild(stage);
+
+  var narrow = window.matchMedia('(max-width: 640px)');
+  var perCard = 0, active = -1;
+
+  function measure() {
+    if (!narrow.matches || reduce) {
+      pin.style.height = '';
+      cards.forEach(function (c) { c.classList.remove('on'); });
+      active = -1;
+      return;
+    }
+    perCard = window.innerHeight * 0.55;
+    pin.style.height = (stage.offsetHeight + perCard * (cards.length - 1)) + 'px';
+    sync();
+  }
+
+  function sync() {
+    if (!narrow.matches || reduce) return;
+    var r = pin.getBoundingClientRect();
+    if (r.bottom < -100 || r.top > window.innerHeight + 100) return;
+    var idx = Math.min(cards.length - 1, Math.max(0, Math.floor(-r.top / perCard)));
+    if (idx === active) return;
+    active = idx;
+    stage.style.setProperty('--rs-active', idx);
+    cards.forEach(function (c, i) { c.classList.toggle('on', i === idx); });
+  }
+
+  addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', measure, { passive: true });
+  measure();
+})();
 
 /* ======================================================================
    18. NASLOV SLOVO PO SLOVO

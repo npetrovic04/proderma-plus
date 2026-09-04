@@ -3515,16 +3515,20 @@ body::before {
   .about-panel.on { max-height: 900px; }
 }
 
-/* ---------- VAŠ PUT KOD NAS (mobilno): pinovano, koraci se smenjuju
-   fade in/fade out dok se skroluje — RUNDA 8, zamenjuje stari horizontalni
-   swipe-karusel. #put .jr-grid dobija JS-generisanu visinu (putMobilePin()
-   u app.js) da obezbedi dovoljno skrol-prostora da se sva 4 koraka smene
-   pre nego što se pusti skrol na ostatak sajta — isti fazon kao
-   .tech-viewport/techScroll(), samo je ovde "traka" opacity umesto
-   translateX. .jr-steps je pinovana (sticky) kutija, a svaki .jr-step je
-   apsolutno naslagan preko cele kutije (svi na istom mestu), pa JS samo
-   pali/gasi .on klasu (već postoji iz journey(), sad ponovo iskorišćena
-   ovde) da napravi crossfade. */
+/* ---------- VAŠ PUT KOD NAS (mobilno): pinovano, koraci se okreću kao
+   stranice kocke oko Y ose dok se skroluje — RUNDA 9 (zamenjuje RUNDA 8
+   fade-crossfade). #put .jr-grid i dalje dobija JS-generisanu visinu
+   (putMobilePin() u app.js) da obezbedi skrol-prostor pre nego što se
+   pusti skrol na ostatak sajta. .jr-steps je pinovana (sticky) kutija sa
+   perspective-om; svaki .jr-step je "strana kocke" — position:absolute
+   preko cele kutije, ali sa SOPSTVENIM rotateY offsetom u odnosu na
+   trenutno aktivan korak (--jr-active, CSS promenljiva koju JS menja).
+   Kad --jr-active poraste za 1, sve četiri strane se zarotiraju za -90deg
+   ISTOVREMENO — aktivna strana dolazi sprednja (0deg), prethodna otklizi
+   na levu stranu kocke (-90deg), sledeća čeka na desnoj (90deg) itd.
+   backface-visibility:hidden sakriva stranu kad joj je poleđina okrenuta
+   ka nama (180deg), a translateZ(radius) razmiče strane tačno za
+   pola širine kartice da zajedno formiraju "kutiju". */
 @media (max-width: 939px) {
   #put .jr-grid { position: relative; }
   #put .jr-steps {
@@ -3532,6 +3536,9 @@ body::before {
     position: sticky;
     top: calc(var(--nav-h) + 14px);
     height: min(70vh, 540px);
+    perspective: 1400px;
+    --jr-active: 0;
+    --jr-radius: 160px;
   }
   #put .jr-step {
     position: absolute;
@@ -3543,11 +3550,18 @@ body::before {
     box-shadow: 0 18px 46px -30px rgba(60,25,38,.34);
     padding: 22px; margin: 0;
     overflow-y: auto;
-    opacity: 0 !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     pointer-events: none;
-    transition: opacity .6s ease;
+    transition: transform .7s cubic-bezier(.2,.9,.25,1);
   }
-  #put .jr-step.on { opacity: 1 !important; pointer-events: auto; }
+  #put .jr-step.on { pointer-events: auto; }
+  /* redosled strana kocke prati redosled koraka u markupu (data-jr-step
+     1-4) — svaka dobija fiksni offset od aktivnog koraka puta 90deg */
+  #put .jr-step[data-jr-step="1"] { transform: rotateY(calc((0 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
+  #put .jr-step[data-jr-step="2"] { transform: rotateY(calc((1 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
+  #put .jr-step[data-jr-step="3"] { transform: rotateY(calc((2 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
+  #put .jr-step[data-jr-step="4"] { transform: rotateY(calc((3 - var(--jr-active)) * 90deg)) translateZ(var(--jr-radius)); }
   #put .jr-mob { order: -1; margin: 0 0 16px; border-radius: 12px; aspect-ratio: 16/10; flex: none; }
   #put .jr-num { margin: 0 0 14px; }
   #put .jr-step h3 { margin-bottom: 10px; }
@@ -3637,7 +3651,11 @@ body::before {
   .lab-tabs button {
     flex: initial !important;
     white-space: normal !important;
-    text-align: left;
+    /* RUNDA 9: tekst (i ikonica uz njega) centriran u dugmetu — pre je
+       bio levo poravnat pa je kod kraćih natpisa ostajao prazan prostor
+       desno */
+    justify-content: center;
+    text-align: center;
     line-height: 1.25;
     padding: 10px 12px !important;
     font-size: .74rem !important;
@@ -3709,29 +3727,43 @@ body::before {
   .lab-more-toggle.active::after { transform: rotate(225deg); }
 }
 
-/* ---------- UTISCI: red, skrol levo-desno (bez sticky-stack efekta) ----- */
+/* ---------- UTISCI: mobilni pin + "spil karata" efekat pri skrolu ------- */
 @media (max-width: 640px) {
-  .rs {
-    display: flex !important; flex-wrap: nowrap !important;
-    overflow-x: auto; scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    gap: 16px; margin-top: 20px;
-    padding: 4px 4px 20px;
-    -ms-overflow-style: none; scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
-            mask-image: linear-gradient(90deg, #000 90%, transparent 100%);
+  #utisci .wrap { position: relative; }
+  #utisci .rs {
+    display: block !important;
+    position: sticky;
+    top: calc(var(--nav-h) + 14px);
+    height: min(62vh, 460px);
+    margin-top: 24px;
+    padding: 0 4px;
+    overflow: visible;
+    --rs-active: 0;
   }
-  .rs::-webkit-scrollbar { display: none; }
-  .rs-card {
-    flex: 0 0 82vw !important;
-    scroll-snap-align: center;
-    position: static !important;
+  #utisci .rs-card[data-rs="0"] { --d: calc(0 - var(--rs-active)); }
+  #utisci .rs-card[data-rs="1"] { --d: calc(1 - var(--rs-active)); }
+  #utisci .rs-card[data-rs="2"] { --d: calc(2 - var(--rs-active)); }
+  #utisci .rs-card[data-rs="3"] { --d: calc(3 - var(--rs-active)); }
+  #utisci .rs-card[data-rs="4"] { --d: calc(4 - var(--rs-active)); }
+  #utisci .rs-card {
+    position: absolute !important;
+    inset: 0 !important;
     top: auto !important;
-    transform: none !important;
-    opacity: 1 !important;
-    margin-bottom: 0 !important;
+    margin: 0 !important;
+    display: flex; flex-direction: column; justify-content: center;
+    overflow-y: auto;
+    pointer-events: none;
+    transform:
+      translateX(calc(min(var(--d, 0), 0) * 130%))
+      translateY(calc(max(var(--d, 0), 0) * 8px))
+      scale(calc(1 - max(var(--d, 0), 0) * 0.035))
+      rotate(calc(max(var(--d, 0), 0) * 3deg + min(var(--d, 0), 0) * -16deg));
+    opacity: clamp(0, calc(1 - max(var(--d, 0), 0) * 0.14 + min(var(--d, 0), 0) * 1), 1);
+    z-index: calc(10 - var(--d, 0));
+    transition: transform .6s cubic-bezier(.2, .9, .25, 1), opacity .5s ease;
+    will-change: transform, opacity;
   }
-  .rs-card + .rs-card { margin-top: 0 !important; }
+  #utisci .rs-card.on { pointer-events: auto; }
 }
 
 /* ---------- KONTAKT: forma pre adrese, adresa u 2 kolone ----------------- */
