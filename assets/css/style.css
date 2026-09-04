@@ -3096,6 +3096,21 @@ body::before {
      što i tačkice, pa je izgledala kao višak linije ispod njih. Poziciju
      sada nose samo tačkice (techScroll ih pomera). */
   .tech-progress{display:none}
+
+  /* Kutija je bila visoka ceo ekran a sadržaj kratak, pa je višak prostora
+     padao i iznad i ispod kartica — donja polovina je bila ona prazna traka
+     pred sekcijom TIM. Sada je kutija visoka koliko i sadržaj i lepi se
+     ispod header-a, isto kao pin kod "Vaš put kod nas" i utisaka.
+     techScroll() runway računa iz stvarne visine kutije, ne iz visine
+     ekrana, pa pin i dalje traje tačno koliko traka putuje. */
+  .tech-viewport{
+    top:calc(var(--nav-h) + 10px);
+    height:auto;
+    /* donji padding je odmeren da razmak do sekcije TIM padne u isti rang
+       kao razmaci između ostalih sekcija (~95-110px) */
+    padding-block:0 46px;
+    gap:18px;
+  }
 }
 
 /* ---------- 17. TIM — biografija na hover ------------------------------- */

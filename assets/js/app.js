@@ -1817,11 +1817,13 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 (function techScroll() {
   var sec = $('[data-tech]');
   if (!sec) return;
+  var view  = $('.tech-viewport', sec);
   var track = $('.tech-track', sec);
   var bar   = $('.tech-progress i', sec);
-  if (!track) return;
+  if (!track || !view) return;
 
-  var dist = 0;
+  var narrow = window.matchMedia('(max-width: 939px)');
+  var dist = 0, viewH = 0, stickyTop = 0;
 
   function measure() {
     if (reduce) {
@@ -1831,8 +1833,17 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     }
     // koliko traka viri van ekrana = koliko treba da otputuje
     dist = Math.max(0, track.scrollWidth - window.innerWidth);
-    // visina sekcije: jedan ekran (pin) + put trake, sa malo vazduha
-    sec.style.height = (window.innerHeight + dist + 120) + 'px';
+    // Pinovana kutija ostaje zalepljena tačno (visina sekcije − visina
+    // kutije) piksela. Na desktopu je kutija visoka ceo ekran i lepi se na
+    // vrh, pa se ovo svodi na staru formulu; na mobilnom je visoka koliko
+    // sadržaj i lepi se ispod header-a, pa mora da se meri stvarno stanje —
+    // inače bi traka završila put pre nego što se kutija odlepi.
+    sec.style.height = '';
+    viewH = view.offsetHeight;
+    stickyTop = parseFloat(getComputedStyle(view).top) || 0;
+    // rep bez kretanja na kraju: na mobilnom kratak, da TIM ne kasni
+    var slack = narrow.matches ? 40 : 120;
+    sec.style.height = (viewH + dist + slack) + 'px';
     sync();
   }
 
@@ -1872,8 +1883,11 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     if (reduce) return;
     var r = sec.getBoundingClientRect();
     if (r.bottom < -100 || r.top > window.innerHeight + 100) return;   // van kadra
-    var total = sec.offsetHeight - window.innerHeight;
-    var p = total > 0 ? Math.min(Math.max(-r.top / total, 0), 1) : 0;
+    // pinovani hod = visina sekcije − visina kutije; progres se meri otkad
+    // se kutija zalepila (r.top === stickyTop), a na desktopu je stickyTop 0
+    // pa je ovo identično staroj formuli
+    var total = sec.offsetHeight - viewH;
+    var p = total > 0 ? Math.min(Math.max((stickyTop - r.top) / total, 0), 1) : 0;
     track.style.transform = 'translate3d(' + (-p * dist).toFixed(1) + 'px,0,0)';
     if (bar) bar.style.setProperty('--p', (p * 100).toFixed(1) + '%');
     syncDots();
