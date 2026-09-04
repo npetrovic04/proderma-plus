@@ -246,41 +246,27 @@ setTimeout(function () {
 })();
 
 /* ======================================================================
-   2f. SPISAK USLUGA — otvaranje opisa na dodir i tastaturu
-   Mišem se otvara preko :hover u CSS-u. Ovde je pokriveno ono što hover
-   ne pokriva: telefoni i navigacija tastaturom.
+   2f. SPISAK USLUGA — klik na cenovnik
+   Mišem se opis otvara preko :hover u CSS-u. Na dodir (RUNDA 8) kartice su
+   sad UVEK ekspandovane (opis + dugme stalno vidljivi, bez tap-to-open
+   koraka), pa klik/tastatura vode direktno na cenovnik i na dodir isto
+   kao mišem — više nema razloga za dvostepeni tap.
    ====================================================================== */
 (function svcRows() {
   var rows = $$('.svc-row');
   if (!rows.length) return;
-
-  // Na mišu/tastaturi klik i dalje vodi direktno na cenovnik. Na dodir
-  // (bez hovera) prvi tap samo otvara karticu (opis + dugme), drugi tap
-  // na dugme vodi dalje — inače se prva stavka svaki put "slučajno"
-  // otvarala u cenovniku pre nego što je korisnik i video o čemu se radi.
-  var coarse = window.matchMedia('(pointer: coarse)').matches;
 
   function goToPrice(row) {
     var g = row.getAttribute('data-price-group');
     window.location.href = 'cenovnik.html' + (g ? ('?g=' + encodeURIComponent(g)) : '');
   }
 
-  function toggleRow(row) {
-    var wasActive = row.classList.contains('active');
-    rows.forEach(function (r) { r.classList.remove('active'); });
-    if (!wasActive) row.classList.add('active');
-  }
-
   rows.forEach(function (row) {
-    row.addEventListener('click', function (e) {
-      if (!coarse) { goToPrice(row); return; }
-      if (e.target.closest('.sr-cta')) { goToPrice(row); return; }
-      toggleRow(row);
-    });
+    row.addEventListener('click', function () { goToPrice(row); });
     row.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
-        if (coarse) { toggleRow(row); } else { goToPrice(row); }
+        goToPrice(row);
       }
     });
   });
@@ -1774,8 +1760,15 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   var nEl = $('[data-jr-num]', sec), tEl = $('[data-jr-title]', sec);
   if (!steps.length) return;
 
+  // RUNDA 8: ova pin-uz-sliku logika je za desktop raspored (.jr-stage
+  // pored .jr-steps). Na mobilnom sad postoji sopstveni pin+fade fazon
+  // (vidi putMobilePin niže) koji drugačije koristi istu .jr-step.on
+  // klasu — bez ovog gate-a bi se ova dva međusobno nadjačavala.
+  var wide = window.matchMedia('(min-width: 940px)');
+
   var active = -1;
   function sync() {
+    if (!wide.matches) return;
     // van kadra se ne računa ništa — jedan rect je jeftiniji od IO stanja
     // koje ume da ostane "ugašeno" ako observer zakasni
     var sr = sec.getBoundingClientRect();
@@ -1804,6 +1797,9 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
    16. TEHNOLOGIJA — horizontalni skrol vezan za vertikalni
    Sekcija je visoka onoliko koliko traka treba da otputuje. Viewport se
    pinuje, traka se pomera po napretku kroz sekciju.
+   RUNDA 8: pre je ovo bilo desktop-only (ispod 940px se traka ručno
+   swipe-ovala) — sad radi na svim širinama, i na mobilnom vertikalni
+   skrol pomera karticu s desna u levo, isto kao na desktopu.
    ====================================================================== */
 (function techScroll() {
   var sec = $('[data-tech]');
@@ -1812,11 +1808,10 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   var bar   = $('.tech-progress i', sec);
   if (!track) return;
 
-  var wide = window.matchMedia('(min-width: 940px)');
   var dist = 0;
 
   function measure() {
-    if (!wide.matches || reduce) {
+    if (reduce) {
       sec.style.height = '';
       track.style.transform = '';
       return;
@@ -1829,7 +1824,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   }
 
   function sync() {
-    if (!wide.matches || reduce) return;
+    if (reduce) return;
     var r = sec.getBoundingClientRect();
     if (r.bottom < -100 || r.top > window.innerHeight + 100) return;   // van kadra
     var total = sec.offsetHeight - window.innerHeight;
@@ -1840,8 +1835,6 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 
   addEventListener('scroll', sync, { passive: true });
   addEventListener('resize', measure, { passive: true });
-  wide.addEventListener ? wide.addEventListener('change', measure)
-                        : wide.addListener(measure);
   // slike menjaju scrollWidth kad se učitaju
   addEventListener('load', measure);
   $$('img', track).forEach(function (im) {
@@ -1866,18 +1859,53 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 })();
 
 /* ======================================================================
-   16c. VAŠ PUT KOD NAS — klik na mobilnom ekspandira opis (strelica uz naslov)
-   ====================================================================== */
-(function putExpand() {
-  var steps = $$('#put .jr-step');
-  if (!steps.length) return;
-  var mq = window.matchMedia('(max-width: 939px)');
-  steps.forEach(function (step) {
-    step.addEventListener('click', function () {
-      if (!mq.matches) return;
-      step.classList.toggle('active');
-    });
-  });
+   16c. VAŠ PUT KOD NAS (mobilno) — pin + fade-cycle kroz korake
+   RUNDA 8: zamena za stari tap-to-expand karusel. #put .jr-grid dobija
+   veštački napumpanu visinu (isti trik kao techScroll() — sekcija je
+   viša nego njen sadržaj da pruži skrol-prostor), #put .jr-steps je
+   position:sticky (pinovana), a svaki .jr-step je apsolutno naslagan
+   preko cele te kutije (CSS, vidi style.css). Ovde se samo računa koji
+   korak je "na redu" na osnovu koliko je sekcija proskrolovana i pali mu
+   .on klasu — CSS transition na opacity radi sam crossfade. Dok se ne
+   prođe i poslednji korak, sekcija je veštački visoka pa sajt fizički ne
+   može da pređe na sledeću dok se svi koraci ne izmenjaju. */
+(function putMobilePin() {
+  var sec = $('#put');
+  if (!sec) return;
+  var grid = $('.jr-grid', sec);
+  var steps = $$('.jr-step', sec);
+  if (!grid || steps.length < 2) return;
+
+  var narrow = window.matchMedia('(max-width: 939px)');
+  var perStep = 0, active = -1;
+
+  function measure() {
+    if (!narrow.matches || reduce) {
+      grid.style.height = '';
+      steps.forEach(function (st) { st.classList.remove('on'); });
+      active = -1;
+      return;
+    }
+    // ~0.72 ekrana skrola po koraku — dovoljno da se pročita opis pre
+    // nego što se pređe na sledeći, a da ne bude predugo/dosadno
+    perStep = window.innerHeight * 0.72;
+    grid.style.height = (perStep * steps.length) + 'px';
+    sync();
+  }
+
+  function sync() {
+    if (!narrow.matches || reduce) return;
+    var r = grid.getBoundingClientRect();
+    if (r.bottom < -100 || r.top > window.innerHeight + 100) return;   // van kadra
+    var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(-r.top / perStep)));
+    if (idx === active) return;
+    active = idx;
+    steps.forEach(function (st, i) { st.classList.toggle('on', i === idx); });
+  }
+
+  addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', measure, { passive: true });
+  measure();
 })();
 
 /* ======================================================================
@@ -1898,13 +1926,14 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 })();
 
 /* ======================================================================
-   16e. Tačkice (dots) ispod horizontalnih skrol redova — Usluge, Put,
+   16e. Tačkice (dots) ispod horizontalnih skrol redova — Usluge,
    Tehnologija, Tim, Utisci. Prati scroll i klikom skroluje na karticu.
-   ====================================================================== */
+   RUNDA 8: "Put kod nas" izbačen iz liste — .jr-steps više nije
+   horizontalno skrolabilna lista (pinovan fade-stack umesto toga), pa
+   tačkice koje prate scrollLeft tu više nemaju šta da prate. */
 (function scrollDots() {
   var groups = [
     { list: '#usluge .svc-list', item: '.svc-row' },
-    { list: '#put .jr-steps',    item: '.jr-step' },
     { list: '.tech-track',       item: '.tech-card' },
     { list: '.team-grid',        item: '.tm' },
     { list: '.rs',                item: '.rs-card' }
