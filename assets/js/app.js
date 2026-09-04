@@ -1547,6 +1547,19 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     }
   });
 
+  // BACK dugme: kad se ode sa stranice, zavesa je podignuta preko celog
+  // ekrana — i takvu je browser zamrzne u bfcache. Pri povratku se DOM
+  // vraća u to isto stanje, a skripte se NE izvršavaju ponovo (zato ni
+  // "pp-nav" grana iznad ne pomaže), pa je "PRODERMA PLUS" ostajao
+  // zalepljen preko sadržaja i stranica je delovala mrtvo.
+  function resetVeil() { veil.className = 'pt-veil'; }
+  addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;              // samo povratak iz bfcache-a
+    resetVeil();
+    sessionStorage.removeItem('pp-nav');
+  });
+  addEventListener('popstate', resetVeil); // back/forward u istoj stranici
+
   if (reduce) return;
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
@@ -1873,17 +1886,32 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 (function putMobilePin() {
   var sec = $('#put');
   if (!sec) return;
+  var wrap = $('.wrap', sec);
+  var head = $('.sec-head', sec);
   var grid = $('.jr-grid', sec);
   var stage = $('.jr-steps', sec);
   var steps = $$('.jr-step', sec);
-  if (!grid || !stage || steps.length < 2) return;
+  if (!wrap || !grid || !stage || steps.length < 2) return;
+
+  // Naslov sekcije i kartice se pinuju ZAJEDNO, da naslov ostane na ekranu
+  // dok se koraci smenjuju. .jr-pin je runway (JS mu daje visinu), .jr-stick
+  // je ono što se lepi. Na desktopu su oba obična div-a bez stila, pa se
+  // raspored ne menja.
+  var pin = document.createElement('div');
+  pin.className = 'jr-pin';
+  var stick = document.createElement('div');
+  stick.className = 'jr-stick';
+  wrap.insertBefore(pin, head || grid);
+  pin.appendChild(stick);
+  if (head) stick.appendChild(head);
+  stick.appendChild(grid);
 
   var narrow = window.matchMedia('(max-width: 939px)');
   var perStep = 0, stickyTop = 0, active = -1;
 
   function measure() {
     if (!narrow.matches || reduce) {
-      grid.style.height = '';
+      pin.style.height = '';
       steps.forEach(function (st) { st.classList.remove('on'); });
       active = -1;
       return;
@@ -1891,22 +1919,22 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     // ~0.36 ekrana skrola po koraku — jedan "skrol" (wheel/swipe) treba
     // da prebaci na sledeći korak, ne dva
     perStep = window.innerHeight * 0.36;
-    stickyTop = parseFloat(getComputedStyle(stage).top) || 0;
-    // KLJUČNO: sticky kutija ostaje zakačena samo (visina kontejnera −
-    // visina same kutije) piksela. Ako je kontejner visok tačno
-    // perStep × brojKoraka, izgubi se stageHeight skrola i poslednji
-    // koraci "prolete" tek pošto se kutija već odlepila i otišla gore.
-    // Zato runway mora da bude stageHeight VEĆI od zbira svih koraka.
-    grid.style.height = (stage.offsetHeight + perStep * steps.length) + 'px';
+    stickyTop = parseFloat(getComputedStyle(stick).top) || 0;
+    // KLJUČNO: sticky blok ostaje zakačen samo (visina runway-a − visina
+    // samog bloka) piksela. Ako je runway visok tačno perStep × brojKoraka,
+    // izgubi se cela visina bloka i poslednji koraci "prolete" tek pošto se
+    // blok već odlepio i otišao gore. Zato runway mora biti za visinu bloka
+    // viši od zbira svih koraka.
+    pin.style.height = (stick.offsetHeight + perStep * steps.length) + 'px';
     sync();
   }
 
   function sync() {
     if (!narrow.matches || reduce) return;
-    var r = grid.getBoundingClientRect();
+    var r = pin.getBoundingClientRect();
     if (r.bottom < -100 || r.top > window.innerHeight + 100) return;   // van kadra
-    // progres se meri OD TRENUTKA kad se kutija zakačila (r.top === stickyTop),
-    // a ne od vrha kontejnera — inače indeksi kasne za stickyTop piksela
+    // progres se meri OD TRENUTKA kad se blok zakačio (r.top === stickyTop),
+    // a ne od vrha runway-a — inače indeksi kasne za stickyTop piksela
     var travelled = stickyTop - r.top;
     var idx = Math.min(steps.length - 1, Math.max(0, Math.floor(travelled / perStep)));
     if (idx === active) return;
@@ -1946,8 +1974,10 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
   var groups = [
     { list: '#usluge .svc-list', item: '.svc-row' },
     { list: '.tech-track',       item: '.tech-card' },
-    { list: '.team-grid',        item: '.tm' },
-    { list: '.rs',                item: '.rs-card' }
+    { list: '.team-grid',        item: '.tm' }
+    // .rs je izbačen: utisci više nisu horizontalni skrol, pa su te tačkice
+    // ostajale zamrznute na prvoj — utisciDeck() sada pravi svoje koje prate
+    // aktivnu karticu u špilu
   ];
   groups.forEach(function (g) {
     var list = $(g.list);
@@ -2058,18 +2088,37 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
 (function utisciDeck() {
   var sec = $('#utisci');
   if (!sec) return;
+  var wrap = $('.wrap', sec);
+  var head = $('.sec-head', sec);
   var stage = $('.rs', sec);
   var cards = $$('.rs-card', sec);
-  if (!stage || cards.length < 2) return;
+  if (!wrap || !stage || cards.length < 2) return;
 
   cards.forEach(function (c, i) { c.setAttribute('data-rs', i); });
 
-  // rs mora imati sopstveni "runway" kontejner (bez sec-head ispred sebe u
-  // istom elementu) da bi -r.top progres bio čist, isto kao .jr-grid/.tech
+  // naslov sekcije i špil se pinuju zajedno (isto kao #put), da naslov
+  // ostane na ekranu dok se kartice smenjuju
   var pin = document.createElement('div');
   pin.className = 'rs-pin';
-  stage.parentNode.insertBefore(pin, stage);
-  pin.appendChild(stage);
+  var stick = document.createElement('div');
+  stick.className = 'rs-stick';
+  wrap.insertBefore(pin, head || stage);
+  pin.appendChild(stick);
+  if (head) stick.appendChild(head);
+  stick.appendChild(stage);
+
+  // pokazivač dokle se stiglo kroz špil — sekcija je zaključana dok se ne
+  // prođu sve kartice, pa je korisno videti koliko ih je ostalo
+  var dots = document.createElement('div');
+  dots.className = 'scroll-dots rs-dots';
+  dots.setAttribute('aria-hidden', 'true');
+  cards.forEach(function () {
+    var d = document.createElement('span');
+    d.className = 'scroll-dot';
+    dots.appendChild(d);
+  });
+  stick.appendChild(dots);
+  var dotEls = $$('.scroll-dot', dots);
 
   var narrow = window.matchMedia('(max-width: 640px)');
   var perCard = 0, stickyTop = 0, active = -1;
@@ -2084,11 +2133,11 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     // ~0.28 ekrana skrola po kartici — jedan "skrol" treba da prebaci na
     // sledeću karticu, ne dva
     perCard = window.innerHeight * 0.28;
-    stickyTop = parseFloat(getComputedStyle(stage).top) || 0;
-    // isto kao kod #put: pinovani hod je (visina runway-a − visina kutije),
-    // pa runway mora biti za stageHeight viši od zbira svih kartica —
+    stickyTop = parseFloat(getComputedStyle(stick).top) || 0;
+    // isto kao kod #put: pinovani hod je (visina runway-a − visina bloka),
+    // pa runway mora biti za visinu bloka viši od zbira svih kartica —
     // inače poslednja kartica dođe na red tek kad se špil već odlepio
-    pin.style.height = (stage.offsetHeight + perCard * cards.length) + 'px';
+    pin.style.height = (stick.offsetHeight + perCard * cards.length) + 'px';
     sync();
   }
 
@@ -2102,6 +2151,7 @@ var fine   = window.matchMedia('(pointer: fine)').matches;
     active = idx;
     stage.style.setProperty('--rs-active', idx);
     cards.forEach(function (c, i) { c.classList.toggle('on', i === idx); });
+    dotEls.forEach(function (d, i) { d.classList.toggle('on', i === idx); });
   }
 
   addEventListener('scroll', sync, { passive: true });

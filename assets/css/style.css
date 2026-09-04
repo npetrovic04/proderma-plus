@@ -1829,7 +1829,19 @@ body::before {
   row-gap: 11px;
   justify-content: start;
 }
-@media (max-width: 560px) { .foot-links--2 { grid-auto-flow: row; grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) {
+  /* kolone su bile 1fr 1fr, pa se spisak razvlačio celom širinom futera i
+     stajao levo poravnat ispod centriranog naslova "Vodič". Kolone sada
+     uzimaju širinu sadržaja, a ceo blok se centrira — naslov je time
+     centriran u odnosu na obe kolone. */
+  .foot-links--2 {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+    column-gap: clamp(26px, 9vw, 48px);
+  }
+  .foot-nav .foot-links--2 { text-align: center; }
+}
 
 /* naslov "Vodič" centriran iznad dvokolonog spiska */
 .foot-nav { text-align: center; }
@@ -3037,6 +3049,11 @@ body::before {
    .tech-track/.tech-card iznad — pin CSS je zajednički za sve širine. */
 @media (max-width:939px){
   .tech-card{flex-basis:78vw}
+  /* .tech-track je flex, a podrazumevani align-items:stretch je razvlačio
+     SVE kartice na visinu one koja je otvorena — ostale su rasle prazne
+     jer im je opis i dalje sakriven (max-height:0). Sa flex-start svaka
+     kartica drži svoju visinu, pa se širi samo ona koja je kliknuta. */
+  .tech-track{align-items:flex-start}
 }
 
 /* ---------- 17. TIM — biografija na hover ------------------------------- */
@@ -3524,12 +3541,24 @@ body::before {
    je position:absolute preko cele kutije i samo menja opacity kad dobije/
    izgubi klasu .on — jeftina, glatka animacija bez 3D transformacija. */
 @media (max-width: 939px) {
+  /* naslov sekcije i kartice se lepe zajedno, pa naslov ostaje na ekranu
+     dok se koraci smenjuju (.jr-pin/.jr-stick pravi putMobilePin()) */
+  #put .jr-stick {
+    position: sticky;
+    top: calc(var(--nav-h) + 10px);
+  }
+  #put .jr-stick .sec-head { margin-bottom: 14px; }
+  #put .jr-stick .sec-head .lead { display: none; }
   #put .jr-grid { position: relative; }
   #put .jr-steps {
     display: block;
-    position: sticky;
-    top: calc(var(--nav-h) + 14px);
-    height: min(70vh, 540px);
+    position: relative;
+    /* visina je odmerena tako da i najduži korak (04) stane ceo, sa
+       ~40px rezerve — proveravano u brauzeru, ne odokativno */
+    height: min(58vh, 480px);
+    /* kartica se širi 10px preko padding-a .wrap-a sa svake strane, da
+       veći unutrašnji razmak ne bi sužavao kolonu teksta */
+    margin-inline: -10px;
   }
   #put .jr-step {
     position: absolute;
@@ -3539,7 +3568,9 @@ body::before {
     border-radius: var(--r-lg, 18px);
     background: var(--surface, #fff);
     box-shadow: 0 18px 46px -30px rgba(60,25,38,.34);
-    padding: 22px; margin: 0;
+    /* sadržaj je bio prilepljen uz ivice (22px); sa širom karticom
+       ide 26/28 a kolona teksta ostaje ista širina kao pre */
+    padding: 26px 28px; margin: 0;
     overflow: hidden;
     opacity: 0;
     transform: scale(1.06);
@@ -3550,11 +3581,17 @@ body::before {
     will-change: opacity, transform;
   }
   #put .jr-step.on { opacity: 1; transform: scale(1); pointer-events: auto; }
-  #put .jr-mob { order: -1; margin: 0 0 16px; border-radius: 12px; aspect-ratio: 16/10; flex: none; }
-  #put .jr-num { margin: 0 0 14px; }
-  #put .jr-step h3 { margin-bottom: 10px; }
-  #put .jr-step p { margin: 0; max-width: none; }
-  #put .jr-meta { margin-top: 14px; }
+  /* sadržaj koraka mora da stane u kutiju — inače overflow:hidden nemo
+     odseče dno (meta tagove) kod najdužih koraka */
+  #put .jr-mob {
+    order: -1; margin: 0 0 12px; border-radius: 12px;
+    aspect-ratio: 16/9; max-height: 150px; flex: none;
+  }
+  #put .jr-num { width: 38px; height: 38px; margin: 0 0 10px; }
+  #put .jr-step h3 { font-size: 1.22rem; margin-bottom: 8px; }
+  #put .jr-step p { margin: 0; max-width: none; font-size: .92rem; line-height: 1.55; }
+  #put .jr-meta { margin-top: 12px; }
+  #put .jr-meta span { font-size: .7rem; padding: 3px 9px; }
 }
 
 /* ---------- TEHNOLOGIJA: opis iza strelice -------------------------------- */
@@ -3718,15 +3755,24 @@ body::before {
 /* ---------- UTISCI: mobilni pin + "spil karata" efekat pri skrolu ------- */
 @media (max-width: 640px) {
   #utisci .wrap { position: relative; }
+  /* naslov + špil se lepe zajedno (.rs-pin/.rs-stick pravi utisciDeck()) */
+  #utisci .rs-stick {
+    position: sticky;
+    top: calc(var(--nav-h) + 10px);
+  }
+  #utisci .rs-stick .sec-head { margin-bottom: 4px; }
   #utisci .rs {
     display: block !important;
-    position: sticky;
-    top: calc(var(--nav-h) + 14px);
-    height: min(48vh, 380px);
+    position: relative;
+    height: min(44vh, 340px);
     margin-top: 8px;
     padding: 0 4px;
     overflow: visible;
     --rs-active: 0;
+  }
+  #utisci .rs-dots {
+    display: flex; justify-content: center; align-items: center;
+    gap: 7px; margin-top: 14px;
   }
   #utisci .rs-card[data-rs="0"] { --d: calc(0 - var(--rs-active)); }
   #utisci .rs-card[data-rs="1"] { --d: calc(1 - var(--rs-active)); }
