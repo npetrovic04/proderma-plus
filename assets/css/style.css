@@ -1388,6 +1388,31 @@ body::before {
   filter: blur(4px);
 }
 
+/* Zatamnjenje preko fotografije (samo desktop): tekst kartice je prilepljen
+   za dno (.sr-panel je justify-content:flex-end), pa gradijent ide odozdo
+   naviše — jak na dnu gde su naslov, opis i tagovi, a potpuno providan pri
+   vrhu da fotografija ostane čista. Boja je namerno neutralno tamna, a ne
+   iz palete, da radi isto u sve tri varijante palete. */
+@media (min-width: 940px) {
+  .sr-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgba(28, 16, 22, .82) 0%,
+      rgba(28, 16, 22, .74) 30%,
+      rgba(28, 16, 22, .56) 52%,
+      rgba(28, 16, 22, .30) 72%,
+      rgba(28, 16, 22, .10) 88%,
+      rgba(28, 16, 22, 0) 100%
+    );
+    transition: opacity .5s var(--ease);
+  }
+}
+
 /* ---- Tekstualni panel — preko cele fotografije. Van hovera bez ikakvog
    zamućenja/pozadine (slika potpuno čista), tekst prilepljen za dno preko
    flex rasporeda; na hover se pojavljuje staklena pozadina. ---- */
@@ -1446,6 +1471,18 @@ body::before {
      1px  1px 0 rgba(0,0,0,.65),
      0 0 4px rgba(0,0,0,.35);
 }
+
+/* Kontura u četiri pravca oko slova (gore) bila je zamena za zatamnjenje dok
+   ga nije bilo — na desktopu je sada suvišna i samo grubi tipografiju, pa je
+   menja jedna meka senka. Mora da stoji POSLE baznih pravila jer ima istu
+   specifičnost. Ispod 940px se ne dira: tablet nema sloj preko fotografije,
+   a mobilni ionako ima tamna slova na svetloj podlozi (text-shadow: none). */
+@media (min-width: 940px) {
+  .sr-t, .sr-d {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .45), 0 0 14px rgba(0, 0, 0, .3);
+  }
+}
+
 .sr-tags {
   display: flex;
   flex-wrap: wrap;
