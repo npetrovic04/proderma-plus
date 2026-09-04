@@ -136,7 +136,16 @@ html {
   /* header je fixed — bez ovoga sidra iz menija završe ispod njega */
   scroll-padding-top: calc(var(--nav-h) + 24px);
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden; /* bez ovoga se overflow-x sa body-ja "prebacuje" na html (CSS overflow propagation) i mobilni safari/chrome i dalje dozvoljavaju horizontalni swipe iako body ima overflow-x:hidden */
+  /* RUNDA 7: "overflow-x: hidden" ovde je bio bag — po CSS specifikaciji,
+     kad je overflow-x nešto drugo osim visible a overflow-y ostane
+     podrazumevano visible, browser overflow-y SAM prebacuje na auto
+     (dokumentovano "overflow propagation" ponašanje). To html/body čini
+     scroll kontejnerom i u potpunosti razbija position:sticky za SVU
+     decu na strani — .jr-stage (Vaš put kod nas), .tech-viewport
+     (Tehnologija) i .rs-card (Utisci) su zbog toga samo listom
+     skrolovali umesto da se pinuju. "overflow-x: clip" sprečava isti
+     horizontalni bleed/swipe bez uspostavljanja scroll kontejnera. */
+  overflow-x: clip;
   width: 100%;
 }
 
@@ -147,7 +156,7 @@ body {
   line-height: 1.65;
   color: var(--ink-2);
   background: transparent; /* preliv živi u body::before, ispod svega */
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -457,14 +466,16 @@ body::before {
               box-shadow .5s var(--ease), border-color .5s var(--ease),
               min-height .45s var(--ease), padding .45s var(--ease);
 }
-/* pri skrolu: traka se stanjuje (manja visina), a staklo je izraženije —
-   jače zamućenje i zasićenje drže čitljivost iako se ispod providi slika */
+/* pri skrolu: traka se stanjuje (manja visina). Ranije je "staklo" ovde bilo
+   izraženije (blur 42px, jače zasićenje) — sad namerno ide suprotno: manje
+   zamućenje i providnija podloga, i na mobilnom i na desktopu (ovo pravilo
+   nije u media query-ju pa važi za oba). */
 .site-header.stuck .nav {
   min-height: 44px;
   padding-block: 4px;
   background: rgba(253, 251, 247, .3);
-  backdrop-filter: blur(42px) saturate(2.2);
-  -webkit-backdrop-filter: blur(42px) saturate(2.2);
+  backdrop-filter: blur(10px) saturate(1.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
   border-color: rgba(255,255,255,.65);
   box-shadow: 0 14px 46px -26px rgba(31,26,28,.34),
               inset 0 1px 0 rgba(255,255,255,.55);
@@ -475,9 +486,16 @@ body::before {
 .brand svg { height: 52px; width: auto; transition: height .4s var(--ease); }
 .site-header.stuck .brand svg { height: 34px; }
 
-/* dugme "Zakaži pregled" se skuplja proporcionalno sa ostatkom trake */
-.site-header .nav-cta .btn { transition: padding .4s var(--ease), gap .4s var(--ease), transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
-.site-header.stuck .nav-cta .btn { padding: 9px 20px; gap: 7px; }
+/* dugme "Zakaži pregled" se skuplja proporcionalno sa ostatkom trake.
+   Pre je padding bio jedini parametar koji se menjao (9px 20px) — sa
+   fiksnim font-size (--fs-3) i strelicom od 16px, dugme je i dalje ostajalo
+   vizuelno preveliko za stanjenu traku (min-height:44px kod .stuck .nav) i
+   fizički ju je gurao van njene kompaktne visine. Sad se pri skrolu smanjuje
+   i font i strelica, ne samo padding, da dugme prati logo (skuplja se na 34px). */
+.site-header .nav-cta .btn { transition: padding .4s var(--ease), gap .4s var(--ease), font-size .4s var(--ease), transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+.site-header.stuck .nav-cta .btn { padding: 7px 16px; gap: 5px; font-size: .75rem; }
+.site-header .nav-cta .btn .arr { transition: width .4s var(--ease), height .4s var(--ease), transform .45s var(--ease-out); }
+.site-header.stuck .nav-cta .btn .arr { width: 13px; height: 13px; }
 
 .nav-links { position: relative; display: flex; align-items: center; gap: clamp(12px, 1.5vw, 24px); flex-wrap: nowrap; }
 .nav-links a {
@@ -1503,7 +1521,14 @@ body::before {
   --sr-pad-x: clamp(12px, 1.2vw, 15px);
   --sr-pad-y: clamp(12px, 1.2vw, 15px);
   aspect-ratio: 390 / 206;
-  min-height: 130px;
+  /* RUNDA 7: na užim desktop širinama (1000-1200px, 3 kolone) aspect-ratio
+     pravi karticu nižu nego što hover-sadržaj (naslov+opis+tagovi+dugme)
+     fizički može da stane — vrh naslova tada izlazi iznad ivice kartice i
+     overflow:hidden ga odseca ("Dijagnostika kože" delovalo je presečeno).
+     Veći min-height garantuje dovoljno prostora nezavisno od širine; na
+     širim ekranima aspect-ratio i dalje prirodno daje veću visinu, pa se
+     ovde ništa vizuelno ne menja. */
+  min-height: 176px;
 }
 #usluge .sr-d { margin-top: 4px; }
 #usluge .sr-tags { margin-top: 8px; }
@@ -2567,7 +2592,10 @@ body::before {
    (npr. 900px) slika + tekst + razmak lako pređu ekran, pa dobija sopstveni,
    blaži prag pre nego što se aktivira opšte "niski prozori" stezanje ispod. */
 @media (min-height: 801px) and (max-height: 920px) {
-  #usluge .svc-row { aspect-ratio: 390 / 188; min-height: 120px; }
+  /* RUNDA 7: min-height podignut sa 120 na 176px — na užim širinama (grid
+     od 3 kolone) je 120px bilo premalo za naslov+opis+tagove+dugme na
+     hoveru, pa se vrh naslova sekao o gornju ivicu kartice. */
+  #usluge .svc-row { aspect-ratio: 390 / 188; min-height: 176px; }
   #usluge .svc-cta { margin-top: clamp(23px, 2vw, 31px); }
 }
 
@@ -2591,8 +2619,11 @@ body::before {
   #usluge.section { padding-block: clamp(16px, 2.2vh, 24px); }
   #usluge .sec-head { margin-bottom: clamp(6px, 1vh, 10px); }
   #usluge .svc-list { gap: clamp(8px, 1vh, 12px); }
-  #usluge .svc-row { aspect-ratio: 390 / 145; min-height: 95px; }
-  #usluge .sr-body { padding: clamp(8px, 1.2vh, 12px); }
+  #usluge .svc-row { aspect-ratio: 390 / 145; min-height: 190px; }
+  /* RUNDA 7: donji padding mora da ostavi mesta za "Pogledaj cenu" dugme
+     (koje je apsolutno pozicionirano, bottom:14px) — bez rezervisanog
+     prostora ovde su se tagovi i dugme preklapali na niskim prozorima. */
+  #usluge .sr-body { padding: clamp(8px, 1.2vh, 12px) clamp(8px, 1.2vh, 12px) calc(clamp(8px, 1.2vh, 12px) + 34px) clamp(8px, 1.2vh, 12px); }
   #usluge .sr-cta { padding: clamp(8px, 1.2vh, 12px); }
   #usluge .sr-t { line-height: 1.1; }
   #usluge .sr-d { margin-top: 3px; line-height: 1.35; }
@@ -3066,7 +3097,11 @@ body::before {
 }
 .site-header.scrolled .nav,
 .site-header.stuck .nav{
-  background:rgba(255,255,255,.62) !important;
+  /* pre je ovo pravilo (kasnije u fajlu, sa !important) nadjačavalo
+     transparentniju pozadinu iz .stuck .nav gore i gurnulo traku na .62 —
+     neprozirniju nego u vrhu strane. Sad ide obrnuto: skrolovano stanje
+     providnije od početnog (.42), ne neprozirnije. */
+  background:rgba(255,255,255,.24) !important;
   box-shadow:0 10px 40px -16px rgba(60,25,38,.34);
 }
 /* uže stavke da 6 linkova diše */
