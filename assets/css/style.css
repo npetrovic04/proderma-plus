@@ -3255,6 +3255,12 @@ body::before {
   grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) !important;
   gap:26px !important;
 }
+/* Stavke u mreži se podrazumevano rastežu na visinu najvišeg u redu, pa je
+   hover na jednoj kartici razvlačio i ostale iz istog reda — one su rasle
+   prazne, jer im je biografija i dalje skupljena. Sa align-items:start
+   svaka kartica drži svoju visinu i širi se samo ona pod mišem. Ispod
+   641px .team-grid je flex traka i tamo isto već stoji flex-start. */
+@media (min-width:641px){ .team-grid{align-items:start} }
 @media (min-width:1080px){ .team-grid{grid-template-columns:repeat(3,1fr) !important} }
 #tim{padding-block:clamp(48px,6vh,84px) !important}
 .tm{
