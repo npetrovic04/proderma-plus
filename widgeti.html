@@ -7,22 +7,24 @@
 <title>Widgeti — interni pregled</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bad+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <style>
-/* ===== widgeti (interni test) — koristi proderma paletu iz style.css ===== */
-.wg-good{color:#3E8E7E}.wg-warn{color:#B98338}.wg-crit{color:#B0455E}.wg-info{color:var(--brand)}
-.wg-page{max-width:820px;margin:0 auto;padding:0 20px 80px}
-.wg-head{padding:38px 0 4px}
+/* na internoj strani: sve je odmah vidljivo (bez scroll-reveal zavisnosti) */
+[data-reveal],[data-reveal-group]>*{opacity:1!important;transform:none!important;filter:none!important}
+body{background:var(--paper)}
+.wg-good{color:#3E8E7E}.wg-warn{color:#B98338}.wg-crit{color:#B0455E}
+.wg-page{max-width:960px;margin:0 auto;padding:0 20px 90px}
+.wg-head{padding:34px 0 4px}
 .wg-badge{display:inline-block;font-family:var(--ff-body);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-deep);background:var(--brand-tint);border:1px solid var(--brand-soft);padding:5px 12px;border-radius:var(--r-pill)}
 .wg-head h1{font-family:var(--ff-display);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--ink);margin:14px 0 10px;font-weight:500;letter-spacing:-.01em}
-.wg-head p{color:var(--ink-2);max-width:60ch;margin:0}
-.wg-nav{position:sticky;top:0;z-index:30;display:flex;gap:8px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(10px);padding:12px 0;margin:20px 0 6px;border-bottom:1px solid var(--line)}
+.wg-head p{color:var(--ink-2);max-width:65ch;margin:0}
+.wg-nav{position:sticky;top:0;z-index:60;display:flex;gap:8px;flex-wrap:wrap;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);padding:12px 0;margin:20px 0 6px;border-bottom:1px solid var(--line)}
 .wg-nav a{font-size:.82rem;font-weight:600;color:var(--ink-3);padding:7px 14px;border-radius:var(--r-pill);border:1px solid var(--line)}
 .wg-nav a:hover{color:var(--brand-deep);background:var(--white);border-color:var(--brand-soft)}
 .wg-group{padding:30px 0 4px}
-.wg-gh{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
-.wg-gh .t{font-family:var(--ff-display);font-size:1.05rem;font-weight:600;color:#fff;background:var(--brand-deep);width:32px;height:32px;border-radius:10px;display:grid;place-items:center}
+.wg-gh{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.wg-gh .t{font-family:var(--ff-display);font-size:1.05rem;font-weight:600;color:#fff;background:var(--brand-deep);width:32px;height:32px;border-radius:10px;display:grid;place-items:center;flex:none}
 .wg-gh h2{font-family:var(--ff-display);font-size:1.5rem;font-weight:500;color:var(--ink)}
 .wg-gh p{flex-basis:100%;color:var(--ink-3);font-size:.9rem;margin:2px 0 0}
 .wg{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;margin:16px 0;box-shadow:var(--shadow-sm)}
@@ -39,17 +41,13 @@
 .wg-f label{font-size:.74rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3)}
 .wg input,.wg select{width:100%;height:46px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);padding:0 14px;font:inherit;font-size:.98rem}
 .wg input:focus,.wg select:focus{outline:none;border-color:var(--brand);background:var(--white)}
-.wg textarea{width:100%;min-height:90px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);padding:12px 14px;font:inherit;resize:vertical}
-.wg textarea:focus{outline:none;border-color:var(--brand)}
 .wg-seg{display:flex;gap:7px;flex-wrap:wrap}
-.wg-seg button{flex:1;min-width:60px;height:42px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--r-sm);font-weight:600;font-size:.9rem;transition:.15s}
+.wg-seg button{flex:1;min-width:60px;height:42px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--r-sm);font-weight:600;font-size:.9rem;transition:.15s;cursor:pointer}
 .wg-seg button[aria-pressed="true"]{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
-.wg-chip{border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:var(--r-pill);padding:8px 14px;font-size:.88rem;font-weight:500;transition:.15s}
+.wg-chip{border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:var(--r-pill);padding:8px 14px;font-size:.88rem;font-weight:500;transition:.15s;cursor:pointer}
 .wg-chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
-.wg-chk{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);cursor:pointer;margin-bottom:8px;font-size:.9rem}
-.wg-chk input{width:20px;height:20px;flex:none;margin-top:1px}
 .wg-qs{font-size:.9rem;margin:14px 0 8px;font-weight:600;color:var(--ink)}
-.wg-btn{height:46px;padding:0 22px;border-radius:var(--r-pill);background:var(--brand-deep);color:#fff;font-weight:600;font-size:.96rem;width:100%;transition:.15s}
+.wg-btn{height:46px;padding:0 22px;border-radius:var(--r-pill);background:var(--brand-deep);color:#fff;font-weight:600;font-size:.96rem;width:100%;transition:.15s;cursor:pointer}
 .wg-btn:hover{background:var(--brand)}.wg-btn:active{transform:translateY(1px)}
 .wg-out{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px;display:none}
 .wg-out.show{display:block;animation:wgf .35s var(--ease)}
@@ -69,75 +67,342 @@
 .wg-mini .m .l{font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
 .wg-mini .m .b{font-family:var(--ff-display);font-size:1.25rem;color:var(--ink);margin-top:3px}
 .wg-mini .m .s{font-size:.75rem;color:var(--ink-3)}
-.wg-pollen{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
-.wg-pollen:last-child{border:none}.wg-pollen .lvl{font-family:var(--ff-display);font-weight:600}
 .wg-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.9rem}
 .wg-table th,.wg-table td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
 .wg-table td:last-child,.wg-table th:last-child{text-align:right;font-family:var(--ff-display)}
 .wg-table th{font-size:.72rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
 .wg-disc{font-size:.78rem;color:var(--ink-3);margin:8px 0 0;line-height:1.5}
 .wg-foot{border-top:1px solid var(--line);margin-top:36px;padding:24px 0 0;color:var(--ink-3);font-size:.82rem}
-@media(max-width:560px){.wg-row,.wg-row.three{grid-template-columns:1fr}.wg-mini{grid-template-columns:1fr 1fr}.wg-nav{overflow-x:auto}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:560px){.wg-row,.wg-row.three{grid-template-columns:1fr}.wg-mini{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.wg-out{animation:none}}
 </style>
 </head>
 <body>
-<div class="wg-page">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
 
+  <!-- ===== PRODERMA PLUS — logo =====
+       Rekonstrukcija originalnog znaka: dvostruki prsten (spoljni tanki
+       sivi + puna roze elipsa sa belim unutrašnjim prstenom), "PRO" belo
+       unutar znaka, "DERMA" u crnoj nastavlja wordmark, tanki potez
+       ispod. Dodat PLUS badge. -->
+  <g id="logoFull">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="#9B9498" stroke-width="1.6"
+             opacity=".5" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="#fff" stroke-width="1.5" opacity=".85"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="var(--ink)">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand)" stroke-width="1.5"
+          stroke-linecap="round" opacity=".8"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="var(--brand-soft)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="var(--brand-deep)">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== varijanta za tamnu podlogu (futer) ===== -->
+  <g id="logoLight">
+    <ellipse cx="52" cy="44" rx="46" ry="37" fill="none" stroke="rgba(255,255,255,.3)"
+             stroke-width="1.6" transform="rotate(-7 52 44)"/>
+    <ellipse cx="50" cy="45" rx="42" ry="34" fill="var(--brand)"/>
+    <ellipse cx="50" cy="45" rx="37.5" ry="29.5" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+    <text x="50" y="56" text-anchor="middle" font-family="Inter, Helvetica, sans-serif"
+          font-size="30" font-weight="400" letter-spacing="1" fill="#fff">PRO</text>
+    <text x="96" y="56" font-family="Inter, Helvetica, sans-serif" font-size="30"
+          font-weight="400" letter-spacing="1" fill="#fff">DERMA</text>
+    <path d="M92 70 Q170 79 249 68" fill="none" stroke="var(--brand-soft)" stroke-width="1.5"
+          stroke-linecap="round"/>
+    <g transform="translate(252,32)">
+      <rect x="0" y="0" width="44" height="19" rx="9.5" fill="rgba(255,255,255,.18)"/>
+      <text x="22" y="13.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.2"
+            font-weight="700" letter-spacing="2.6" fill="#fff">PLUS</text>
+    </g>
+  </g>
+
+  <!-- ===== ikone ===== -->
+  <g id="iPhone"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iMail"><rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m2 7 10 6 10-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iPin"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></g>
+  <g id="iClock"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iCheck"><path d="m4 12.5 5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iShield"><path d="M12 2.5 4 6v6c0 5 3.4 8.6 8 9.5 4.6-.9 8-4.5 8-9.5V6z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m8.8 12 2.2 2.2 4.2-4.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g id="iScan"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="7.5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+  <g id="iSun"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iDrop"><path d="M12 2.7S5.5 9.8 5.5 14.3a6.5 6.5 0 0 0 13 0C18.5 9.8 12 2.7 12 2.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></g>
+  <g id="iSpark"><path d="M12 2.5 14 9l6.5 2-6.5 2-2 6.5-2-6.5L3.5 11 10 9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></g>
+  <g id="iLaser"><path d="M12 2v7M12 15v7M4.9 6.4l4.3 3.1M14.8 14.5l4.3 3.1M19.1 6.4l-4.3 3.1M9.2 14.5l-4.3 3.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></g>
+  <g id="iCal"><rect x="3" y="5" width="18" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></g>
+  <g id="iSearch"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iQuote"><path d="M0 30V17.5C0 7.8 5.4 1.6 15.6 0l1.9 4.6c-5.3 1.5-8 4.4-8 8.6h6.1V30H0zm22.5 0V17.5C22.5 7.8 27.9 1.6 38.1 0L40 4.6c-5.3 1.5-8 4.4-8 8.6h6.1V30H22.5z" fill="currentColor"/></g>
+  <g id="iArr"><path d="M4 12h15m-5.5-5.5L19 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iWind"><path d="M3 8.5h10.5a3 3 0 1 0-3-3M3 12.5h15a3 3 0 1 1-3 3M3 16.5h8a2.5 2.5 0 1 1-2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <g id="iPollen"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v3.6M12 17.4V21M3 12h3.6M17.4 12H21M5.6 5.6l2.6 2.6M15.8 15.8l2.6 2.6M18.4 5.6l-2.6 2.6M8.2 15.8l-2.6 2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="3" r="1.2" fill="currentColor"/><circle cx="21" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="21" r="1.2" fill="currentColor"/><circle cx="3" cy="12" r="1.2" fill="currentColor"/></g>
+  <g id="iIG"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></g>
+  <g id="iFB"><path d="M14 8.5h2.5V5.2H14c-2.2 0-3.8 1.7-3.8 3.9v1.6H8v3.3h2.2V21h3.3v-7h2.4l.6-3.3h-3V9.1c0-.4.2-.6.5-.6z" fill="currentColor"/></g>
+  <g id="iIn"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 10.5V17M7.5 7.3v.1M11.5 17v-3.6c0-1.4 1-2.4 2.3-2.4s2.2 1 2.2 2.4V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>
+  <g id="iYT"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m10.5 9 5 3-5 3z" fill="currentColor"/></g>
+</defs>
+</svg>
+<div class="wg-page">
   <header class="wg-head">
     <span class="wg-badge">Interni pregled · nije za klijenta</span>
     <h1>Widgeti — radna verzija</h1>
-    <p>Sve na jednom mestu za odabir. Real-time alati (UV, vazduh, bioprognoza) povlače podatke uživo za vašu lokaciju. Kliknite alat, isprobajte, pa mi javite koje zadržavamo.</p>
-    <nav class="wg-nav"><a href="#a">Uživo</a><a href="#b">Testovi</a><a href="#c">Kalkulatori</a></nav>
+    <p>Gore su Skin Lab alati preuzeti 1:1 sa proderma sajta (rade identično). Ispod su dodatni predlozi za novi Stetoskop — takođe uživo. Prošetaj kroz sve pa javi koje zadržavamo.</p>
+    <nav class="wg-nav"><a href="#skin-lab">Skin Lab (1:1)</a><a href="#extra">Još real-time</a><a href="#b">Testovi rizika</a><a href="#c">Kalkulatori</a></nav>
   </header>
+  <div class="wg-group"><div class="wg-gh"><span class="t">A</span><h2>Skin Lab — preuzeto 1:1</h2><p>Identično kao na proderma sajtu: UV indeks, vazduh i polen, tip kože, ABCDE samopregled, kalendar nege.</p></div></div>
+<section class="section lab" id="skin-lab">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow eyebrow--center">Skin Lab</span>
+      <h2>Vaša koža, u realnom vremenu</h2>
+      <p class="lead">Pet alata koje smo napravili da biste između dva pregleda znali šta vaša koža traži danas —
+      od UV zračenja iznad Niša do samopregleda mladeža.</p>
+    </div>
 
-  <!-- ============ A ============ -->
-  <section class="wg-group" id="a">
-    <div class="wg-gh"><span class="t">A</span><h2>U realnom vremenu</h2><p>Podaci: Open-Meteo, za vašu lokaciju.</p></div>
+    <div class="lab-tabs" data-reveal role="tablist">
+      <button class="on" data-lab="uv" role="tab"><svg viewBox="0 0 24 24"><use href="#iSun"/></svg> UV indeks danas</button>
+      <button data-lab="air" role="tab"><svg viewBox="0 0 24 24"><use href="#iPollen"/></svg> Vazduh i polen</button>
+      <button data-lab="quiz" role="tab"><svg viewBox="0 0 24 24"><use href="#iDrop"/></svg> Kakav je vaš tip kože?</button>
+      <button data-lab="abcde" role="tab"><svg viewBox="0 0 24 24"><use href="#iScan"/></svg> ABCDE samopregled</button>
+      <button data-lab="cal" role="tab"><svg viewBox="0 0 24 24"><use href="#iCal"/></svg> Kalendar nege</button>
+    </div>
 
-    <!-- A1 UV (proderma stil) -->
-    <div class="wg" id="wUv">
-      <div class="wg-top"><div class="wg-ic">☀️</div><div><h3>UV indeks i zaštita</h3><p id="uvLoc">Učitavanje lokacije…</p></div><span class="wg-badge-live" id="uvBadge">uživo</span></div>
-      <div class="uv-grid">
-        <div>
-          <div class="uv-gauge">
-            <svg viewBox="0 0 200 200" aria-hidden="true">
-              <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line)" stroke-width="12" stroke-dasharray="386 515" stroke-linecap="round" transform="rotate(135 100 100)"/>
-              <circle id="uvArc" cx="100" cy="100" r="82" fill="none" stroke="var(--brand)" stroke-width="12" stroke-dasharray="0 515" stroke-linecap="round" transform="rotate(135 100 100)" style="transition:stroke-dasharray 1.2s var(--ease-out),stroke .6s"/>
-            </svg>
-            <div class="uv-num"><b id="uvVal">–</b><span>UV indeks</span></div>
+    <div class="lab-card" data-reveal>
+
+      <!-- ---------- UV VIDŽET ---------- -->
+      <div class="lab-panel on" data-labp="uv">
+        <div class="uv-grid">
+          <div>
+            <div class="uv-gauge">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line)" stroke-width="12"
+                        stroke-dasharray="386 515" stroke-linecap="round" transform="rotate(135 100 100)"/>
+                <circle id="uvArc" cx="100" cy="100" r="82" fill="none" stroke="var(--brand)" stroke-width="12"
+                        stroke-dasharray="0 515" stroke-linecap="round" transform="rotate(135 100 100)"
+                        style="transition:stroke-dasharray 1.2s cubic-bezier(.16,1,.3,1), stroke .6s"/>
+              </svg>
+              <div class="uv-num"><b id="uvVal">–</b><span>UV indeks</span></div>
+            </div>
+            <div style="text-align:center">
+              <span class="uv-level" id="uvLevel">Učitavanje…</span>
+              <div class="uv-loc" id="uvLoc">Niš, Srbija · <button id="uvGeo" type="button">koristi moju lokaciju</button></div>
+            </div>
           </div>
-          <div style="text-align:center"><span class="uv-level" id="uvLevel">Učitavanje…</span></div>
+
+          <div class="uv-advice">
+            <h3 id="uvHead">Koliko sunca vaša koža podnese danas?</h3>
+            <p class="uv-msg" id="uvMsg">Izaberite svoj fototip kože i dobićete procenu vremena do prvog crvenila,
+            kao i preporučeni SPF za današnje uslove.</p>
+
+            <button type="button" class="lab-more-toggle" data-labmore-toggle aria-expanded="false">Detaljnije</button>
+            <div class="lab-more" data-labmore>
+              <div class="pheno-label">Fototip kože po Fitzpatricku</div>
+              <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa kože">
+                <button data-t="1" title="I — vrlo svetla koža, uvek izgori, nikad ne potamni">I</button>
+                <button data-t="2" class="on" title="II — svetla koža, obično izgori, slabo potamni">II</button>
+                <button data-t="3" title="III — svetlo-smeđa koža, ponekad izgori, ravnomerno potamni">III</button>
+                <button data-t="4" title="IV — maslinasta koža, retko izgori, lako potamni">IV</button>
+                <button data-t="5" title="V — tamno-smeđa koža, vrlo retko izgori">V</button>
+                <button data-t="6" title="VI — tamna koža, praktično nikad ne izgori">VI</button>
+              </div>
+
+              <div class="uv-out">
+                <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite, na direktnom suncu</i></div>
+                <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i id="uvSpfNote">ponoviti na 2 h</i></div>
+                <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce u tom periodu</i></div>
+              </div>
+
+              <div class="uv-chart">
+                <div class="uc-t">UV kroz dan</div>
+                <div class="uv-bars" id="uvBars"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="uv-advice">
-          <h3 id="uvHead">Koliko sunca vaša koža podnese danas?</h3>
-          <p class="uv-msg" id="uvMsg">Izaberite fototip kože i dobićete procenu vremena do crvenila i preporučeni SPF.</p>
-          <div class="pheno-label">Fototip kože po Fitzpatricku</div>
-          <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa">
-            <button data-t="1" title="I — vrlo svetla">I</button><button data-t="2" class="on" title="II — svetla">II</button><button data-t="3" title="III — svetlosmeđa">III</button><button data-t="4" title="IV — maslinasta">IV</button><button data-t="5" title="V — tamnosmeđa">V</button><button data-t="6" title="VI — tamna">VI</button>
-          </div>
-          <div class="uv-out">
-            <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite</i></div>
-            <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i>ponoviti na 2 h</i></div>
-            <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce</i></div>
-          </div>
-          <div class="uv-chart"><div class="uc-t" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px">UV kroz dan</div><div class="uv-bars" id="uvBars"></div></div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Procena je informativna i računa se po standardnom modelu minimalne eritemske doze
+          za direktno podnevno sunce, bez zaštite. Stvarno vreme zavisi od nadmorske visine, refleksije (voda, pesak, sneg),
+          lekova koje uzimate i stanja kože. Ne zamenjuje pregled dermatologa.
+          Podaci: Open-Meteo. <a href="#kontakt" style="color:var(--brand-deep);text-decoration:underline">Zakažite dermoskopiju →</a>
         </div>
       </div>
-    </div>
 
-    <!-- A2 Vazduh i polen -->
-    <div class="wg" id="wAir">
-      <div class="wg-top"><div class="wg-ic">🌬️</div><div><h3>Vazduh i polen</h3><p>Kvalitet vazduha i alergeni</p></div><span class="wg-badge-live" id="airBadge">uživo</span></div>
-      <div class="wg-metric"><span class="wg-num" id="airAqi">–</span><span class="wg-unit">EU AQI</span><span class="wg-pill" id="airPill">—</span></div>
-      <div class="wg-mini"><div class="m"><div class="l">PM2.5</div><div class="b" id="airPm25">–</div><div class="s">µg/m³</div></div><div class="m"><div class="l">PM10</div><div class="b" id="airPm10">–</div><div class="s">µg/m³</div></div><div class="m"><div class="l">Status</div><div class="b" id="airSt" style="font-size:1rem">–</div><div class="s">danas</div></div></div>
-      <p class="wg-note" style="font-weight:600;color:var(--ink);margin-top:16px">Alergeni u vazduhu (zrnaca/m³)</p>
-      <div id="airPollen"></div>
-      <p class="wg-note" id="airMsg"></p>
-      <a class="wg-cta" href="#kontakt">Zakaži alergološko testiranje →</a>
-    </div>
+      <!-- ---------- VAZDUH I POLEN ---------- -->
+      <div class="lab-panel" data-labp="air">
+        <div class="air-grid">
+          <div>
+            <div class="air-hero" id="airHero">
+              <div class="air-aqi">
+                <span class="ah-l">Kvalitet vazduha</span>
+                <b id="airAqi">–</b>
+                <span class="air-level" id="airAqiLvl">Učitavanje…</span>
+              </div>
+              <div class="air-pm">
+                <div><span>PM2.5</span><b id="airPm25">–</b><i>µg/m³</i></div>
+                <div><span>PM10</span><b id="airPm10">–</b><i>µg/m³</i></div>
+              </div>
+            </div>
+            <p class="air-msg" id="airMsg">Učitavanje podataka o vazduhu za Niš…</p>
+          </div>
 
-    <!-- A3 Bioprognoza -->
+          <div>
+            <h3>Alergeni u vazduhu</h3>
+            <button type="button" class="lab-more-toggle" data-labmore-toggle aria-expanded="false">Detaljnije</button>
+            <div class="lab-more" data-labmore>
+              <p style="margin:8px 0 20px;font-size:.92rem">Koncentracije polena za Niš, u zrncima po kubnom metru.
+              Kod atopijskog dermatitisa, ekcema i kontaktne urtikarije visok polen se često vidi na koži
+              pre nego u nosu.</p>
+              <div class="pollen-list" id="pollenList">
+                <div class="pl-empty">Učitavanje…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="air-skin" id="airSkin">
+          <div class="as-t">Šta ovo znači za kožu danas</div>
+          <p id="airSkinMsg">—</p>
+          <a class="btn btn--ghost" href="#kontakt">Zakaži alergološko testiranje</a>
+        </div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Podaci su modelovani (CAMS Europe / Open-Meteo) i predstavljaju procenu za
+          širu zonu grada, ne merenje na vašoj adresi. Reakcija kože na alergene je individualna — tačan okidač
+          utvrđuje se <strong>alergološkim epikutanim testiranjem</strong>, ne prema koncentraciji u vazduhu.
+          Ako već primate terapiju, ne menjajte je na osnovu ovih brojeva.
+        </div>
+      </div>
+
+      <!-- ---------- KVIZ ---------- -->
+      <div class="lab-panel" data-labp="quiz">
+        <div class="quiz" id="quiz">
+          <div class="quiz-progress">
+            <span class="qp-n" id="qpN">Pitanje 1 / 6</span>
+            <div class="qp-bar"><i id="qpBar"></i></div>
+          </div>
+          <div id="quizBody"></div>
+        </div>
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Kviz daje orijentacionu procenu tipa kože na osnovu vaših odgovora i ne predstavlja
+          dijagnozu. Za tačnu analizu potrebna je dermatološka procena uživo.
+        </div>
+      </div>
+
+      <!-- ---------- ABCDE ---------- -->
+      <div class="lab-panel" data-labp="abcde">
+        <div style="max-width:62ch;margin-bottom:26px">
+          <h3>ABCDE pravilo — kako da sami pregledate mladež</h3>
+          <p style="margin-top:8px">Jednom mesečno, pri dobrom svetlu, pregledajte kožu celog tela. Ako mladež ispunjava
+          <strong>bilo koji</strong> od pet kriterijuma — ne čekajte. Digitalna dermoskopija i FotoFinder mapiranje
+          daju odgovor za jedan pregled.</p>
+        </div>
+
+        <div class="abcde-grid" data-reveal-group>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <path d="M60 14c14 0 26 10 26 26 0 16-12 30-26 30S34 56 34 40c0-16 12-26 26-26z" fill="var(--brand-tint)"/>
+              <path class="sh-bad" d="M60 16c16 2 24 12 24 26 0 15-11 28-24 28V16z" fill="var(--accent-soft)"/>
+              <path d="M60 12v62" stroke="var(--brand)" stroke-width="1.4" stroke-dasharray="4 4"/>
+            </svg>
+            <div class="ab-l">A</div><div class="ab-w">Asimetrija</div>
+            <p>Jedna polovina mladeža ne odgovara drugoj kada ga zamislite prepolovljenog.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <path class="sh-bad" d="M60 12c10-2 22 6 26 16 5 12-2 18 2 26-5 10-16 16-28 16s-24-6-28-16c-3-8 2-14 0-24 4-12 18-16 28-18z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+            </svg>
+            <div class="ab-l">B</div><div class="ab-w">Border / ivice</div>
+            <p>Ivice su nazubljene, nepravilne ili razlivene, a ne glatke i jasno ograničene.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <ellipse cx="60" cy="42" rx="27" ry="26" fill="var(--brand-tint)"/>
+              <path class="sh-bad" d="M45 26c10-4 18 4 26 2s14 8 10 18-16 6-22 12-18 2-20-10 -2-18 6-22z" fill="var(--accent)" opacity=".55"/>
+              <circle cx="52" cy="52" r="6" fill="var(--brand-deep)" opacity=".5"/>
+            </svg>
+            <div class="ab-l">C</div><div class="ab-w">Color / boja</div>
+            <p>Više nijansi u istom mladežu — smeđa, crna, crvena, bela ili plavičasta polja.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <circle cx="40" cy="42" r="10" fill="var(--brand-tint)"/>
+              <circle class="sh-bad" cx="80" cy="42" r="24" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+              <path d="M56 70h48" stroke="var(--brand)" stroke-width="1.2"/>
+              <text x="80" y="80" text-anchor="middle" font-size="9" fill="var(--ink-3)" font-family="Inter,sans-serif">&gt; 6 mm</text>
+            </svg>
+            <div class="ab-l">D</div><div class="ab-w">Diameter</div>
+            <p>Prečnik veći od 6 mm (otprilike gumica na vrhu olovke) — ili bilo koji rast.</p>
+          </div>
+          <div class="ab">
+            <svg viewBox="0 0 120 84" fill="none">
+              <circle cx="38" cy="42" r="13" fill="var(--brand-tint)"/>
+              <path d="M58 42h14m-4-4 4 4-4 4" stroke="var(--brand)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle class="sh-bad" cx="92" cy="42" r="21" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6"/>
+            </svg>
+            <div class="ab-l">E</div><div class="ab-w">Evolucija</div>
+            <p>Menja se — raste, menja boju ili oblik, svrbi, krvari ili se ljušti.</p>
+          </div>
+        </div>
+
+        <div class="abcde-note">
+          <p><strong style="color:#fff">Ako prepoznate bilo koji znak</strong> — zakažite dermoskopiju. Rano otkriven
+          melanom ima izuzetno visoku stopu izlečenja, a pregled traje kraće od pauze za kafu.</p>
+          <a class="btn" href="#kontakt" data-magnetic>Zakaži dermoskopiju <svg class="arr" width="16" height="16" viewBox="0 0 24 24"><use href="#iArr"/></svg></a>
+        </div>
+
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> ABCDE je alat za samoprocenu i ne isključuje potrebu za stručnim pregledom.
+          Neki melanomi ne ispunjavaju nijedan od ovih kriterijuma. Kod svake nedoumice — javite se dermatologu.
+        </div>
+      </div>
+
+      <!-- ---------- KALENDAR ---------- -->
+      <div class="lab-panel" data-labp="cal">
+        <div class="cal-grid">
+          <div>
+            <div class="pheno-label">Izaberite mesec</div>
+            <div class="cal-months" id="calMonths"></div>
+            <div style="margin-top:22px;padding:18px;border-radius:var(--r-md);background:rgba(255,255,255,.7);border:1px solid var(--line-2)">
+              <div class="pheno-label" style="margin-bottom:8px">Uslovi sada · Niš</div>
+              <div style="display:flex;gap:22px;flex-wrap:wrap">
+                <div><b style="font-family:var(--ff-display);font-size:1.6rem;color:var(--ink)" id="calTemp">–</b>
+                     <i style="font-style:normal;display:block;font-size:.74rem;color:var(--ink-3)">temperatura</i></div>
+                <div><b style="font-family:var(--ff-display);font-size:1.6rem;color:var(--ink)" id="calHum">–</b>
+                     <i style="font-style:normal;display:block;font-size:.74rem;color:var(--ink-3)">vlažnost vazduha</i></div>
+              </div>
+              <p style="font-size:.82rem;margin-top:12px;margin-bottom:0" id="calHumMsg">—</p>
+            </div>
+          </div>
+
+          <div class="cal-body">
+            <div class="cal-season" id="calSeason">—</div>
+            <h3 id="calTitle">—</h3>
+            <p id="calIntro" style="margin-top:10px"></p>
+            <div class="cal-focus" id="calFocus"></div>
+            <ul class="cal-list" id="calList"></ul>
+            <a class="btn btn--ghost" href="#usluge" style="margin-top:22px">Tretmani za ovaj period</a>
+          </div>
+        </div>
+        <div class="lab-disclaimer">
+          <strong>Napomena.</strong> Sezonske preporuke su opšte smernice. Plan nege se pravi individualno — nakon pregleda
+          i procene stanja vaše kože.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- ===== Još real-time (dodatak) ===== -->
+  <section class="wg-group" id="extra">
+    <div class="wg-gh"><span class="t">+</span><h2>Još u realnom vremenu</h2><p>Predlog — nije na proderma. Podaci: Open-Meteo za Niš (ili vašu lokaciju).</p></div>
+
     <div class="wg" id="wBio">
       <div class="wg-top"><div class="wg-ic">🌡️</div><div><h3>Bioprognoza za meteoropate</h3><p>Uticaj promene pritiska i vremena</p></div><span class="wg-badge-live" id="bioBadge">uživo</span></div>
       <div class="wg-metric"><span class="wg-num" id="bioVal">–</span><span class="wg-unit">indeks opterećenja</span><span class="wg-pill" id="bioPill">—</span></div>
@@ -145,7 +410,6 @@
       <p class="wg-note" id="bioMsg"></p>
     </div>
 
-    <!-- A4 Grip -->
     <div class="wg" id="wFlu">
       <div class="wg-top"><div class="wg-ic">🤧</div><div><h3>Indeks prehlade i gripa</h3><p>Sezonska procena i saveti za imunitet</p></div><span class="wg-badge-live" id="fluBadge">uživo</span></div>
       <div class="wg-metric"><span class="wg-num" id="fluVal">–</span><span class="wg-unit">/ 100</span><span class="wg-pill" id="fluPill">—</span></div>
@@ -153,7 +417,7 @@
     </div>
   </section>
 
-  <!-- ============ B ============ -->
+  <!-- ===== B testovi ===== -->
   <section class="wg-group" id="b">
     <div class="wg-gh"><span class="t">B</span><h2>Testovi i procene rizika</h2><p>Vode ka odgovarajućem specijalisti.</p></div>
 
@@ -178,17 +442,9 @@
     <div class="wg"><div class="wg-top"><div class="wg-ic">🧠</div><div><h3>Stres i anksioznost</h3><p>Kratak skrining (GAD-2/PHQ-2) — poslednje 2 nedelje</p></div></div>
       <div id="gaQs"></div><button class="wg-btn" id="gaCalc">Prikaži rezultat</button>
       <div class="wg-out" id="gaOut"><div class="wg-metric"><span class="wg-num" id="gaVal">–</span><span class="wg-unit">/ 12</span><span class="wg-pill" id="gaPill"></span></div><p class="wg-note" id="gaMsg"></p><a class="wg-cta" href="#kontakt">Zakaži: Psiholog →</a></div></div>
-
-    <div class="wg"><div class="wg-top"><div class="wg-ic">🧴</div><div><h3>Kakav je vaš tip kože?</h3><p>Fitzpatrick fototip</p></div></div>
-      <div id="fpQs"></div><button class="wg-btn" id="fpCalc">Odredi fototip</button>
-      <div class="wg-out" id="fpOut"><div class="wg-metric"><span class="wg-num" id="fpVal">–</span><span class="wg-unit" id="fpName"></span></div><p class="wg-note" id="fpMsg"></p></div></div>
-
-    <div class="wg"><div class="wg-top"><div class="wg-ic">🔬</div><div><h3>ABCDE samopregled mladeža</h3><p>Označite sve što primećujete</p></div></div>
-      <div id="abQs"></div><button class="wg-btn" id="abCalc">Proveri</button>
-      <div class="wg-out" id="abOut"><div class="wg-metric"><span class="wg-num" id="abVal">–</span><span class="wg-unit">/ 5 znakova</span><span class="wg-pill" id="abPill"></span></div><p class="wg-note" id="abMsg"></p><a class="wg-cta" href="#kontakt">Zakaži dermoskopiju →</a></div></div>
   </section>
 
-  <!-- ============ C ============ -->
+  <!-- ===== C kalkulatori ===== -->
   <section class="wg-group" id="c">
     <div class="wg-gh"><span class="t">C</span><h2>Medicinski kalkulatori</h2><p>Pet postojećih (osavremenjenih) + osam novih.</p></div>
 
@@ -262,90 +518,50 @@
   </section>
 
   <div class="wg-foot" id="kontakt">
-    <strong>⚕️ Napomena.</strong> Svi alati su informativni i ne zamenjuju pregled lekara. Real-time procene su modelovane za širu zonu lokacije. Ovo je interna radna strana (van navigacije, noindex) — nije za deljenje klijentima. U hitnim slučajevima pozovite <strong>194</strong>.
+    <strong>⚕️ Napomena.</strong> Svi alati su informativni i ne zamenjuju pregled lekara. Interna radna strana (van navigacije, noindex) — nije za deljenje klijentima. U hitnim slučajevima pozovite <strong>194</strong>.
   </div>
 </div>
 
+<script src="assets/js/app.js"></script>
 <script>
+(function(){
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const show=id=>$('#'+id).classList.add('show');
 const fmt=(n,d=0)=>Number(n).toLocaleString('sr-RS',{minimumFractionDigits:d,maximumFractionDigits:d});
 function pill(el,cls,txt){el.className='wg-pill '+cls;el.textContent=txt;}
 
-/* ---------- A: real-time ---------- */
-const A={lat:43.3209,lon:21.8958,city:'Niš (podrazumevano)'}; // Niš default
+/* ----- dodatni real-time: bioprognoza + grip (Niš default) ----- */
 async function fetchJSON(u){const c=new AbortController();const t=setTimeout(()=>c.abort(),3500);try{const r=await fetch(u,{signal:c.signal});clearTimeout(t);if(!r.ok)throw 0;return await r.json();}catch(e){clearTimeout(t);return null;}}
-function renderUV(uv,peak,series){
-  const fp=+($('#pheno button.on')?.dataset.t||2);
-  $('#uvVal').textContent=fmt(uv,1);
-  const frac=Math.min(uv,11)/11;$('#uvArc').setAttribute('stroke-dasharray',(frac*386)+' 515');
-  let col='#3E8E7E',lbl='Nizak';if(uv>=3&&uv<6){col='var(--accent)';lbl='Umeren';}else if(uv>=6&&uv<8){col='#C77B2E';lbl='Visok';}else if(uv>=8){col='#B0455E';lbl='Vrlo visok';}
-  $('#uvArc').setAttribute('stroke',col);$('#uvLevel').textContent=lbl;
-  const med=[200,250,325,400,500,600][fp-1];const burn=uv>0?Math.max(5,Math.round(med/(uv*3.5))):999;
-  $('#uvBurn').textContent=uv>0?burn+' min':'—';$('#uvSpf').textContent=uv<3?'SPF 15':uv<6?'SPF 30':'SPF 50';$('#uvPeak').textContent=peak;
-  $('#uvMsg').textContent=uv<3?'Nizak rizik. Zaštita obično nije neophodna.':uv<6?'Umeren UV. U sredini dana potražite hlad, naočare i zaštitu na lice, vrat i šake.':uv<8?'Visok UV. Obavezan SPF, šešir i naočare; izbegavajte sunce 11–16 h.':'Vrlo visok UV. Ograničite izlaganje; SPF 50 i zaštitna odeća.';
-  const bars=$('#uvBars');bars.innerHTML='';const mx=Math.max(...series.map(s=>s.v),1);
-  series.forEach(s=>{const b=document.createElement('div');b.className='ub';b.style.height=Math.max(4,s.v/mx*100)+'%';if(s.v>=6)b.classList.add('now');const sp=document.createElement('span');sp.textContent=s.h;b.appendChild(sp);bars.appendChild(b);});
-}
-$$('#pheno button').forEach(b=>b.onclick=()=>{$$('#pheno button').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(window._uv)renderUV(window._uv.uv,window._uv.peak,window._uv.series);});
-function renderPollen(rows){const w=$('#airPollen');w.innerHTML='';rows.forEach(([sr,la,v])=>{const lvl=v<10?'Nizak':v<30?'Umeren':v<50?'Visok':'Vrlo visok';const c=v<10?'#3E8E7E':v<30?'#C77B2E':'#B0455E';const d=document.createElement('div');d.className='wg-pollen';d.innerHTML=`<span><strong>${sr}</strong> <span style="color:var(--ink-3)">${la}</span></span><span class="lvl" style="color:${c}">${v<1?'<1':v} · ${lvl}</span>`;w.appendChild(d);});}
 function renderBio(p,tr,t,h){$('#bioP').textContent=fmt(p);$('#bioPt').textContent=(tr>0?'+':'')+tr+' hPa / 24h';$('#bioT').textContent=fmt(t);$('#bioH').textContent=fmt(h);let load=Math.min(100,Math.abs(tr)*8+(t>28?20:t<0?15:0)+(h>80?10:0));$('#bioVal').textContent=Math.round(load);let cls='good',l='Nisko';if(load>=30&&load<55){cls='info';l='Umereno';}else if(load>=55&&load<75){cls='warn';l='Povišeno';}else if(load>=75){cls='crit';l='Visoko';}pill($('#bioPill'),cls,l);$('#bioMsg').textContent=Math.abs(tr)>=5?'Nagla promena pritiska — meteoropati mogu osetiti glavobolju, umor i bol u zglobovima. Više tečnosti, manje napora i kofeina uveče.':'Stabilni uslovi — mali uticaj na organizam.';}
 function renderFlu(t,h){const m=new Date().getMonth();const seas=(m>=10||m<=2)?45:((m>=3&&m<=4)||m===9)?25:10;let idx=Math.min(100,seas+(t<5?25:t<12?12:0)+(h<40?10:0));$('#fluVal').textContent=Math.round(idx);let cls='good',l='Nizak';if(idx>=30&&idx<55){cls='info';l='Umeren';}else if(idx>=55&&idx<75){cls='warn';l='Povišen';}else if(idx>=75){cls='crit';l='Visok';}pill($('#fluPill'),cls,l);$('#fluMsg').textContent=idx>=55?'Povećan rizik od respiratornih infekcija. Perite ruke, provetravajte, dovoljno sna i vitamin D jačaju imunitet.':'Nizak do umeren rizik. Održavajte hidrataciju i san.';}
-function demoA(){['uvBadge','airBadge','bioBadge','fluBadge'].forEach(id=>{$('#'+id).classList.add('demo');$('#'+id).textContent='demo';});$('#uvLoc').textContent=A.city+' · demo';window._uv={uv:4.5,peak:'13:00',series:[{h:'6',v:.4},{h:'9',v:2.4},{h:'12',v:4.3},{h:'15',v:2.6},{h:'18',v:.6}]};renderUV(4.5,'13:00',window._uv.series);$('#airAqi').textContent='37';pill($('#airPill'),'good','Prihvatljiv');$('#airPm25').textContent='14';$('#airPm10').textContent='21';$('#airSt').textContent='Prihvatljiv';renderPollen([['Ambrozija','Ambrosia',51],['Trave','Poaceae',6],['Pelin','Artemisia',4],['Breza','Betula',.5],['Jova','Alnus',.4],['Maslina','Olea',.3]]);$('#airMsg').textContent='Ambrozija je u vrlo visokoj koncentraciji — kod alergičara moguć svrab i osip.';renderBio(1013,-6,22,58);renderFlu(22,58);}
-async function loadA(){
-  const go=async()=>{
-    const f=await fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${A.lat}&longitude=${A.lon}&current=temperature_2m,relative_humidity_2m,surface_pressure&hourly=uv_index,surface_pressure&timezone=auto&past_days=1&forecast_days=1`);
-    const aq=await fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${A.lat}&longitude=${A.lon}&current=european_aqi,pm2_5,pm10&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen&timezone=auto&forecast_days=1`);
-    if(!f||!aq){demoA();return;}
-    try{
-      $('#uvLoc').textContent=A.city;const hrs=f.hourly.time,uvs=f.hourly.uv_index,now=new Date();
-      let ci=hrs.findIndex(t=>new Date(t)>=now);if(ci<0)ci=hrs.length-1;
-      const today=hrs.map((t,i)=>i).filter(i=>new Date(hrs[i]).getDate()===now.getDate());
-      let pk=today[0]||ci;today.forEach(i=>{if(uvs[i]>uvs[pk])pk=i;});
-      const series=[6,9,12,15,18].map(H=>{const i=today.find(k=>new Date(hrs[k]).getHours()===H);return{h:''+H,v:i!=null?Math.max(0,uvs[i]):0};});
-      const uvNow=Math.max(0,uvs[ci]||0);window._uv={uv:uvNow,peak:new Date(hrs[pk]).getHours()+':00',series};renderUV(uvNow,window._uv.peak,series);
-      const aqi=Math.round(aq.current.european_aqi);$('#airAqi').textContent=aqi;const st=aqi<=20?['good','Odličan']:aqi<=40?['good','Prihvatljiv']:aqi<=60?['warn','Umeren']:aqi<=80?['warn','Loš']:['crit','Vrlo loš'];pill($('#airPill'),st[0],st[1]);$('#airSt').textContent=st[1];$('#airPm25').textContent=fmt(aq.current.pm2_5,0);$('#airPm10').textContent=fmt(aq.current.pm10,0);
-      const pv=k=>{const a=aq.hourly[k];return a?Math.round(a[0]||0):0;};
-      renderPollen([['Ambrozija','Ambrosia',pv('ragweed_pollen')],['Trave','Poaceae',pv('grass_pollen')],['Pelin','Artemisia',pv('mugwort_pollen')],['Breza','Betula',pv('birch_pollen')],['Jova','Alnus',pv('alder_pollen')],['Maslina','Olea',pv('olive_pollen')]]);
-      const mp=Math.max(pv('ragweed_pollen'),pv('grass_pollen'),pv('mugwort_pollen'),pv('birch_pollen'));$('#airMsg').textContent=mp>=30?'Visoka koncentracija polena — kod alergičara moguće reakcije na koži i disajnim putevima.':'Koncentracija polena je niska do umerena danas.';
-      const sp=f.hourly.surface_pressure,stime=f.hourly.time,pn=f.current.surface_pressure;let i24=stime.findIndex(t=>new Date(t)>=new Date(now.getTime()-864e5));if(i24<0)i24=0;const tr=Math.round(pn-(sp[i24]||pn));renderBio(pn,tr,f.current.temperature_2m,f.current.relative_humidity_2m);renderFlu(f.current.temperature_2m,f.current.relative_humidity_2m);
-    }catch(e){demoA();}
-  };
-  try{if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{A.lat=p.coords.latitude;A.lon=p.coords.longitude;A.city='Vaša lokacija';go();},()=>go(),{timeout:5000});}else go();}catch(e){go();}
-}
-loadA();
+function demoExtra(){['bioBadge','fluBadge'].forEach(id=>{$('#'+id).classList.add('demo');$('#'+id).textContent='demo';});renderBio(1013,-6,22,58);renderFlu(22,58);}
+(async function(){
+  const f=await fetchJSON('https://api.open-meteo.com/v1/forecast?latitude=43.3209&longitude=21.8958&current=temperature_2m,relative_humidity_2m,surface_pressure&hourly=surface_pressure&timezone=auto&past_days=1&forecast_days=1');
+  if(!f){demoExtra();return;}
+  try{const sp=f.hourly.surface_pressure,st=f.hourly.time,now=new Date(),pn=f.current.surface_pressure;let i24=st.findIndex(t=>new Date(t)>=new Date(now.getTime()-864e5));if(i24<0)i24=0;const tr=Math.round(pn-(sp[i24]||pn));renderBio(pn,tr,f.current.temperature_2m,f.current.relative_humidity_2m);renderFlu(f.current.temperature_2m,f.current.relative_humidity_2m);}catch(e){demoExtra();}
+})();
 
-/* ---------- B1 simptomi ---------- */
+/* ----- B1 simptomi ----- */
 const symptoms=[['❤️','Bol u grudima','Kardiologija'],['🩸','Visok pritisak','Kardiologija'],['🫁','Nedostatak vazduha','Pulmologija'],['🤕','Glavobolja','Neurologija'],['💫','Vrtoglavica','Neurologija'],['🌙','Nesanica','Neurologija'],['🤢','Bol u stomaku','Gastroenterologija'],['🔥','Gorušica','Gastroenterologija'],['🦴','Bol u zglobovima','Reumatologija'],['🌡️','Osip na koži','Dermatologija'],['👁️','Problemi sa vidom','Oftalmologija'],['😴','Zamor','Endokrinologija'],['😟','Anksioznost','Psihijatrija']];
 const specDesc={Kardiologija:'srčano-vaskularne tegobe',Pulmologija:'disajni putevi i pluća',Neurologija:'glavobolje i nervni sistem',Gastroenterologija:'varenje i stomak',Reumatologija:'zglobovi i kosti',Dermatologija:'promene na koži',Oftalmologija:'vid i oči',Endokrinologija:'hormoni i metabolizam',Psihijatrija:'psihičko zdravlje'};
 const syBox=$('#syChips');
 symptoms.forEach(([em,n,sp])=>{const b=document.createElement('button');b.type='button';b.className='wg-chip';b.style.flex='0 0 auto';b.dataset.spec=sp;b.setAttribute('aria-pressed','false');b.innerHTML=em+' '+n;b.onclick=()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');syR();};syBox.appendChild(b);});
 function syR(){const on=$$('#syChips button[aria-pressed="true"]'),out=$('#syOut');if(!on.length){out.classList.remove('show');out.innerHTML='';return;}const t={};on.forEach(b=>t[b.dataset.spec]=(t[b.dataset.spec]||0)+1);const top=Object.entries(t).sort((a,b)=>b[1]-a[1]);const sp=top[0][0];const conf=Math.min(96,60+top[0][1]*12+(on.length>1?6:0));out.innerHTML=`<div class="wg-metric"><span class="wg-num" style="font-size:1.4rem">${sp}</span><span class="wg-pill info">${conf}% podudarnost</span></div><p class="wg-note">Simptomi upućuju na oblast: <strong>${specDesc[sp]}</strong>. Izabrano: ${on.length}.</p><a class="wg-cta" href="#kontakt">Zakaži: ${sp} →</a>`;out.classList.add('show');}
 
-/* ---------- B2 SCORE2 ---------- */
+/* ----- B2 SCORE2 ----- */
 $$('#s2Smoke button').forEach(b=>b.onclick=()=>{$$('#s2Smoke button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');});
 $('#s2Calc').onclick=()=>{const sex=$('#s2Sex').value,age=+$('#s2Age').value,sbp=+$('#s2Sbp').value,ch=+$('#s2Chol').value,sm=+$('#s2Smoke button[aria-pressed="true"]').dataset.v;let r=(age-40)*0.35+(sbp-120)*0.06+(ch-4)*1.1;if(sm)r+=age<50?6:4;if(sex==='m')r+=2;r=Math.max(0.5,Math.min(60,r));$('#s2Val').textContent=fmt(r,1);let cls,l;if(r<5){cls='good';l='Nizak';}else if(r<10){cls='info';l='Umeren';}else if(r<20){cls='warn';l='Visok';}else{cls='crit';l='Vrlo visok';}pill($('#s2Pill'),cls,l);$('#s2Msg').textContent=r<5?'Nastavite zdrav stil života i redovne kontrole.':r<10?'Preporučuju se promene u ishrani, aktivnost i kontrola pritiska.':'Preporučuje se pregled kod kardiologa i procena terapije.';show('s2Out');};
 
-/* ---------- B3 FINDRISC ---------- */
+/* ----- B3 FINDRISC ----- */
 $('#frCalc').onclick=()=>{const s=['frAge','frBmi','frWaist','frAct','frVeg','frBp','frGlu','frFam'].reduce((a,id)=>a+ +$('#'+id).value,0);$('#frVal').textContent=s;let cls,l,risk;if(s<7){cls='good';l='Nizak';risk='~1%';}else if(s<12){cls='info';l='Blago povišen';risk='~4%';}else if(s<15){cls='warn';l='Umeren';risk='~17%';}else if(s<21){cls='crit';l='Visok';risk='~33%';}else{cls='crit';l='Vrlo visok';risk='~50%';}pill($('#frPill'),cls,l);$('#frMsg').textContent='Rizik od tipa 2 dijabetesa za 10 god: '+risk+'. '+(s>=12?'Preporučuje se provera šećera i pregled kod endokrinologa.':'Održavajte aktivnost i uravnoteženu ishranu.');show('frOut');};
 
-/* ---------- B4 GAD/PHQ ---------- */
+/* ----- B4 GAD/PHQ ----- */
 const gaQ=['Nervoza, anksioznost ili napetost','Nemogućnost da zaustavite brigu','Malo interesovanja ili zadovoljstva','Potištenost, depresija ili beznađe'];
 $('#gaQs').innerHTML=gaQ.map((q,i)=>`<div class="wg-qs">${q}</div><div class="wg-seg" data-ga="${i}"><button data-v="0" aria-pressed="true">Nimalo</button><button data-v="1">Ponekad</button><button data-v="2">Pola dana</button><button data-v="3">Skoro svaki dan</button></div>`).join('');
 $$('#gaQs .wg-seg').forEach(seg=>$$('button',seg).forEach(b=>b.onclick=()=>{$$('button',seg).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');}));
 $('#gaCalc').onclick=()=>{const v=$$('#gaQs .wg-seg').map(s=>+$('button[aria-pressed="true"]',s).dataset.v);const anx=v[0]+v[1],dep=v[2]+v[3],tot=anx+dep;$('#gaVal').textContent=tot;let cls,l;if(anx>=3||dep>=3){cls='warn';l='Pozitivan skrining';}else{cls='good';l='Uredno';}if(tot>=9){cls='crit';l='Izražene tegobe';}pill($('#gaPill'),cls,l);$('#gaMsg').textContent=(anx>=3||dep>=3)?'Rezultat ukazuje na moguću anksioznost/depresivnost. Preporučuje se razgovor sa stručnjakom — nije dijagnoza.':'Rezultat je u urednom opsegu.';show('gaOut');};
 
-/* ---------- B5 Fitzpatrick ---------- */
-const fpQ=[['Boja kože bez sunca',['Bela/ružičasta','Bela','Bež','Svetlobraon','Braon','Tamnobraon']],['Boja očiju',['Svetloplava/siva','Plava/zelena','Plava','Braon','Tamnobraon','Crna']],['Reakcija na sunce',['Uvek izgori','Obično izgori','Ponekad izgori','Retko izgori','Vrlo retko','Nikad']]];
-$('#fpQs').innerHTML=fpQ.map((q,i)=>`<div class="wg-qs">${q[0]}</div><select data-fpq="${i}">${q[1].map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select>`).join('');
-$('#fpCalc').onclick=()=>{const s=$$('#fpQs select').reduce((a,el)=>a+ +el.value,0);const t=Math.min(6,Math.max(1,Math.floor(s/2.6)+1));const names=['','I — vrlo svetla','II — svetla','III — srednja','IV — maslinasta','V — tamna','VI — vrlo tamna'];const adv=['','Ekstremno osetljiva — SPF 50, izbegavati sunce.','Vrlo osetljiva — SPF 50, oprez u podne.','Osetljiva — SPF 30–50.','Umereno otporna — SPF 30.','Otporna — SPF 30, retko izgara.','Vrlo otporna — SPF 30 i dalje preporuka.'];$('#fpVal').textContent=t;$('#fpName').textContent=names[t];$('#fpMsg').textContent=adv[t];show('fpOut');};
-
-/* ---------- B6 ABCDE ---------- */
-const abQ=[['A','Asimetrija','jedna polovina se razlikuje'],['B','Ivice','nazubljene/nejasne'],['C','Boja','više boja ili neravnomerno'],['D','Dimenzija','veći od 6 mm'],['E','Evolucija','menja se, svrbi ili krvari']];
-$('#abQs').innerHTML=abQ.map((q,i)=>`<label class="wg-chk"><input type="checkbox" data-ab="${i}"><span><strong>${q[0]} — ${q[1]}</strong><br><span style="color:var(--ink-3)">${q[2]}</span></span></label>`).join('');
-$('#abCalc').onclick=()=>{const n=$$('#abQs input:checked').length;$('#abVal').textContent=n;let cls,l;if(n===0){cls='good';l='Bez alarma';}else if(n<=1){cls='info';l='Pratite promenu';}else if(n<=2){cls='warn';l='Preporučen pregled';}else{cls='crit';l='Hitno kod dermatologa';}pill($('#abPill'),cls,l);$('#abMsg').textContent=n===0?'Nijedan znak. Ipak radite samopregled jednom mesečno.':n<=1?'Jedan znak — pratite; ako se menja, javite se dermatologu.':'Više znakova — preporučuje se dermoskopski pregled u najkraćem roku.';show('abOut');};
-
-/* ---------- C kalkulatori ---------- */
+/* ----- C kalkulatori ----- */
 function bmr(sex,age,h,w){return sex==='m'?10*w+6.25*h-5*age+5:10*w+6.25*h-5*age-161;}
 $('#bmiCalc').onclick=()=>{const h=+$('#bmiH').value/100,w=+$('#bmiW').value;if(!h||!w)return;const b=w/(h*h);$('#bmiVal').textContent=fmt(b,1);let cls,l;if(b<18.5){cls='info';l='Pothranjenost';}else if(b<25){cls='good';l='Normalna težina';}else if(b<30){cls='warn';l='Prekomerna težina';}else{cls='crit';l='Gojaznost';}pill($('#bmiPill'),cls,l);$('#bmiMsg').textContent='Zdrav opseg je 18,5–24,9. '+(b>=25?'Smanjenje 5–10% mase značajno snižava rizike.':'Održavajte navike.');show('bmiOut');};
 $('#bmrCalc').onclick=()=>{$('#bmrVal').textContent=fmt(bmr($('#bmrSex').value,+$('#bmrAge').value,+$('#bmrH').value,+$('#bmrW').value));show('bmrOut');};
@@ -367,6 +583,7 @@ function rdaR(){const sex=$('#rdaSex button[aria-pressed="true"]').dataset.v;$('
 $$('#rdaSex button').forEach(b=>b.onclick=()=>{$$('#rdaSex button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');rdaR();});
 rdaR();
 (()=>{const t=new Date();t.setDate(t.getDate()-14);const s=t.toISOString().slice(0,10);$('#ovLmp').value=s;$('#ddLmp').value=s;})();
+})();
 </script>
 </body>
 </html>
