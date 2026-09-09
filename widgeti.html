@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Widgeti — interni pregled</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,380..620;1,9..144,380..560&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ===== widgeti (interni test) — koristi proderma paletu iz style.css ===== */
+.wg-good{color:#3E8E7E}.wg-warn{color:#B98338}.wg-crit{color:#B0455E}.wg-info{color:var(--brand)}
+.wg-page{max-width:820px;margin:0 auto;padding:0 20px 80px}
+.wg-head{padding:38px 0 4px}
+.wg-badge{display:inline-block;font-family:var(--ff-body);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-deep);background:var(--brand-tint);border:1px solid var(--brand-soft);padding:5px 12px;border-radius:var(--r-pill)}
+.wg-head h1{font-family:var(--ff-display);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--ink);margin:14px 0 10px;font-weight:500;letter-spacing:-.01em}
+.wg-head p{color:var(--ink-2);max-width:60ch;margin:0}
+.wg-nav{position:sticky;top:0;z-index:30;display:flex;gap:8px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(10px);padding:12px 0;margin:20px 0 6px;border-bottom:1px solid var(--line)}
+.wg-nav a{font-size:.82rem;font-weight:600;color:var(--ink-3);padding:7px 14px;border-radius:var(--r-pill);border:1px solid var(--line)}
+.wg-nav a:hover{color:var(--brand-deep);background:var(--white);border-color:var(--brand-soft)}
+.wg-group{padding:30px 0 4px}
+.wg-gh{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+.wg-gh .t{font-family:var(--ff-display);font-size:1.05rem;font-weight:600;color:#fff;background:var(--brand-deep);width:32px;height:32px;border-radius:10px;display:grid;place-items:center}
+.wg-gh h2{font-family:var(--ff-display);font-size:1.5rem;font-weight:500;color:var(--ink)}
+.wg-gh p{flex-basis:100%;color:var(--ink-3);font-size:.9rem;margin:2px 0 0}
+.wg{background:var(--white);border:1px solid var(--line);border-radius:var(--r-md);padding:24px;margin:16px 0;box-shadow:var(--shadow-sm)}
+.wg-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px}
+.wg-ic{width:42px;height:42px;border-radius:12px;background:var(--brand-tint);display:grid;place-items:center;font-size:20px;flex:none}
+.wg-top h3{font-family:var(--ff-display);font-size:1.18rem;font-weight:500;color:var(--ink)}
+.wg-top p{margin:2px 0 0;color:var(--ink-3);font-size:.85rem}
+.wg-badge-live{margin-left:auto;font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:var(--r-pill);background:var(--brand-tint);color:var(--brand-deep);white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.wg-badge-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brand)}
+.wg-badge-live.demo{background:var(--accent-soft);color:#8a6a2e}.wg-badge-live.demo::before{background:var(--accent)}
+.wg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wg-row.three{grid-template-columns:1fr 1fr 1fr}.wg-row.one{grid-template-columns:1fr}
+.wg-f{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.wg-f label{font-size:.74rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3)}
+.wg input,.wg select{width:100%;height:46px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);padding:0 14px;font:inherit;font-size:.98rem}
+.wg input:focus,.wg select:focus{outline:none;border-color:var(--brand);background:var(--white)}
+.wg textarea{width:100%;min-height:90px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);padding:12px 14px;font:inherit;resize:vertical}
+.wg textarea:focus{outline:none;border-color:var(--brand)}
+.wg-seg{display:flex;gap:7px;flex-wrap:wrap}
+.wg-seg button{flex:1;min-width:60px;height:42px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--r-sm);font-weight:600;font-size:.9rem;transition:.15s}
+.wg-seg button[aria-pressed="true"]{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
+.wg-chip{border:1.5px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:var(--r-pill);padding:8px 14px;font-size:.88rem;font-weight:500;transition:.15s}
+.wg-chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.wg-chk{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r-sm);background:var(--paper);cursor:pointer;margin-bottom:8px;font-size:.9rem}
+.wg-chk input{width:20px;height:20px;flex:none;margin-top:1px}
+.wg-qs{font-size:.9rem;margin:14px 0 8px;font-weight:600;color:var(--ink)}
+.wg-btn{height:46px;padding:0 22px;border-radius:var(--r-pill);background:var(--brand-deep);color:#fff;font-weight:600;font-size:.96rem;width:100%;transition:.15s}
+.wg-btn:hover{background:var(--brand)}.wg-btn:active{transform:translateY(1px)}
+.wg-out{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px;display:none}
+.wg-out.show{display:block;animation:wgf .35s var(--ease)}
+@keyframes wgf{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.wg-metric{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wg-num{font-family:var(--ff-display);font-size:2.4rem;font-weight:500;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.wg-unit{color:var(--ink-3);font-size:.95rem}
+.wg-pill{display:inline-block;font-size:.82rem;font-weight:600;padding:4px 12px;border-radius:var(--r-pill)}
+.wg-pill.good{background:#E4F1EC;color:#3E8E7E}.wg-pill.warn{background:var(--accent-soft);color:#8a6a2e}.wg-pill.crit{background:#F6E1E7;color:#B0455E}.wg-pill.info{background:var(--brand-tint);color:var(--brand-deep)}
+.wg-note{color:var(--ink-2);font-size:.9rem;margin:10px 0 0}
+.wg-cta{margin-top:14px;display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:.9rem;color:#fff;background:var(--brand);padding:9px 16px;border-radius:var(--r-pill)}
+.wg-cta:hover{background:var(--brand-deep)}
+.wg-kv{display:grid;grid-template-columns:1fr auto;gap:6px 14px;margin-top:12px;font-size:.9rem}
+.wg-kv .k{color:var(--ink-3)}.wg-kv .v{font-family:var(--ff-display);text-align:right;color:var(--ink)}
+.wg-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.wg-mini .m{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
+.wg-mini .m .l{font-size:.68rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+.wg-mini .m .b{font-family:var(--ff-display);font-size:1.25rem;color:var(--ink);margin-top:3px}
+.wg-mini .m .s{font-size:.75rem;color:var(--ink-3)}
+.wg-pollen{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.wg-pollen:last-child{border:none}.wg-pollen .lvl{font-family:var(--ff-display);font-weight:600}
+.wg-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.9rem}
+.wg-table th,.wg-table td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+.wg-table td:last-child,.wg-table th:last-child{text-align:right;font-family:var(--ff-display)}
+.wg-table th{font-size:.72rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.wg-disc{font-size:.78rem;color:var(--ink-3);margin:8px 0 0;line-height:1.5}
+.wg-foot{border-top:1px solid var(--line);margin-top:36px;padding:24px 0 0;color:var(--ink-3);font-size:.82rem}
+@media(max-width:560px){.wg-row,.wg-row.three{grid-template-columns:1fr}.wg-mini{grid-template-columns:1fr 1fr}.wg-nav{overflow-x:auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wg-page">
+
+  <header class="wg-head">
+    <span class="wg-badge">Interni pregled · nije za klijenta</span>
+    <h1>Widgeti — radna verzija</h1>
+    <p>Sve na jednom mestu za odabir. Real-time alati (UV, vazduh, bioprognoza) povlače podatke uživo za vašu lokaciju. Kliknite alat, isprobajte, pa mi javite koje zadržavamo.</p>
+    <nav class="wg-nav"><a href="#a">Uživo</a><a href="#b">Testovi</a><a href="#c">Kalkulatori</a></nav>
+  </header>
+
+  <!-- ============ A ============ -->
+  <section class="wg-group" id="a">
+    <div class="wg-gh"><span class="t">A</span><h2>U realnom vremenu</h2><p>Podaci: Open-Meteo, za vašu lokaciju.</p></div>
+
+    <!-- A1 UV (proderma stil) -->
+    <div class="wg" id="wUv">
+      <div class="wg-top"><div class="wg-ic">☀️</div><div><h3>UV indeks i zaštita</h3><p id="uvLoc">Učitavanje lokacije…</p></div><span class="wg-badge-live" id="uvBadge">uživo</span></div>
+      <div class="uv-grid">
+        <div>
+          <div class="uv-gauge">
+            <svg viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="82" fill="none" stroke="var(--line)" stroke-width="12" stroke-dasharray="386 515" stroke-linecap="round" transform="rotate(135 100 100)"/>
+              <circle id="uvArc" cx="100" cy="100" r="82" fill="none" stroke="var(--brand)" stroke-width="12" stroke-dasharray="0 515" stroke-linecap="round" transform="rotate(135 100 100)" style="transition:stroke-dasharray 1.2s var(--ease-out),stroke .6s"/>
+            </svg>
+            <div class="uv-num"><b id="uvVal">–</b><span>UV indeks</span></div>
+          </div>
+          <div style="text-align:center"><span class="uv-level" id="uvLevel">Učitavanje…</span></div>
+        </div>
+        <div class="uv-advice">
+          <h3 id="uvHead">Koliko sunca vaša koža podnese danas?</h3>
+          <p class="uv-msg" id="uvMsg">Izaberite fototip kože i dobićete procenu vremena do crvenila i preporučeni SPF.</p>
+          <div class="pheno-label">Fototip kože po Fitzpatricku</div>
+          <div class="pheno" id="pheno" role="group" aria-label="Izbor fototipa">
+            <button data-t="1" title="I — vrlo svetla">I</button><button data-t="2" class="on" title="II — svetla">II</button><button data-t="3" title="III — svetlosmeđa">III</button><button data-t="4" title="IV — maslinasta">IV</button><button data-t="5" title="V — tamnosmeđa">V</button><button data-t="6" title="VI — tamna">VI</button>
+          </div>
+          <div class="uv-out">
+            <div class="uo"><span>Do prvog crvenila</span><b id="uvBurn">–</b><i>bez zaštite</i></div>
+            <div class="uo"><span>Preporučeni SPF</span><b id="uvSpf">–</b><i>ponoviti na 2 h</i></div>
+            <div class="uo"><span>Vrhunac UV-a</span><b id="uvPeak">–</b><i>izbegavati sunce</i></div>
+          </div>
+          <div class="uv-chart"><div class="uc-t" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px">UV kroz dan</div><div class="uv-bars" id="uvBars"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- A2 Vazduh i polen -->
+    <div class="wg" id="wAir">
+      <div class="wg-top"><div class="wg-ic">🌬️</div><div><h3>Vazduh i polen</h3><p>Kvalitet vazduha i alergeni</p></div><span class="wg-badge-live" id="airBadge">uživo</span></div>
+      <div class="wg-metric"><span class="wg-num" id="airAqi">–</span><span class="wg-unit">EU AQI</span><span class="wg-pill" id="airPill">—</span></div>
+      <div class="wg-mini"><div class="m"><div class="l">PM2.5</div><div class="b" id="airPm25">–</div><div class="s">µg/m³</div></div><div class="m"><div class="l">PM10</div><div class="b" id="airPm10">–</div><div class="s">µg/m³</div></div><div class="m"><div class="l">Status</div><div class="b" id="airSt" style="font-size:1rem">–</div><div class="s">danas</div></div></div>
+      <p class="wg-note" style="font-weight:600;color:var(--ink);margin-top:16px">Alergeni u vazduhu (zrnaca/m³)</p>
+      <div id="airPollen"></div>
+      <p class="wg-note" id="airMsg"></p>
+      <a class="wg-cta" href="#kontakt">Zakaži alergološko testiranje →</a>
+    </div>
+
+    <!-- A3 Bioprognoza -->
+    <div class="wg" id="wBio">
+      <div class="wg-top"><div class="wg-ic">🌡️</div><div><h3>Bioprognoza za meteoropate</h3><p>Uticaj promene pritiska i vremena</p></div><span class="wg-badge-live" id="bioBadge">uživo</span></div>
+      <div class="wg-metric"><span class="wg-num" id="bioVal">–</span><span class="wg-unit">indeks opterećenja</span><span class="wg-pill" id="bioPill">—</span></div>
+      <div class="wg-mini"><div class="m"><div class="l">Pritisak</div><div class="b" id="bioP">–</div><div class="s" id="bioPt">hPa</div></div><div class="m"><div class="l">Temperatura</div><div class="b" id="bioT">–</div><div class="s">°C</div></div><div class="m"><div class="l">Vlažnost</div><div class="b" id="bioH">–</div><div class="s">%</div></div></div>
+      <p class="wg-note" id="bioMsg"></p>
+    </div>
+
+    <!-- A4 Grip -->
+    <div class="wg" id="wFlu">
+      <div class="wg-top"><div class="wg-ic">🤧</div><div><h3>Indeks prehlade i gripa</h3><p>Sezonska procena i saveti za imunitet</p></div><span class="wg-badge-live" id="fluBadge">uživo</span></div>
+      <div class="wg-metric"><span class="wg-num" id="fluVal">–</span><span class="wg-unit">/ 100</span><span class="wg-pill" id="fluPill">—</span></div>
+      <p class="wg-note" id="fluMsg"></p>
+    </div>
+  </section>
+
+  <!-- ============ B ============ -->
+  <section class="wg-group" id="b">
+    <div class="wg-gh"><span class="t">B</span><h2>Testovi i procene rizika</h2><p>Vode ka odgovarajućem specijalisti.</p></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🩺</div><div><h3>Provera simptoma</h3><p>Izaberite više simptoma — preporuka se računa uživo</p></div></div>
+      <div class="wg-seg" id="syChips" style="flex-wrap:wrap"></div><div class="wg-out" id="syOut"></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">❤️</div><div><h3>Rizik od srčanog udara</h3><p>Orijentaciona 10-god. procena (SCORE2 princip)</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Pol</label><select id="s2Sex"><option value="m">Muški</option><option value="z">Ženski</option></select></div><div class="wg-f"><label>Godine (40–75)</label><input id="s2Age" type="number" value="55"></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Sistolni pritisak (mmHg)</label><input id="s2Sbp" type="number" value="140"></div><div class="wg-f"><label>Ukupni holesterol (mmol/L)</label><input id="s2Chol" type="number" step="0.1" value="5.5"></div></div>
+      <div class="wg-f"><label>Pušač</label><div class="wg-seg" id="s2Smoke"><button data-v="0" aria-pressed="true">Ne</button><button data-v="1">Da</button></div></div>
+      <button class="wg-btn" id="s2Calc">Izračunaj rizik</button>
+      <div class="wg-out" id="s2Out"><div class="wg-metric"><span class="wg-num" id="s2Val">–</span><span class="wg-unit">% / 10 god.</span><span class="wg-pill" id="s2Pill"></span></div><p class="wg-note" id="s2Msg"></p><a class="wg-cta" href="#kontakt">Zakaži: Kardiolog →</a></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🩸</div><div><h3>Rizik od dijabetesa (FINDRISC)</h3><p>Zvanični upitnik za tip 2</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Godine</label><select id="frAge"><option value="0">ispod 45</option><option value="2">45–54</option><option value="3">55–64</option><option value="4">preko 64</option></select></div><div class="wg-f"><label>BMI</label><select id="frBmi"><option value="0">ispod 25</option><option value="1">25–30</option><option value="3">preko 30</option></select></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Obim struka</label><select id="frWaist"><option value="0">nizak</option><option value="3">srednji</option><option value="4">visok</option></select></div><div class="wg-f"><label>30 min aktivnosti dnevno</label><select id="frAct"><option value="0">Da</option><option value="2">Ne</option></select></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Povrće/voće svaki dan</label><select id="frVeg"><option value="0">Da</option><option value="1">Ne</option></select></div><div class="wg-f"><label>Lekovi za pritisak</label><select id="frBp"><option value="0">Ne</option><option value="2">Da</option></select></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Ikad povišen šećer</label><select id="frGlu"><option value="0">Ne</option><option value="5">Da</option></select></div><div class="wg-f"><label>Dijabetes u porodici</label><select id="frFam"><option value="0">Ne</option><option value="3">dalji rod</option><option value="5">roditelj/brat/sestra</option></select></div></div>
+      <button class="wg-btn" id="frCalc">Izračunaj bodove</button>
+      <div class="wg-out" id="frOut"><div class="wg-metric"><span class="wg-num" id="frVal">–</span><span class="wg-unit">bodova</span><span class="wg-pill" id="frPill"></span></div><p class="wg-note" id="frMsg"></p><a class="wg-cta" href="#kontakt">Zakaži: Endokrinolog →</a></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🧠</div><div><h3>Stres i anksioznost</h3><p>Kratak skrining (GAD-2/PHQ-2) — poslednje 2 nedelje</p></div></div>
+      <div id="gaQs"></div><button class="wg-btn" id="gaCalc">Prikaži rezultat</button>
+      <div class="wg-out" id="gaOut"><div class="wg-metric"><span class="wg-num" id="gaVal">–</span><span class="wg-unit">/ 12</span><span class="wg-pill" id="gaPill"></span></div><p class="wg-note" id="gaMsg"></p><a class="wg-cta" href="#kontakt">Zakaži: Psiholog →</a></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🧴</div><div><h3>Kakav je vaš tip kože?</h3><p>Fitzpatrick fototip</p></div></div>
+      <div id="fpQs"></div><button class="wg-btn" id="fpCalc">Odredi fototip</button>
+      <div class="wg-out" id="fpOut"><div class="wg-metric"><span class="wg-num" id="fpVal">–</span><span class="wg-unit" id="fpName"></span></div><p class="wg-note" id="fpMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🔬</div><div><h3>ABCDE samopregled mladeža</h3><p>Označite sve što primećujete</p></div></div>
+      <div id="abQs"></div><button class="wg-btn" id="abCalc">Proveri</button>
+      <div class="wg-out" id="abOut"><div class="wg-metric"><span class="wg-num" id="abVal">–</span><span class="wg-unit">/ 5 znakova</span><span class="wg-pill" id="abPill"></span></div><p class="wg-note" id="abMsg"></p><a class="wg-cta" href="#kontakt">Zakaži dermoskopiju →</a></div></div>
+  </section>
+
+  <!-- ============ C ============ -->
+  <section class="wg-group" id="c">
+    <div class="wg-gh"><span class="t">C</span><h2>Medicinski kalkulatori</h2><p>Pet postojećih (osavremenjenih) + osam novih.</p></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">⚖️</div><div><h3>Indeks telesne mase (BMI)</h3><p>Odnos težine i visine</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Visina (cm)</label><input id="bmiH" type="number" value="175"></div><div class="wg-f"><label>Težina (kg)</label><input id="bmiW" type="number" value="75"></div></div>
+      <button class="wg-btn" id="bmiCalc">Izračunaj</button>
+      <div class="wg-out" id="bmiOut"><div class="wg-metric"><span class="wg-num" id="bmiVal">–</span><span class="wg-unit">kg/m²</span><span class="wg-pill" id="bmiPill"></span></div><p class="wg-note" id="bmiMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🔥</div><div><h3>Bazalni metabolizam (BMR)</h3><p>Mifflin-St Jeor</p></div></div>
+      <div class="wg-row three"><div class="wg-f"><label>Pol</label><select id="bmrSex"><option value="m">Muški</option><option value="z">Ženski</option></select></div><div class="wg-f"><label>Godine</label><input id="bmrAge" type="number" value="30"></div><div class="wg-f"><label>Visina (cm)</label><input id="bmrH" type="number" value="175"></div></div>
+      <div class="wg-f"><label>Težina (kg)</label><input id="bmrW" type="number" value="75"></div>
+      <button class="wg-btn" id="bmrCalc">Izračunaj</button>
+      <div class="wg-out" id="bmrOut"><div class="wg-metric"><span class="wg-num" id="bmrVal">–</span><span class="wg-unit">kcal/dan</span></div><p class="wg-note">Kalorije koje telo troši u potpunom mirovanju.</p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🍽️</div><div><h3>Dnevne potrebe za kalorijama i proteinima</h3><p>BMR × nivo aktivnosti</p></div></div>
+      <div class="wg-row three"><div class="wg-f"><label>Pol</label><select id="calSex"><option value="m">Muški</option><option value="z">Ženski</option></select></div><div class="wg-f"><label>Godine</label><input id="calAge" type="number" value="30"></div><div class="wg-f"><label>Visina (cm)</label><input id="calH" type="number" value="175"></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Težina (kg)</label><input id="calW" type="number" value="75"></div><div class="wg-f"><label>Aktivnost</label><select id="calAct"><option value="1.2">Sedeći</option><option value="1.375">Lako aktivan</option><option value="1.55" selected>Umereno</option><option value="1.725">Vrlo aktivan</option><option value="1.9">Ekstremno</option></select></div></div>
+      <button class="wg-btn" id="calCalc">Izračunaj</button>
+      <div class="wg-out" id="calOut"><div class="wg-mini"><div class="m"><div class="l">Održavanje</div><div class="b" id="calMaint">–</div><div class="s">kcal/dan</div></div><div class="m"><div class="l">Mršavljenje</div><div class="b" id="calLoss">–</div><div class="s">−500 kcal</div></div><div class="m"><div class="l">Proteini</div><div class="b" id="calProt">–</div><div class="s">g/dan</div></div></div></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">💧</div><div><h3>Dnevni unos vode</h3><p>Prema masi i aktivnosti</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Težina (kg)</label><input id="waW" type="number" value="75"></div><div class="wg-f"><label>Minuta vežbanja dnevno</label><input id="waEx" type="number" value="30"></div></div>
+      <button class="wg-btn" id="waCalc">Izračunaj</button>
+      <div class="wg-out" id="waOut"><div class="wg-metric"><span class="wg-num" id="waVal">–</span><span class="wg-unit">litara/dan</span></div><p class="wg-note" id="waMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🎯</div><div><h3>Idealna telesna težina</h3><p>Devine + zdrav BMI opseg</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Pol</label><select id="iwSex"><option value="m">Muški</option><option value="z">Ženski</option></select></div><div class="wg-f"><label>Visina (cm)</label><input id="iwH" type="number" value="175"></div></div>
+      <button class="wg-btn" id="iwCalc">Izračunaj</button>
+      <div class="wg-out" id="iwOut"><div class="wg-metric"><span class="wg-num" id="iwVal">–</span><span class="wg-unit">kg</span></div><p class="wg-note" id="iwMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">📏</div><div><h3>Odnos struk–kuk (WHR)</h3><p>Raspodela masti i rizik</p></div></div>
+      <div class="wg-row three"><div class="wg-f"><label>Pol</label><select id="whrSex"><option value="m">Muški</option><option value="z">Ženski</option></select></div><div class="wg-f"><label>Struk (cm)</label><input id="whrWa" type="number" value="90"></div><div class="wg-f"><label>Kuk (cm)</label><input id="whrHi" type="number" value="100"></div></div>
+      <button class="wg-btn" id="whrCalc">Izračunaj</button>
+      <div class="wg-out" id="whrOut"><div class="wg-metric"><span class="wg-num" id="whrVal">–</span><span class="wg-unit">WHR</span><span class="wg-pill" id="whrPill"></span></div><p class="wg-note" id="whrMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🫀</div><div><h3>Klasifikacija krvnog pritiska</h3><p>Evropske smernice (ESC)</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Sistolni (gornji)</label><input id="bpSys" type="number" value="128"></div><div class="wg-f"><label>Dijastolni (donji)</label><input id="bpDia" type="number" value="82"></div></div>
+      <button class="wg-btn" id="bpCalc">Klasifikuj</button>
+      <div class="wg-out" id="bpOut"><div class="wg-metric"><span class="wg-num" id="bpVal">–</span><span class="wg-unit">mmHg</span><span class="wg-pill" id="bpPill"></span></div><p class="wg-note" id="bpMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🩸</div><div><h3>HbA1c ↔ prosečan šećer</h3><p>Konverzija</p></div></div>
+      <div class="wg-f"><label>HbA1c (%)</label><input id="a1cV" type="number" step="0.1" value="6.5"></div>
+      <button class="wg-btn" id="a1cCalc">Preračunaj</button>
+      <div class="wg-out" id="a1cOut"><div class="wg-metric"><span class="wg-num" id="a1cVal">–</span><span class="wg-unit">mmol/L prosečno</span><span class="wg-pill" id="a1cPill"></span></div><p class="wg-note" id="a1cMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🧒</div><div><h3>Doza leka za dete (po kg)</h3><p>Antipiretici — orijentaciono</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Težina deteta (kg)</label><input id="dzW" type="number" value="18"></div><div class="wg-f"><label>Lek</label><select id="dzDrug"><option value="para">Paracetamol (15 mg/kg)</option><option value="ibu">Ibuprofen (10 mg/kg)</option></select></div></div>
+      <button class="wg-btn" id="dzCalc">Izračunaj dozu</button>
+      <div class="wg-out" id="dzOut"><div class="wg-metric"><span class="wg-num" id="dzVal">–</span><span class="wg-unit">mg po dozi</span></div><p class="wg-note" id="dzMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">📈</div><div><h3>Rast deteta — procena</h3><p>Orijentaciona pozicija za uzrast</p></div></div>
+      <div class="wg-row three"><div class="wg-f"><label>Pol</label><select id="grSex"><option value="m">Dečak</option><option value="z">Devojčica</option></select></div><div class="wg-f"><label>Uzrast (god.)</label><input id="grAge" type="number" step="0.5" value="5"></div><div class="wg-f"><label>Visina (cm)</label><input id="grH" type="number" value="110"></div></div>
+      <div class="wg-f"><label>Težina (kg)</label><input id="grW" type="number" value="18"></div>
+      <button class="wg-btn" id="grCalc">Proceni</button>
+      <div class="wg-out" id="grOut"><div class="wg-kv" id="grKv"></div><p class="wg-note" id="grMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">🌸</div><div><h3>Ovulacija i plodni dani</h3><p>Procena plodnog prozora</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Prvi dan poslednje menstruacije</label><input id="ovLmp" type="date"></div><div class="wg-f"><label>Dužina ciklusa (dana)</label><input id="ovCyc" type="number" value="28"></div></div>
+      <button class="wg-btn" id="ovCalc">Izračunaj</button>
+      <div class="wg-out" id="ovOut"><div class="wg-kv" id="ovKv"></div><p class="wg-note" id="ovMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">👶</div><div><h3>Termin porođaja</h3><p>Naegele pravilo</p></div></div>
+      <div class="wg-row"><div class="wg-f"><label>Prvi dan poslednje menstruacije</label><input id="ddLmp" type="date"></div><div class="wg-f"><label>Dužina ciklusa (dana)</label><input id="ddCyc" type="number" value="28"></div></div>
+      <button class="wg-btn" id="ddCalc">Izračunaj termin</button>
+      <div class="wg-out" id="ddOut"><div class="wg-metric"><span class="wg-num" id="ddVal" style="font-size:1.5rem">–</span></div><p class="wg-note" id="ddMsg"></p></div></div>
+
+    <div class="wg"><div class="wg-top"><div class="wg-ic">💊</div><div><h3>Preporučeni dnevni unos zaštitnih materija</h3><p>Vitamini i minerali (odrasli)</p></div></div>
+      <div class="wg-f"><label>Pol</label><div class="wg-seg" id="rdaSex"><button data-v="m" aria-pressed="true">Muški</button><button data-v="z">Ženski</button></div></div>
+      <div id="rdaTable"></div>
+      <p class="wg-disc">Opšte dnevne preporuke za odrasle; potrebe se menjaju u trudnoći, bolesti i starijem dobu.</p></div>
+  </section>
+
+  <div class="wg-foot" id="kontakt">
+    <strong>⚕️ Napomena.</strong> Svi alati su informativni i ne zamenjuju pregled lekara. Real-time procene su modelovane za širu zonu lokacije. Ovo je interna radna strana (van navigacije, noindex) — nije za deljenje klijentima. U hitnim slučajevima pozovite <strong>194</strong>.
+  </div>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const show=id=>$('#'+id).classList.add('show');
+const fmt=(n,d=0)=>Number(n).toLocaleString('sr-RS',{minimumFractionDigits:d,maximumFractionDigits:d});
+function pill(el,cls,txt){el.className='wg-pill '+cls;el.textContent=txt;}
+
+/* ---------- A: real-time ---------- */
+const A={lat:43.3209,lon:21.8958,city:'Niš (podrazumevano)'}; // Niš default
+async function fetchJSON(u){const c=new AbortController();const t=setTimeout(()=>c.abort(),3500);try{const r=await fetch(u,{signal:c.signal});clearTimeout(t);if(!r.ok)throw 0;return await r.json();}catch(e){clearTimeout(t);return null;}}
+function renderUV(uv,peak,series){
+  const fp=+($('#pheno button.on')?.dataset.t||2);
+  $('#uvVal').textContent=fmt(uv,1);
+  const frac=Math.min(uv,11)/11;$('#uvArc').setAttribute('stroke-dasharray',(frac*386)+' 515');
+  let col='#3E8E7E',lbl='Nizak';if(uv>=3&&uv<6){col='var(--accent)';lbl='Umeren';}else if(uv>=6&&uv<8){col='#C77B2E';lbl='Visok';}else if(uv>=8){col='#B0455E';lbl='Vrlo visok';}
+  $('#uvArc').setAttribute('stroke',col);$('#uvLevel').textContent=lbl;
+  const med=[200,250,325,400,500,600][fp-1];const burn=uv>0?Math.max(5,Math.round(med/(uv*3.5))):999;
+  $('#uvBurn').textContent=uv>0?burn+' min':'—';$('#uvSpf').textContent=uv<3?'SPF 15':uv<6?'SPF 30':'SPF 50';$('#uvPeak').textContent=peak;
+  $('#uvMsg').textContent=uv<3?'Nizak rizik. Zaštita obično nije neophodna.':uv<6?'Umeren UV. U sredini dana potražite hlad, naočare i zaštitu na lice, vrat i šake.':uv<8?'Visok UV. Obavezan SPF, šešir i naočare; izbegavajte sunce 11–16 h.':'Vrlo visok UV. Ograničite izlaganje; SPF 50 i zaštitna odeća.';
+  const bars=$('#uvBars');bars.innerHTML='';const mx=Math.max(...series.map(s=>s.v),1);
+  series.forEach(s=>{const b=document.createElement('div');b.className='ub';b.style.height=Math.max(4,s.v/mx*100)+'%';if(s.v>=6)b.classList.add('now');const sp=document.createElement('span');sp.textContent=s.h;b.appendChild(sp);bars.appendChild(b);});
+}
+$$('#pheno button').forEach(b=>b.onclick=()=>{$$('#pheno button').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(window._uv)renderUV(window._uv.uv,window._uv.peak,window._uv.series);});
+function renderPollen(rows){const w=$('#airPollen');w.innerHTML='';rows.forEach(([sr,la,v])=>{const lvl=v<10?'Nizak':v<30?'Umeren':v<50?'Visok':'Vrlo visok';const c=v<10?'#3E8E7E':v<30?'#C77B2E':'#B0455E';const d=document.createElement('div');d.className='wg-pollen';d.innerHTML=`<span><strong>${sr}</strong> <span style="color:var(--ink-3)">${la}</span></span><span class="lvl" style="color:${c}">${v<1?'<1':v} · ${lvl}</span>`;w.appendChild(d);});}
+function renderBio(p,tr,t,h){$('#bioP').textContent=fmt(p);$('#bioPt').textContent=(tr>0?'+':'')+tr+' hPa / 24h';$('#bioT').textContent=fmt(t);$('#bioH').textContent=fmt(h);let load=Math.min(100,Math.abs(tr)*8+(t>28?20:t<0?15:0)+(h>80?10:0));$('#bioVal').textContent=Math.round(load);let cls='good',l='Nisko';if(load>=30&&load<55){cls='info';l='Umereno';}else if(load>=55&&load<75){cls='warn';l='Povišeno';}else if(load>=75){cls='crit';l='Visoko';}pill($('#bioPill'),cls,l);$('#bioMsg').textContent=Math.abs(tr)>=5?'Nagla promena pritiska — meteoropati mogu osetiti glavobolju, umor i bol u zglobovima. Više tečnosti, manje napora i kofeina uveče.':'Stabilni uslovi — mali uticaj na organizam.';}
+function renderFlu(t,h){const m=new Date().getMonth();const seas=(m>=10||m<=2)?45:((m>=3&&m<=4)||m===9)?25:10;let idx=Math.min(100,seas+(t<5?25:t<12?12:0)+(h<40?10:0));$('#fluVal').textContent=Math.round(idx);let cls='good',l='Nizak';if(idx>=30&&idx<55){cls='info';l='Umeren';}else if(idx>=55&&idx<75){cls='warn';l='Povišen';}else if(idx>=75){cls='crit';l='Visok';}pill($('#fluPill'),cls,l);$('#fluMsg').textContent=idx>=55?'Povećan rizik od respiratornih infekcija. Perite ruke, provetravajte, dovoljno sna i vitamin D jačaju imunitet.':'Nizak do umeren rizik. Održavajte hidrataciju i san.';}
+function demoA(){['uvBadge','airBadge','bioBadge','fluBadge'].forEach(id=>{$('#'+id).classList.add('demo');$('#'+id).textContent='demo';});$('#uvLoc').textContent=A.city+' · demo';window._uv={uv:4.5,peak:'13:00',series:[{h:'6',v:.4},{h:'9',v:2.4},{h:'12',v:4.3},{h:'15',v:2.6},{h:'18',v:.6}]};renderUV(4.5,'13:00',window._uv.series);$('#airAqi').textContent='37';pill($('#airPill'),'good','Prihvatljiv');$('#airPm25').textContent='14';$('#airPm10').textContent='21';$('#airSt').textContent='Prihvatljiv';renderPollen([['Ambrozija','Ambrosia',51],['Trave','Poaceae',6],['Pelin','Artemisia',4],['Breza','Betula',.5],['Jova','Alnus',.4],['Maslina','Olea',.3]]);$('#airMsg').textContent='Ambrozija je u vrlo visokoj koncentraciji — kod alergičara moguć svrab i osip.';renderBio(1013,-6,22,58);renderFlu(22,58);}
+async function loadA(){
+  const go=async()=>{
+    const f=await fetchJSON(`https://api.open-meteo.com/v1/forecast?latitude=${A.lat}&longitude=${A.lon}&current=temperature_2m,relative_humidity_2m,surface_pressure&hourly=uv_index,surface_pressure&timezone=auto&past_days=1&forecast_days=1`);
+    const aq=await fetchJSON(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${A.lat}&longitude=${A.lon}&current=european_aqi,pm2_5,pm10&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen&timezone=auto&forecast_days=1`);
+    if(!f||!aq){demoA();return;}
+    try{
+      $('#uvLoc').textContent=A.city;const hrs=f.hourly.time,uvs=f.hourly.uv_index,now=new Date();
+      let ci=hrs.findIndex(t=>new Date(t)>=now);if(ci<0)ci=hrs.length-1;
+      const today=hrs.map((t,i)=>i).filter(i=>new Date(hrs[i]).getDate()===now.getDate());
+      let pk=today[0]||ci;today.forEach(i=>{if(uvs[i]>uvs[pk])pk=i;});
+      const series=[6,9,12,15,18].map(H=>{const i=today.find(k=>new Date(hrs[k]).getHours()===H);return{h:''+H,v:i!=null?Math.max(0,uvs[i]):0};});
+      const uvNow=Math.max(0,uvs[ci]||0);window._uv={uv:uvNow,peak:new Date(hrs[pk]).getHours()+':00',series};renderUV(uvNow,window._uv.peak,series);
+      const aqi=Math.round(aq.current.european_aqi);$('#airAqi').textContent=aqi;const st=aqi<=20?['good','Odličan']:aqi<=40?['good','Prihvatljiv']:aqi<=60?['warn','Umeren']:aqi<=80?['warn','Loš']:['crit','Vrlo loš'];pill($('#airPill'),st[0],st[1]);$('#airSt').textContent=st[1];$('#airPm25').textContent=fmt(aq.current.pm2_5,0);$('#airPm10').textContent=fmt(aq.current.pm10,0);
+      const pv=k=>{const a=aq.hourly[k];return a?Math.round(a[0]||0):0;};
+      renderPollen([['Ambrozija','Ambrosia',pv('ragweed_pollen')],['Trave','Poaceae',pv('grass_pollen')],['Pelin','Artemisia',pv('mugwort_pollen')],['Breza','Betula',pv('birch_pollen')],['Jova','Alnus',pv('alder_pollen')],['Maslina','Olea',pv('olive_pollen')]]);
+      const mp=Math.max(pv('ragweed_pollen'),pv('grass_pollen'),pv('mugwort_pollen'),pv('birch_pollen'));$('#airMsg').textContent=mp>=30?'Visoka koncentracija polena — kod alergičara moguće reakcije na koži i disajnim putevima.':'Koncentracija polena je niska do umerena danas.';
+      const sp=f.hourly.surface_pressure,stime=f.hourly.time,pn=f.current.surface_pressure;let i24=stime.findIndex(t=>new Date(t)>=new Date(now.getTime()-864e5));if(i24<0)i24=0;const tr=Math.round(pn-(sp[i24]||pn));renderBio(pn,tr,f.current.temperature_2m,f.current.relative_humidity_2m);renderFlu(f.current.temperature_2m,f.current.relative_humidity_2m);
+    }catch(e){demoA();}
+  };
+  try{if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>{A.lat=p.coords.latitude;A.lon=p.coords.longitude;A.city='Vaša lokacija';go();},()=>go(),{timeout:5000});}else go();}catch(e){go();}
+}
+loadA();
+
+/* ---------- B1 simptomi ---------- */
+const symptoms=[['❤️','Bol u grudima','Kardiologija'],['🩸','Visok pritisak','Kardiologija'],['🫁','Nedostatak vazduha','Pulmologija'],['🤕','Glavobolja','Neurologija'],['💫','Vrtoglavica','Neurologija'],['🌙','Nesanica','Neurologija'],['🤢','Bol u stomaku','Gastroenterologija'],['🔥','Gorušica','Gastroenterologija'],['🦴','Bol u zglobovima','Reumatologija'],['🌡️','Osip na koži','Dermatologija'],['👁️','Problemi sa vidom','Oftalmologija'],['😴','Zamor','Endokrinologija'],['😟','Anksioznost','Psihijatrija']];
+const specDesc={Kardiologija:'srčano-vaskularne tegobe',Pulmologija:'disajni putevi i pluća',Neurologija:'glavobolje i nervni sistem',Gastroenterologija:'varenje i stomak',Reumatologija:'zglobovi i kosti',Dermatologija:'promene na koži',Oftalmologija:'vid i oči',Endokrinologija:'hormoni i metabolizam',Psihijatrija:'psihičko zdravlje'};
+const syBox=$('#syChips');
+symptoms.forEach(([em,n,sp])=>{const b=document.createElement('button');b.type='button';b.className='wg-chip';b.style.flex='0 0 auto';b.dataset.spec=sp;b.setAttribute('aria-pressed','false');b.innerHTML=em+' '+n;b.onclick=()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');syR();};syBox.appendChild(b);});
+function syR(){const on=$$('#syChips button[aria-pressed="true"]'),out=$('#syOut');if(!on.length){out.classList.remove('show');out.innerHTML='';return;}const t={};on.forEach(b=>t[b.dataset.spec]=(t[b.dataset.spec]||0)+1);const top=Object.entries(t).sort((a,b)=>b[1]-a[1]);const sp=top[0][0];const conf=Math.min(96,60+top[0][1]*12+(on.length>1?6:0));out.innerHTML=`<div class="wg-metric"><span class="wg-num" style="font-size:1.4rem">${sp}</span><span class="wg-pill info">${conf}% podudarnost</span></div><p class="wg-note">Simptomi upućuju na oblast: <strong>${specDesc[sp]}</strong>. Izabrano: ${on.length}.</p><a class="wg-cta" href="#kontakt">Zakaži: ${sp} →</a>`;out.classList.add('show');}
+
+/* ---------- B2 SCORE2 ---------- */
+$$('#s2Smoke button').forEach(b=>b.onclick=()=>{$$('#s2Smoke button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');});
+$('#s2Calc').onclick=()=>{const sex=$('#s2Sex').value,age=+$('#s2Age').value,sbp=+$('#s2Sbp').value,ch=+$('#s2Chol').value,sm=+$('#s2Smoke button[aria-pressed="true"]').dataset.v;let r=(age-40)*0.35+(sbp-120)*0.06+(ch-4)*1.1;if(sm)r+=age<50?6:4;if(sex==='m')r+=2;r=Math.max(0.5,Math.min(60,r));$('#s2Val').textContent=fmt(r,1);let cls,l;if(r<5){cls='good';l='Nizak';}else if(r<10){cls='info';l='Umeren';}else if(r<20){cls='warn';l='Visok';}else{cls='crit';l='Vrlo visok';}pill($('#s2Pill'),cls,l);$('#s2Msg').textContent=r<5?'Nastavite zdrav stil života i redovne kontrole.':r<10?'Preporučuju se promene u ishrani, aktivnost i kontrola pritiska.':'Preporučuje se pregled kod kardiologa i procena terapije.';show('s2Out');};
+
+/* ---------- B3 FINDRISC ---------- */
+$('#frCalc').onclick=()=>{const s=['frAge','frBmi','frWaist','frAct','frVeg','frBp','frGlu','frFam'].reduce((a,id)=>a+ +$('#'+id).value,0);$('#frVal').textContent=s;let cls,l,risk;if(s<7){cls='good';l='Nizak';risk='~1%';}else if(s<12){cls='info';l='Blago povišen';risk='~4%';}else if(s<15){cls='warn';l='Umeren';risk='~17%';}else if(s<21){cls='crit';l='Visok';risk='~33%';}else{cls='crit';l='Vrlo visok';risk='~50%';}pill($('#frPill'),cls,l);$('#frMsg').textContent='Rizik od tipa 2 dijabetesa za 10 god: '+risk+'. '+(s>=12?'Preporučuje se provera šećera i pregled kod endokrinologa.':'Održavajte aktivnost i uravnoteženu ishranu.');show('frOut');};
+
+/* ---------- B4 GAD/PHQ ---------- */
+const gaQ=['Nervoza, anksioznost ili napetost','Nemogućnost da zaustavite brigu','Malo interesovanja ili zadovoljstva','Potištenost, depresija ili beznađe'];
+$('#gaQs').innerHTML=gaQ.map((q,i)=>`<div class="wg-qs">${q}</div><div class="wg-seg" data-ga="${i}"><button data-v="0" aria-pressed="true">Nimalo</button><button data-v="1">Ponekad</button><button data-v="2">Pola dana</button><button data-v="3">Skoro svaki dan</button></div>`).join('');
+$$('#gaQs .wg-seg').forEach(seg=>$$('button',seg).forEach(b=>b.onclick=()=>{$$('button',seg).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');}));
+$('#gaCalc').onclick=()=>{const v=$$('#gaQs .wg-seg').map(s=>+$('button[aria-pressed="true"]',s).dataset.v);const anx=v[0]+v[1],dep=v[2]+v[3],tot=anx+dep;$('#gaVal').textContent=tot;let cls,l;if(anx>=3||dep>=3){cls='warn';l='Pozitivan skrining';}else{cls='good';l='Uredno';}if(tot>=9){cls='crit';l='Izražene tegobe';}pill($('#gaPill'),cls,l);$('#gaMsg').textContent=(anx>=3||dep>=3)?'Rezultat ukazuje na moguću anksioznost/depresivnost. Preporučuje se razgovor sa stručnjakom — nije dijagnoza.':'Rezultat je u urednom opsegu.';show('gaOut');};
+
+/* ---------- B5 Fitzpatrick ---------- */
+const fpQ=[['Boja kože bez sunca',['Bela/ružičasta','Bela','Bež','Svetlobraon','Braon','Tamnobraon']],['Boja očiju',['Svetloplava/siva','Plava/zelena','Plava','Braon','Tamnobraon','Crna']],['Reakcija na sunce',['Uvek izgori','Obično izgori','Ponekad izgori','Retko izgori','Vrlo retko','Nikad']]];
+$('#fpQs').innerHTML=fpQ.map((q,i)=>`<div class="wg-qs">${q[0]}</div><select data-fpq="${i}">${q[1].map((o,j)=>`<option value="${j}">${o}</option>`).join('')}</select>`).join('');
+$('#fpCalc').onclick=()=>{const s=$$('#fpQs select').reduce((a,el)=>a+ +el.value,0);const t=Math.min(6,Math.max(1,Math.floor(s/2.6)+1));const names=['','I — vrlo svetla','II — svetla','III — srednja','IV — maslinasta','V — tamna','VI — vrlo tamna'];const adv=['','Ekstremno osetljiva — SPF 50, izbegavati sunce.','Vrlo osetljiva — SPF 50, oprez u podne.','Osetljiva — SPF 30–50.','Umereno otporna — SPF 30.','Otporna — SPF 30, retko izgara.','Vrlo otporna — SPF 30 i dalje preporuka.'];$('#fpVal').textContent=t;$('#fpName').textContent=names[t];$('#fpMsg').textContent=adv[t];show('fpOut');};
+
+/* ---------- B6 ABCDE ---------- */
+const abQ=[['A','Asimetrija','jedna polovina se razlikuje'],['B','Ivice','nazubljene/nejasne'],['C','Boja','više boja ili neravnomerno'],['D','Dimenzija','veći od 6 mm'],['E','Evolucija','menja se, svrbi ili krvari']];
+$('#abQs').innerHTML=abQ.map((q,i)=>`<label class="wg-chk"><input type="checkbox" data-ab="${i}"><span><strong>${q[0]} — ${q[1]}</strong><br><span style="color:var(--ink-3)">${q[2]}</span></span></label>`).join('');
+$('#abCalc').onclick=()=>{const n=$$('#abQs input:checked').length;$('#abVal').textContent=n;let cls,l;if(n===0){cls='good';l='Bez alarma';}else if(n<=1){cls='info';l='Pratite promenu';}else if(n<=2){cls='warn';l='Preporučen pregled';}else{cls='crit';l='Hitno kod dermatologa';}pill($('#abPill'),cls,l);$('#abMsg').textContent=n===0?'Nijedan znak. Ipak radite samopregled jednom mesečno.':n<=1?'Jedan znak — pratite; ako se menja, javite se dermatologu.':'Više znakova — preporučuje se dermoskopski pregled u najkraćem roku.';show('abOut');};
+
+/* ---------- C kalkulatori ---------- */
+function bmr(sex,age,h,w){return sex==='m'?10*w+6.25*h-5*age+5:10*w+6.25*h-5*age-161;}
+$('#bmiCalc').onclick=()=>{const h=+$('#bmiH').value/100,w=+$('#bmiW').value;if(!h||!w)return;const b=w/(h*h);$('#bmiVal').textContent=fmt(b,1);let cls,l;if(b<18.5){cls='info';l='Pothranjenost';}else if(b<25){cls='good';l='Normalna težina';}else if(b<30){cls='warn';l='Prekomerna težina';}else{cls='crit';l='Gojaznost';}pill($('#bmiPill'),cls,l);$('#bmiMsg').textContent='Zdrav opseg je 18,5–24,9. '+(b>=25?'Smanjenje 5–10% mase značajno snižava rizike.':'Održavajte navike.');show('bmiOut');};
+$('#bmrCalc').onclick=()=>{$('#bmrVal').textContent=fmt(bmr($('#bmrSex').value,+$('#bmrAge').value,+$('#bmrH').value,+$('#bmrW').value));show('bmrOut');};
+$('#calCalc').onclick=()=>{const m=bmr($('#calSex').value,+$('#calAge').value,+$('#calH').value,+$('#calW').value)*+$('#calAct').value;$('#calMaint').textContent=fmt(m);$('#calLoss').textContent=fmt(m-500);$('#calProt').textContent=fmt(+$('#calW').value*1.6);show('calOut');};
+$('#waCalc').onclick=()=>{const w=+$('#waW').value,ex=+$('#waEx').value,l=w*0.033+(ex/30)*0.35;$('#waVal').textContent=fmt(l,1);$('#waMsg').textContent='Oko '+Math.round(l/0.25)+' čaša. Uz vežbanje i vrućine potrebe rastu.';show('waOut');};
+$('#iwCalc').onclick=()=>{const h=+$('#iwH').value,sex=$('#iwSex').value,inch=(h-152.4)/2.54,dev=(sex==='m'?50:45.5)+2.3*Math.max(0,inch),lo=18.5*(h/100)**2,hi=24.9*(h/100)**2;$('#iwVal').textContent=fmt(dev,1);$('#iwMsg').textContent='Zdrav opseg za vašu visinu: '+fmt(lo,0)+'–'+fmt(hi,0)+' kg.';show('iwOut');};
+$('#whrCalc').onclick=()=>{const wa=+$('#whrWa').value,hi=+$('#whrHi').value,sex=$('#whrSex').value;if(!hi)return;const r=wa/hi;$('#whrVal').textContent=fmt(r,2);const hr=sex==='m'?0.9:0.85;let cls,l;if(r<hr-0.05){cls='good';l='Nizak rizik';}else if(r<hr){cls='warn';l='Umeren rizik';}else{cls='crit';l='Povišen rizik';}pill($('#whrPill'),cls,l);$('#whrMsg').textContent='Granica rizika: '+hr+' za '+(sex==='m'?'muškarce':'žene')+'.';show('whrOut');};
+$('#bpCalc').onclick=()=>{const s=+$('#bpSys').value,d=+$('#bpDia').value;$('#bpVal').textContent=s+'/'+d;let cls,l;if(s<120&&d<80){cls='good';l='Optimalan';}else if(s<130&&d<85){cls='good';l='Normalan';}else if(s<140&&d<90){cls='info';l='Povišen normalan';}else if(s<160||d<100){cls='warn';l='Hipertenzija 1';}else if(s<180||d<110){cls='crit';l='Hipertenzija 2';}else{cls='crit';l='Hipertenzija 3 — hitno';}pill($('#bpPill'),cls,l);$('#bpMsg').textContent=(s>=140||d>=90)?'Vrednosti ukazuju na povišen pritisak. Ponovite merenje u miru i javite se lekaru.':'Vrednosti su u prihvatljivom opsegu. Merite redovno.';show('bpOut');};
+$('#a1cCalc').onclick=()=>{const a=+$('#a1cV').value,mgdl=28.7*a-46.7,mmol=mgdl/18;$('#a1cVal').textContent=fmt(mmol,1);let cls,l;if(a<5.7){cls='good';l='Normalno';}else if(a<6.5){cls='warn';l='Predijabetes';}else{cls='crit';l='Dijabetes opseg';}pill($('#a1cPill'),cls,l);$('#a1cMsg').textContent='Prosečna glikemija ≈ '+fmt(mgdl,0)+' mg/dL (prosek u 2–3 meseca).';show('a1cOut');};
+$('#dzCalc').onclick=()=>{const w=+$('#dzW').value,drug=$('#dzDrug').value;if(!w)return;const perkg=drug==='para'?15:10,dose=w*perkg,max=drug==='para'?w*60:w*30;$('#dzVal').textContent=fmt(dose);$('#dzMsg').textContent=(drug==='para'?'Paracetamol: '+fmt(dose)+' mg po dozi na 4–6 h (max '+fmt(max)+' mg/dan).':'Ibuprofen: '+fmt(dose)+' mg po dozi na 6–8 h (max '+fmt(max)+' mg/dan). Ne davati bebama ispod 3 meseca.')+' Uvek proverite sa pedijatrom.';show('dzOut');};
+const growth={m:{h:[[1,76],[2,88],[3,96],[5,110],[7,122],[10,138],[13,156]],w:[[1,10],[2,12.5],[3,14.5],[5,18.5],[7,23],[10,32],[13,45]]},z:{h:[[1,74],[2,86],[3,95],[5,109],[7,121],[10,138],[13,157]],w:[[1,9.5],[2,12],[3,14],[5,18],[7,22.5],[10,33],[13,46]]}};
+function interp(tbl,x){for(let i=0;i<tbl.length-1;i++){if(x<=tbl[i+1][0]){const[a,va]=tbl[i],[b,vb]=tbl[i+1];return va+(vb-va)*(x-a)/(b-a);}}return tbl[tbl.length-1][1];}
+$('#grCalc').onclick=()=>{const sex=$('#grSex').value,age=+$('#grAge').value,h=+$('#grH').value,w=+$('#grW').value,eh=interp(growth[sex].h,age),ew=interp(growth[sex].w,age),dh=(h/eh-1)*100,dw=(w/ew-1)*100;const band=d=>Math.abs(d)<5?'≈ prosek':d>0?(d>12?'iznad proseka':'blago iznad'):(d<-12?'ispod proseka':'blago ispod');$('#grKv').innerHTML=`<span class="k">Očekivana visina (${age} g.)</span><span class="v">${fmt(eh,0)} cm</span><span class="k">Vaše dete</span><span class="v">${fmt(h,0)} cm · ${band(dh)}</span><span class="k">Očekivana težina</span><span class="v">${fmt(ew,1)} kg</span><span class="k">Vaše dete</span><span class="v">${fmt(w,1)} kg · ${band(dw)}</span>`;$('#grMsg').textContent='Orijentaciono prema prosečnim vrednostima. Za tačne percentile koristite SZO krive i pregled pedijatra.';show('grOut');};
+function dstr(d){return d.toLocaleDateString('sr-RS',{day:'numeric',month:'long',year:'numeric'});}
+$('#ovCalc').onclick=()=>{const lmp=$('#ovLmp').value,cyc=+$('#ovCyc').value||28;if(!lmp){$('#ovMsg').textContent='Unesite prvi dan menstruacije.';show('ovOut');return;}const d=new Date(lmp),ov=new Date(d);ov.setDate(ov.getDate()+cyc-14);const f0=new Date(ov);f0.setDate(f0.getDate()-4);const f1=new Date(ov);f1.setDate(f1.getDate()+1);const nx=new Date(d);nx.setDate(nx.getDate()+cyc);$('#ovKv').innerHTML=`<span class="k">Ovulacija</span><span class="v">${dstr(ov)}</span><span class="k">Plodni prozor</span><span class="v">${f0.toLocaleDateString('sr-RS',{day:'numeric',month:'short'})} – ${f1.toLocaleDateString('sr-RS',{day:'numeric',month:'short'})}</span><span class="k">Sledeća menstruacija</span><span class="v">${dstr(nx)}</span>`;$('#ovMsg').textContent='Najveća šansa za začeće je u danima oko ovulacije.';show('ovOut');};
+$('#ddCalc').onclick=()=>{const lmp=$('#ddLmp').value,cyc=+$('#ddCyc').value||28;if(!lmp){$('#ddMsg').textContent='Unesite prvi dan menstruacije.';$('#ddVal').textContent='—';show('ddOut');return;}const d=new Date(lmp),due=new Date(d);due.setDate(due.getDate()+280+(cyc-28));const days=Math.floor((Date.now()-d)/864e5),wk=Math.max(0,Math.floor(days/7));$('#ddVal').textContent=dstr(due);$('#ddMsg').textContent=wk>0&&wk<=42?('Trenutno ste u '+wk+'. nedelji trudnoće.'):'Termin po Naegele pravilu (poslednja menstruacija + 280 dana).';show('ddOut');};
+const rda={m:[['Vitamin C','90 mg'],['Vitamin D','15 µg'],['Vitamin B12','2,4 µg'],['Kalcijum','1000 mg'],['Gvožđe','8 mg'],['Magnezijum','400 mg'],['Cink','11 mg']],z:[['Vitamin C','75 mg'],['Vitamin D','15 µg'],['Vitamin B12','2,4 µg'],['Kalcijum','1000 mg'],['Gvožđe','18 mg'],['Magnezijum','310 mg'],['Cink','8 mg']]};
+function rdaR(){const sex=$('#rdaSex button[aria-pressed="true"]').dataset.v;$('#rdaTable').innerHTML='<table class="wg-table"><thead><tr><th>Materija</th><th>Dnevno</th></tr></thead><tbody>'+rda[sex].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')+'</tbody></table>';}
+$$('#rdaSex button').forEach(b=>b.onclick=()=>{$$('#rdaSex button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');rdaR();});
+rdaR();
+(()=>{const t=new Date();t.setDate(t.getDate()-14);const s=t.toISOString().slice(0,10);$('#ovLmp').value=s;$('#ddLmp').value=s;})();
+</script>
+</body>
+</html>
